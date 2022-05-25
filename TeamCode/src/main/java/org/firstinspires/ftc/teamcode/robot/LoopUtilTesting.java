@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.utils.LoopUtil;
+import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
 @Config
 @Autonomous(name = "Loop Util Testing", group = "Test")

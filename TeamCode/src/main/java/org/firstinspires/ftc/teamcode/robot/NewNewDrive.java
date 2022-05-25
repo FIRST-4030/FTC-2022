@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.utils.PiecewiseFunction;
+import org.firstinspires.ftc.teamcode.utils.piecewise.PiecewiseFunction;
 
 @Config
 public class NewNewDrive extends OpMode {

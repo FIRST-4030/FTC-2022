@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.gamepad.GAMEPAD;
-import org.firstinspires.ftc.teamcode.gamepad.PAD_KEY;
-import org.firstinspires.ftc.teamcode.momm.MultiOpModeManager;
+import org.firstinspires.ftc.teamcode.utils.gamepad.GAMEPAD;
+import org.firstinspires.ftc.teamcode.utils.gamepad.PAD_KEY;
+import org.firstinspires.ftc.teamcode.utils.momm.MultiOpModeManager;
 
 @Disabled
 @TeleOp(name = "MOMM_Teleop", group = "MOMM")

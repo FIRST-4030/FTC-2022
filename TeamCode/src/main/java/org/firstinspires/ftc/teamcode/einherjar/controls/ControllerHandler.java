@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.einherjar.controls;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.tfodohm.TFMaths.Vector2f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.Vector2f;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentHashMap;

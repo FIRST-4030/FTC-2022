@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.utils.threadingUtils;
 
-import org.firstinspires.ftc.teamcode.utils.CSASV;
-
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
+import org.firstinspires.ftc.teamcode.utils.general.CSASV;
 
 public abstract class MRUTask implements Runnable{
 

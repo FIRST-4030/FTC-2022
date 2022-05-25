@@ -36,12 +36,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.gamepad.GAMEPAD;
-import org.firstinspires.ftc.teamcode.gamepad.InputHandler;
-import org.firstinspires.ftc.teamcode.gamepad.PAD_KEY;
-import org.firstinspires.ftc.teamcode.momm.MultiOpModeManager;
-import org.firstinspires.ftc.teamcode.utils.OrderedEnum;
-import org.firstinspires.ftc.teamcode.utils.OrderedEnumHelper;
+import org.firstinspires.ftc.teamcode.utils.gamepad.GAMEPAD;
+import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
+import org.firstinspires.ftc.teamcode.utils.gamepad.PAD_KEY;
+import org.firstinspires.ftc.teamcode.utils.momm.MultiOpModeManager;
+import org.firstinspires.ftc.teamcode.utils.general.OrderedEnum;
+import org.firstinspires.ftc.teamcode.utils.general.OrderedEnumHelper;
 
 @Config
 //@Disabled

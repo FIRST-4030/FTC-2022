@@ -36,11 +36,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.tfodohm.TFMaths.TFMathExtension;
-import org.firstinspires.ftc.teamcode.tfodohm.TFMaths.Vector2f;
-import org.firstinspires.ftc.teamcode.momm.MultiOpModeManager;
-import org.firstinspires.ftc.teamcode.utils.OrderedEnum;
-import org.firstinspires.ftc.teamcode.utils.OrderedEnumHelper;
+import org.firstinspires.ftc.teamcode.utils.general.maths.TFMathExtension;
+import org.firstinspires.ftc.teamcode.utils.general.maths.Vector2f;
+import org.firstinspires.ftc.teamcode.utils.momm.MultiOpModeManager;
+import org.firstinspires.ftc.teamcode.utils.general.OrderedEnum;
+import org.firstinspires.ftc.teamcode.utils.general.OrderedEnumHelper;
 
 @Config
 @Autonomous(name = "tfMathArcTest", group = "Test")

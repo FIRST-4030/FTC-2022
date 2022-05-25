@@ -34,10 +34,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.gamepad.InputHandler;
-import org.firstinspires.ftc.teamcode.momm.MultiOpModeManager;
-import org.firstinspires.ftc.teamcode.utils.OrderedEnum;
-import org.firstinspires.ftc.teamcode.utils.OrderedEnumHelper;
+import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
+import org.firstinspires.ftc.teamcode.utils.momm.MultiOpModeManager;
+import org.firstinspires.ftc.teamcode.utils.general.OrderedEnum;
+import org.firstinspires.ftc.teamcode.utils.general.OrderedEnumHelper;
 
 @Config
 @Disabled

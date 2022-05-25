@@ -33,11 +33,10 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.gamepad.GAMEPAD;
-import org.firstinspires.ftc.teamcode.gamepad.InputHandler;
-import org.firstinspires.ftc.teamcode.gamepad.PAD_KEY;
+import org.firstinspires.ftc.teamcode.utils.gamepad.GAMEPAD;
+import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
+import org.firstinspires.ftc.teamcode.utils.gamepad.PAD_KEY;
 
 @Config
 @TeleOp(name = "MotorTester", group = "Test")
