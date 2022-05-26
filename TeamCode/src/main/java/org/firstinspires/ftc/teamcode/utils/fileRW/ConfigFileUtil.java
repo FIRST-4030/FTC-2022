@@ -33,7 +33,7 @@ public class ConfigFileUtil {
         STRING,
         DOUBLE,
         BYTE,
-        LONG,
+        LONG
     }
 
     //private static final long LOG_QUOTA = 25 * 1024 * 1024; // 25MB log quota for now
