@@ -19,7 +19,7 @@ public class SecondOrderDynamics {
     private float t_crit; //variable for time step stability
 
     /**
-     * freq is frequency or how fast the system behaves
+     * freq is the coefficient for how fast the system behaves
      * zeta is the dampening coefficient
      * react is the coefficient for initial response
      * @param freq
