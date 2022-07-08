@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utils.fileRW.ConfigFileUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.pot.DoublePotentiometer;
 
 import java.util.ArrayList;
@@ -114,53 +115,38 @@ public class SwervePod extends PID<Double>{
         ArrayList<Double> td2a = new ArrayList<Double>();
         ArrayList<Double> td2b = new ArrayList<Double>();
 
+        double thr1 = 0;
+        double thr2 = 0;
+
         double tpd  = tpr/360;
 
         for(;m1.getCurrentPosition() < tpr;){
             telemetry.addData("pot1",m1.getCurrentPosition()/tpd);
             telemetry.addData("pot2",0);
-            //if(pot.getMV1() > 0.2 && pot.getMV1() < 3.1){
             if(m1.getCurrentPosition()<tpr/2){
-                pd1a.add(pot.getMV2());
-                td1a.add(m1.getCurrentPosition()/tpd);
+                pd2a.add(pot.getMV2());
+                td2a.add(m1.getCurrentPosition()/tpd);
 
                 telemetry.addData("pot1",1);
+                thr2 = pot.getMV1();
             } else {
-                pd1b.add(pot.getMV2());
-                td1b.add(m1.getCurrentPosition()/tpd);
+                pd2b.add(pot.getMV2());
+                td2b.add(m1.getCurrentPosition()/tpd);
 
                 telemetry.addData("pot1",0);
             }
-            //}
-            //if(pot.getMV2()>0.15&&pot.getMV2()<2.7){
             if(m1.getCurrentPosition()<tpr/4||m1.getCurrentPosition()>3*tpr/4){
-                pd2a.add(pot.getMV1());
-                td2a.add(m1.getCurrentPosition()/tpd);
+                pd1a.add(pot.getMV1());
+                td1a.add(m1.getCurrentPosition()/tpd);
                 telemetry.addData("pot2",1);
             } else {
-                pd2b.add(pot.getMV1());
-                td2b.add(m1.getCurrentPosition()/tpd);
+                pd1b.add(pot.getMV1());
+                td1b.add(m1.getCurrentPosition()/tpd);
                 telemetry.addData("pot2",0);
+                thr1 = pot.getMV2();
             }
-            //}
             telemetry.update();
         }
-
-        /*double[] pd1a = new double[pd1.size()];
-        double[] td1a = new double[pd1.size()];
-
-        double[] pd2a = new double[pd2.size()];
-        double[] td2a = new double[pd2.size()];
-
-        for(int i = 0; i < pd1a.length; i++){
-            pd1a[i] = (double)pd1.get(i);
-            td1a[i] = (double)td1.get(i);
-        }
-        for(int i = 0; i < pd2a.length; i++){
-            pd2a[i] = (double)pd2.get(i);
-            td2a[i] = (double)td2.get(i);
-        }
-         */
 
         try {
             RobotLog.d("AUTOTUNE poly 1: " + pd1a);//Arrays.toString(Polynomial.getConstants(pd1a, td1a,20)));
@@ -169,6 +155,25 @@ public class SwervePod extends PID<Double>{
             RobotLog.d("AUTOTUNE poly 4: " + pd2b);
             RobotLog.d("AUTOTUNE cracker 1: " + td1a);RobotLog.d("AUTOTUNE cracker 2: " + td2a);
             RobotLog.d("AUTOTUNE cracker 3: " + td1b);RobotLog.d("AUTOTUNE cracker 4: " + td2b);
+            RobotLog.d("AUTOTUNE thresholds: " + Arrays.toString(new double[]{thr1, thr2}));
+
+            ArrayList<Double> thresh = new ArrayList<Double>();
+            thresh.add(thr1);
+            thresh.add(thr2);
+            ArrayList<ArrayList<Double>> data1 = new ArrayList<ArrayList<Double>>();
+            data1.add(pd1a);
+            data1.add(pd2a);
+            data1.add(pd1b);
+            data1.add(pd2b);
+            data1.add(td1a);
+            data1.add(td2a);
+            data1.add(td1b);
+            data1.add(td2b);
+            data1.add(thresh);
+
+            ConfigFileUtil.init();
+            ConfigFileUtil.writeToConfig("swerve_pod_1_profile", data1,1);
+
         } catch (Exception e) {
             RobotLog.d("uh oh " + e.getMessage() + " sdfsd" + Arrays.toString(e.getStackTrace()));
         }
@@ -189,10 +194,10 @@ public class SwervePod extends PID<Double>{
 
     public void loop() {
         //get current position and set that in out correction
-        setFeedBack(-(((double)m1.getCurrentPosition()/277)+((double)m2.getCurrentPosition()/277)));//pot.getAngleD());
+        setFeedBack(pot.getAngleR());//pot.getAngleD());
 
         //visualization
-        telemetry.addData("feedBack", -(((double)m1.getCurrentPosition()/277)+((double)m2.getCurrentPosition()/277)));
+        telemetry.addData("feedBack", pot.getAngleR());
 
         // do fancy math and calculate correction value based on the error of the angle
         double correction = PIDloop();

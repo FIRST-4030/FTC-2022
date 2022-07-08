@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.utils.piecewise.PiecewiseFunction;
+import org.firstinspires.ftc.teamcode.utils.general.maths.piecewise.PiecewiseFunction;
 
 @Config
 @Disabled

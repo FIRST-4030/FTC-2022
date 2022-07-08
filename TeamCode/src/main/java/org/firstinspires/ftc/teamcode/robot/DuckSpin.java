@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.utils.general.OrderedEnum;
 import org.firstinspires.ftc.teamcode.utils.general.OrderedEnumHelper;
-import org.firstinspires.ftc.teamcode.utils.piecewise.PiecewiseFunction;
+import org.firstinspires.ftc.teamcode.utils.general.maths.piecewise.PiecewiseFunction;
 
 @Config
 //@Disabled

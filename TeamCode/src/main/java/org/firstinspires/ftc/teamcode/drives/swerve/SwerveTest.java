@@ -5,7 +5,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utils.sensors.pot.DoublePotentiometer;
@@ -27,16 +26,11 @@ public class SwerveTest extends LinearOpMode {
         telemetry.addData("status", "initing . . .");
         //Hardware map initializing
         try {
-            pod1 = new SwervePod(t, hardwareMap.get(DcMotor.class, "p1m1"), hardwareMap.get(DcMotor.class, "p1m2"), new DoublePotentiometer(hardwareMap, t, "pot1a", "pot1b", 90));
-            pod2 = new SwervePod(t, hardwareMap.get(DcMotor.class, "p2m1"), hardwareMap.get(DcMotor.class, "p2m2"), new DoublePotentiometer(hardwareMap, t, "pot2a", "pot2b", 90));
+            pod1 = new SwervePod(t, hardwareMap.get(DcMotor.class, "p1m1"), hardwareMap.get(DcMotor.class, "p1m2"), DoublePotentiometer.FromData(hardwareMap, t, "pot1a", "pot1b", 90));
+          //  pod2 = new SwervePod(t, hardwareMap.get(DcMotor.class, "p2m1"), hardwareMap.get(DcMotor.class, "p2m2"), DoublePotentiometer.FromData(hardwareMap, t, "pot2a", "pot2b", 90));
         } catch (Exception e) {
             telemetry.log().add("failed to init");
         }
-        RobotLog.d("," + +getRuntime() + "," + "screeeeeeeeeeeeeeeeeeeeeem");
-
-        //zero out each pod
-        pod1.tune();
-        pod2.tune();
 
         waitForStart();
 
@@ -44,6 +38,7 @@ public class SwerveTest extends LinearOpMode {
         for (; opModeIsActive(); ) {
             //angle from joystick
             double angle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
+
             t.addData("input", angle);
 
             //drives slow to better be able to tell what is going on
@@ -54,23 +49,23 @@ public class SwerveTest extends LinearOpMode {
                 if (main_velocity != Double.NaN) {
                     //if not turning point wheels in dirrection of stick
                     pod1.setTargetAngle(angle);
-                    pod2.setTargetAngle(angle);
+                  //  pod2.setTargetAngle(angle);
                 } else {
                     //no inputs make sure things are zerod
                     pod1.zero();
-                    pod2.zero();
+                   // pod2.zero();
                 }
             } else {
                 //parallel wheels
                 pod1.setTargetAngle(Math.PI/2);
-                pod2.setTargetAngle(Math.PI/2);
+                //pod2.setTargetAngle(Math.PI/2);
             }
             pod1.setTargetVelocity(main_velocity+turn);
-            pod2.setTargetVelocity(main_velocity-turn);
+            //pod2.setTargetVelocity(main_velocity-turn);
 
             //update pods
             pod1.loop();
-            pod2.loop();
+           // pod2.loop();
 
             //update telemtry
             t.update();

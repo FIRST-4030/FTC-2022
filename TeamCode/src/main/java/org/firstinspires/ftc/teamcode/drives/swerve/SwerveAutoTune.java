@@ -28,7 +28,7 @@ public class SwerveAutoTune extends LinearOpMode {
         telemetry.addData("status", "initing . . .");
 
         try{
-            pod1 = new SwervePod(t, hardwareMap.get(DcMotor.class, "p1m1"), hardwareMap.get(DcMotor.class, "p1m2"), new DoublePotentiometer(hardwareMap, t, "pot1a", "pot1b", 90));
+            pod1 = new SwervePod(t, hardwareMap.get(DcMotor.class, "p1m1"), hardwareMap.get(DcMotor.class, "p1m2"), DoublePotentiometer.FromData(hardwareMap, t, "pot1a", "pot1b", 90));
         } catch (Exception e) {
             telemetry.log().add("failed to init");
         }
@@ -37,7 +37,7 @@ public class SwerveAutoTune extends LinearOpMode {
         waitForStart();
 
         //run tuning
-        // pod1.tune();
+        //pod1.tune();
 
         //does tpr make sense?
         //pod1.hmmm(1740);

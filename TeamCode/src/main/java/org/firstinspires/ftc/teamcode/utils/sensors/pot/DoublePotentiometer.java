@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.utils.sensors.pot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utils.fileRW.ConfigFileUtil;
 
 import java.util.ArrayList;
 
@@ -19,8 +20,13 @@ public class DoublePotentiometer implements Potentiometer {
     private static double CLIP_TOP = 30;
     private static double CLIP_BOTTOM = 30;
 
+    double thr1 = 0.332;
+    double thr2 = 0.282;
+
+    double tolerance = 0.2;
+
     //initalize hardware
-    public DoublePotentiometer(HardwareMap map, Telemetry telemetry, String n1, String n2, double offset){
+    public DoublePotentiometer(HardwareMap map, Telemetry telemetry, String n1, String n2, double offset, double[] poly1, double[] poly2, double[] poly3, double[] poly4, double[] cracker1, double[] cracker2, double[] cracker3, double[] cracker4){
         if(n1 == null || n2 == null || n1.isEmpty() || n2.isEmpty()){
             throw new IllegalArgumentException(this.getClass().getSimpleName() + ": invalid name");
         }
@@ -28,7 +34,16 @@ public class DoublePotentiometer implements Potentiometer {
         normalized.add(0);
         normalized.add(1);
 
+        pot1a = new BasicPotentiometer(map, telemetry, n1, poly1, cracker1);
+        pot2a = new BasicPotentiometer(map, telemetry, n2, poly2, cracker2);
+        pot1b = new BasicPotentiometer(map, telemetry, n1, poly3, cracker3);
+        pot2b = new BasicPotentiometer(map, telemetry, n2, poly4, cracker4);
+        pot1 = new BasicPotentiometer(map, telemetry, n1, new double[] {0,1}, new double[] {0,1});
+        pot2 = new BasicPotentiometer(map, telemetry, n2, new double[] {0,1}, new double[] {0,1});
+        this.OFFSET = offset;
+    }
 
+    public static DoublePotentiometer FromData(HardwareMap map, Telemetry telemetry, String n1, String n2, double offset) {
         double[] poly1 = {0.0, 0.0, 0.0, 0.006, 0.025, 0.031, 0.045, 0.064, 0.075, 0.089, 0.1, 0.107, 0.117, 0.123, 0.137, 0.145, 0.157, 0.161, 0.168, 0.17400000000000002, 0.18, 0.19, 0.196, 0.203, 0.211, 0.216, 0.219, 0.228, 0.23600000000000002, 0.249, 0.258, 0.262, 0.275, 0.28400000000000003, 0.293, 0.307, 0.317, 0.332, 0.34900000000000003, 0.36, 0.376, 0.387, 0.402, 0.421, 0.434, 0.466, 0.492, 0.52, 0.555, 0.608, 0.66, 0.708, 0.755, 0.8190000000000001, 0.884, 0.996, 1.051, 1.245, 1.407, 1.614, 1.929, 2.562};
         double[] poly2 = {0.34700000000000003, 0.341, 0.336, 0.328, 0.323, 0.316, 0.305, 0.302, 0.293, 0.29, 0.28300000000000003, 0.273, 0.267, 0.263, 0.25, 0.246, 0.23900000000000002, 0.234, 0.228, 0.221, 0.21, 0.20500000000000002, 0.196, 0.191, 0.184, 0.17500000000000002, 0.166, 0.159, 0.147, 0.14100000000000001, 0.129, 0.112, 0.10200000000000001, 0.09, 2.46, 3.222, 3.188, 2.47, 1.963, 1.6280000000000001, 1.3900000000000001, 1.258, 1.1520000000000001, 1.0030000000000001, 0.932, 0.854, 0.798, 0.739, 0.671, 0.647, 0.608, 0.5640000000000001, 0.543, 0.512, 0.489, 0.47000000000000003, 0.442, 0.42, 0.40700000000000003, 0.383, 0.369, 0.356};
         double[] poly3 = {3.0540000000000003, 2.952, 2.868, 2.3040000000000003, 1.741, 1.495, 1.229, 1.114, 0.982, 0.862, 0.804, 0.711, 0.684, 0.634, 0.592, 0.55, 0.521, 0.501, 0.468, 0.443, 0.423, 0.395, 0.373, 0.363, 0.35100000000000003, 0.34, 0.323, 0.31, 0.296, 0.29, 0.275, 0.267, 0.256, 0.246, 0.23800000000000002, 0.229, 0.219, 0.213, 0.20600000000000002, 0.195, 0.184, 0.177, 0.164, 0.155, 0.14400000000000002, 0.133, 0.122, 0.107, 0.098, 0.073, 0.053, 0.036000000000000004, 0.001, 0.0};
@@ -38,14 +53,12 @@ public class DoublePotentiometer implements Potentiometer {
         double[] cracker3 = {182.06895952984516, 185.99999388333046, 188.89654551221435, 192.41378677585908, 195.72413149458353, 199.24137275822827, 202.55171747695275, 206.06895874059748, 209.37930345932193, 212.89654472296667, 216.20688944169112, 219.72413070533585, 223.0344754240603, 225.93102705294422, 229.03447522674838, 232.13792340055258, 235.65516466419732, 238.96550938292177, 242.89654373640707, 246.82757808989234, 250.75861244337764, 254.0689571621021, 256.965508790986, 260.2758535097105, 263.17240513859434, 266.4827498573188, 269.7930945760433, 273.93102547444886, 277.2413701931733, 279.7241287322166, 283.0344734509411, 286.3448181696656, 290.0689559782306, 293.5861972418753, 297.3103350504403, 300.6206797691648, 303.93102448788926, 307.0344726616934, 310.34481738041785, 313.65516209914233, 316.7586102729465, 320.6896446264318, 324.6206789799171, 327.72412715372127, 330.82757532752544, 334.3448165911702, 337.4482647649744, 340.96550602861913, 344.6896438371841, 347.7930920109883, 351.10343672971277, 354.20688490351694, 357.3103330773211, 359.1724019816036};
         double[] cracker4 = {91.24137630984285, 94.34482448364703, 97.6551692023715, 100.75861737617566, 104.27585863982041, 107.17241026870431, 109.65516880774766, 113.17241007139239, 116.27585824519656, 118.96551332916019, 122.48275459280492, 126.20689240136994, 129.5172371200944, 133.03447838373913, 136.96551273722443, 140.8965470907097, 144.20689180943418, 147.31033998323835, 150.82758124688308, 154.34482251052782, 157.03447759449145, 160.13792576829562, 163.2413739420998, 166.34482211590398, 170.27585646938928, 173.79309773303402, 176.6896493619179, 180.41378717048292, 183.93102843412765, 187.03447660793185, 190.3448213266563, 193.86206259030104, 196.9655107641052, 200.8965451175905, 203.99999329139467, 207.7241310999597, 211.03447581868414, 214.34482053740862, 217.86206180105336, 221.1724065197778, 224.27585469358198, 227.58619941230646, 230.48275104119034, 233.7930957599148, 237.10344047863927, 240.82757828720426, 244.96550918560985, 248.68964699417486, 252.41378480273988, 255.51723297654405, 258.6206811503482, 261.51723277923213, 264.41378440811604, 267.72412912684047};
 
-        pot1a = new BasicPotentiometer(map, telemetry, n1, poly1, cracker1);
-        pot2a = new BasicPotentiometer(map, telemetry, n2, poly3, cracker3);
-        pot1b = new BasicPotentiometer(map, telemetry, n1, poly2, cracker2);
-        pot2b = new BasicPotentiometer(map, telemetry, n2, poly4, cracker4);
-        pot1 = new BasicPotentiometer(map, telemetry, n1, new double[] {0,1}, new double[] {0,1});
-        pot2 = new BasicPotentiometer(map, telemetry, n2, new double[] {0,1}, new double[] {0,1});
-        this.OFFSET = offset;
+        return new DoublePotentiometer(map, telemetry, n1, n2, offset, poly1, poly2, poly3, poly4, cracker1, cracker2, cracker3, cracker4);
+
+
     }
+
+
 
     // see overridden methods
     // some (marked with numbers) allow acces to the individual potentiometers inside the dual unit
@@ -70,39 +83,36 @@ public class DoublePotentiometer implements Potentiometer {
         double angle3 = pot1b.getAngleD();
         double angle4 = pot2b.getAngleD();
 
-        //double mv1 = pot1a.getMV();
-        //double mv2 = pot2b.getMV();
+        double mv1 = pot1a.getMV();
+        double mv2 = pot2b.getMV();
 
-        if(angle1 == -40 || angle1 == 400){
-            return (angle2+angle4)/2;
+        double angleOut = 0;
+        double n = 0;
+
+        if(mv2 < thr1-tolerance){
+            n++;
+            angleOut+= angle1;
         }
-        return 0;
-        /*
-        double d1 = Math.abs(angle1-angle2);
-        double d2 = Math.abs(angle3-angle4);
-
-        if(d1>d2) {
-            double av = (angle3+angle4)/2;
-            double d3 = Math.abs(angle2-av);
-            double d4 = Math.abs(angle1-av);
-            if(d4>d3) return d3;
-            return 0;//d4;
-
+        if(mv2 > thr1+tolerance){
+            n++;
+            angleOut+= angle3;
         }
-        double av = (angle1+angle2)/2;
-        double d3 = Math.abs(angle2-av);
-        double d4 = Math.abs(angle1-av);
-        if(d4>d3) return 0;//d3;
-        return 0;//d4;
-*/
-        //if(angle1 < CLIP_BOTTOM || angle2 > 360-CLIP_TOP || (angle2 > 180-CLIP_TOP && angle2 < 180 + CLIP_BOTTOM)) return pot1.getAngleD();
-        //else if((angle1 < CLIP_BOTTOM + OFFSET && angle1 > OFFSET - CLIP_TOP) || (angle1 < 180 + CLIP_BOTTOM +OFFSET && angle1 > 180 - CLIP_TOP + OFFSET)) return pot2.getAngleD();
-        //return (pot1.getAngleD() + pot2.getAngleD())/2;
+        if(mv1 < thr2-tolerance){
+            n++;
+            angleOut+= angle2;
+        }
+        if(mv1 > thr1+tolerance){
+            n++;
+            angleOut+= angle4;
+        }
+
+        if(n==0)return 0;
+        return angleOut/n;
     }
 
     @Override
     public double getAngleR() {
-      return getAngleD()*scaleRad;
+        return Math.toRadians(this.getAngleD());//*scaleRad;
     }
 
     public boolean isZeroOne(){

@@ -25,9 +25,9 @@ public abstract class MRUTask implements Runnable{
     @Override
     public void run() {
         double
-                start = 0,
+                start,
                 end = 0,
-                delta = 0,
+                delta,
                 unprocessed = 0,
                 frameTime = 0,
                 frames = 0,

@@ -35,6 +35,25 @@ public abstract class PID<T> {
 
         //how far off is it
         double err = (double)feedBack - (double)setPoint;
+
+        double ear = Math.abs(err);
+
+        if(ear>Math.PI/2){
+            if(ear<Math.PI){
+                ear = Math.PI-ear;
+            } else {
+                ear = (ear+Math.PI)%(2*Math.PI);
+                err*=-1;
+            }
+
+            if(ear>Math.PI/2){
+                ear = Math.PI-ear;
+            }
+        }
+
+        ear *= Integer.signum((int)err);
+        err = ear;
+
         telemetry.addData("err", err);
 
         //proportional part
