@@ -14,10 +14,13 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
+/*
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+
+ */
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
@@ -53,7 +56,7 @@ import java.util.List;
 /*
  * Simple tank drive hardware implementation for REV hardware.
  */
-@Config
+//@Config
 public class ModdedTankDrive extends TankDrive {
     public static PIDCoefficients AXIAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients CROSS_TRACK_PID = new PIDCoefficients(0, 0, 0);
@@ -77,7 +80,7 @@ public class ModdedTankDrive extends TankDrive {
         REPEAT
     }
 
-    protected FtcDashboard dashboard;
+    //protected FtcDashboard dashboard;
     private NanoClock clock;
 
     private org.firstinspires.ftc.teamcode.roadrunner.drive.SampleTankDrive.Mode mode;
@@ -110,8 +113,8 @@ public class ModdedTankDrive extends TankDrive {
         sampledPathRecorder = new PathRecorder();
         trajectoryBuffer = new ArrayList<>();
 
-        dashboard = FtcDashboard.getInstance();
-        dashboard.setTelemetryTransmissionInterval(25);
+        //dashboard = FtcDashboard.getInstance();
+        //dashboard.setTelemetryTransmissionInterval(25);
 
         clock = NanoClock.system();
 
@@ -280,6 +283,7 @@ public class ModdedTankDrive extends TankDrive {
 
         poseHistory.add(currentPose);
 
+        /*
         TelemetryPacket packet = new TelemetryPacket();
         Canvas fieldOverlay = packet.fieldOverlay();
 
@@ -293,6 +297,8 @@ public class ModdedTankDrive extends TankDrive {
         packet.put("Y Error: ", lastError.getY());
         packet.put("Heading/Direction Error: ", lastError.getHeading());
 
+
+         */
         switch (mode) {
             case IDLE:
                 break;
@@ -327,6 +333,7 @@ public class ModdedTankDrive extends TankDrive {
 
                 Trajectory trajectory = follower.getTrajectory();
 
+                /*
                 fieldOverlay.setStrokeWidth(1);
                 fieldOverlay.setStroke("4CAF50");
                 DashboardUtil.drawSampledPath(fieldOverlay, trajectory.getPath());
@@ -337,6 +344,7 @@ public class ModdedTankDrive extends TankDrive {
                 DashboardUtil.drawPoseHistory(fieldOverlay, poseHistory);
                 DashboardUtil.drawRobot(fieldOverlay, currentPose);
 
+                 */
                 //under FOLLOW_TRAJECTORY because we don't need to record every single update call
                 currentPoseRecorder.record(currentPose); //records the current position of the bot
                 sampledPathRecorder.record(trajectory.getPath()); //records the expected path of the bot
@@ -350,6 +358,7 @@ public class ModdedTankDrive extends TankDrive {
             }
         }
 
+        /*
         if (drawCall){
             DashboardUtil.drawPoseHistory(fieldOverlay.setStroke("#ff0000"), currentPoseRecorder.getAsList());
             DashboardUtil.drawSampledPaths(fieldOverlay.setStroke("#000000"), sampledPathRecorder.getAsList());
@@ -358,6 +367,8 @@ public class ModdedTankDrive extends TankDrive {
         drawCall = false;
 
         dashboard.sendTelemetryPacket(packet);
+
+         */
     }
 
     public void queueDraw(){
