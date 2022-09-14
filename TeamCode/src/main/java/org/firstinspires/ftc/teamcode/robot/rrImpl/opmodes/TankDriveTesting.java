@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.rrImpl.opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -15,11 +17,9 @@ public class TankDriveTesting extends LoopUtil {
     //basic roadrunner stuff
     public static ModdedTankDrive drive;
     public static Trajectory trajectory;
-    /*
+
     public static FtcDashboard dashboard;
     public static TelemetryPacket packet;
-
-     */
 
     //poses
     public static Pose2d startingPose = new Pose2d(0, 0);
@@ -34,12 +34,10 @@ public class TankDriveTesting extends LoopUtil {
         //roadrunner stuffs
         drive = new ModdedTankDrive(hardwareMap);
         drive.setPoseEstimate(startingPose);
-        /*
+
         dashboard = FtcDashboard.getInstance();
         dashboard.setTelemetryTransmissionInterval(25);
         packet = new TelemetryPacket();
-
-         */
 
         //external stuffs
         trackedHeading = drive.getRawExternalHeading();
