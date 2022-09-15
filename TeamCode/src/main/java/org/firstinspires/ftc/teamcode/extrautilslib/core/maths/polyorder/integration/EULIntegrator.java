@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.extrautilslib.core.maths.polyorder.integration;
 
-import com.icaras84.extrautilslib.core.timer.EULClock;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.timer.EULClock;
 
 public abstract class EULIntegrator {
     protected EULClock timer;

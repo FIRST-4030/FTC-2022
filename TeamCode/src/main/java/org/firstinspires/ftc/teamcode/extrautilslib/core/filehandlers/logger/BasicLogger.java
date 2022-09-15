@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.extrautilslib.core.filehandlers.logger;
 
-import com.icaras84.extrautilslib.core.timer.EULClock;
-import sun.net.www.protocol.http.logging.HttpLogFormatter;
+
+import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.timer.EULClock;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +34,7 @@ public class BasicLogger implements EULLogger<Level>{
 
     @Override
     public void log(Level level, String msg) {
-        double time = this.clock.getElapsedTime() * EULClock.NANO2SEC;
+        double time = this.clock.getElapsedTime() * EULConstants.NANO2SEC;
         String header = "";
         header += logTime ? "{Elapsed: " + time + " seconds}: " : "";
 

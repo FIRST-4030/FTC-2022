@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices;
 
-import com.icaras84.extrautilslib.core.maths.EULMathEx;
-import com.icaras84.extrautilslib.core.maths.vectors.Vector3d;
-import com.icaras84.extrautilslib.core.maths.vectors.Vector4d;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.EULMathEx;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector4d;
+
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector4d;
 
 public class Matrix4d implements EULMatrix<Matrix4d, Vector4d>{
 

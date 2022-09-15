@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices;
 
-import com.icaras84.extrautilslib.core.maths.vectors.Vector2d;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 
 public class Matrix2d implements EULMatrix<Matrix2d, Vector2d>{
 

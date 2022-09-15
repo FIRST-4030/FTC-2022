@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.extrautilslib.core.filehandlers.read;
 
 import com.sun.tools.javac.util.Pair;
 
-import static com.icaras84.extrautilslib.core.misc.EULArrays.*;
-import static com.icaras84.extrautilslib.core.misc.EULBooleans.*;
-import static com.icaras84.extrautilslib.core.misc.EULStrings.*;
+import static org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULArrays.*;
+import static org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULBooleans.*;
+import static org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULStrings.*;
 
 public class EULTokenizer {
     //common letters, digits, symbols

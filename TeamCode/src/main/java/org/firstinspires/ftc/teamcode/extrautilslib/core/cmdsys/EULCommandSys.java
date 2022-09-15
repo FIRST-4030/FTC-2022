@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.extrautilslib.core.cmdsys;
 
-import com.icaras84.extrautilslib.core.filehandlers.read.EULToken;
-import com.icaras84.extrautilslib.core.filehandlers.read.EULTokenizer;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.filehandlers.read.EULToken;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.filehandlers.read.EULTokenizer;
 import com.sun.tools.javac.util.Pair;
 
 import java.util.HashMap;
