@@ -27,15 +27,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.robot;
+package org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
 import org.firstinspires.ftc.teamcode.utils.momm.MultiOpModeManager;
@@ -44,59 +41,30 @@ import org.firstinspires.ftc.teamcode.utils.general.OrderedEnumHelper;
 
 @Config
 @Disabled
-@Autonomous(name = "NewDriveTest", group = "Test")
-public class NewDriveTest extends MultiOpModeManager {
+@Autonomous(name = "ticksTest", group = "Test")
+public class ticksTest extends MultiOpModeManager {
     // Hardware
     private NewNewDrive drive;
     private Servo collectorArm = null;
-    private Distance distance;
-    private Depositor depositor;
-    private DuckSpin duck;
 
     // Constants
     public static double speedMin = 0.1;
-    public static double speedMax = 0.9;
-    public static double COLLECTOR_UP = 0.6;
-    public static double moveDistance = 30;
+    public static double speedMax = 0.8;
+    public static double r = 16;
+    public static double arcLength = 16;
+    public static double angle = arcLength / Math.PI * 180.0 / r;
+    public static double COLLECTOR_UP = 0.53;
     public static int num = 0;
-    public static int waitTime = 1;
+    public static int Distance = 30;
 
     // Members
     private AUTO_STATE state = AUTO_STATE.DONE;
-    private AUTO_STATE oldState = AUTO_STATE.DONE;
     private InputHandler in;
-    private final ElapsedTime waitTimer = new ElapsedTime();
 
     @Override
     public void init() {
         boolean error = false;
         telemetry.addData("Status", "Initializing...");
-
-        /*try {
-            super.register(new Depositor());
-            super.register(new Capstone());
-            super.register(new Distance());
-            super.register(new DuckSpin());
-
-            distance = new Distance();
-            super.register(distance);
-            depositor = new Depositor();
-            super.register(depositor);
-            duck = new DuckSpin();
-            super.register(duck);
-
-            Globals.opmode = this;
-            in = Globals.input(this);
-            in.register("+", GAMEPAD.driver2, PAD_KEY.dpad_up);
-            in.register("-", GAMEPAD.driver2, PAD_KEY.dpad_down);
-
-            distance.startScan();
-
-            super.init();
-        } catch (Exception e) {
-            telemetry.log().add(String.valueOf(e));
-            error = true;
-        }*/
 
         try {
             super.register(new NewNewDrive());
@@ -104,7 +72,7 @@ public class NewDriveTest extends MultiOpModeManager {
             drive = new NewNewDrive();
             super.register(drive);
 
-            telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+            in = Globals.input(this);
 
             super.init();
         } catch (Exception e) {
@@ -114,7 +82,6 @@ public class NewDriveTest extends MultiOpModeManager {
 
         try {
             collectorArm = hardwareMap.get(Servo.class, "CollectorArm");
-            //collector = hardwareMap.get(DcMotor.class, "Collector");
         } catch (Exception e) {
             telemetry.log().add("Could not find collector");
             error = true;
@@ -131,6 +98,7 @@ public class NewDriveTest extends MultiOpModeManager {
 
     @Override
     public void init_loop() {
+        super.init_loop();
     }
 
     @Override
@@ -138,47 +106,21 @@ public class NewDriveTest extends MultiOpModeManager {
         super.start();
         num = 0;
         drive.setDoneFalse();
-        state = AUTO_STATE.TEST_MOVE1;
+        state = AUTO_STATE.MOVE;
     }
 
     @Override
     public void loop() {
-        /*depositor.loop();
-        distance.loop();
-        duck.loop();
-        in.loop();*/
+        in.loop();
 
-        if (state != oldState && state != AUTO_STATE.WAIT) {
-            oldState = state;
-        }
         // Step through the auto commands
         switch (state) {
-            case TEST_MOVE1:
-                drive.arcTo(0, moveDistance, speedMin, speedMax);
-                //drive.combinedCurves(0, 10, speedMin, speedMax, 0, 10, speedMin, speedMax);
+            case MOVE:
+                drive.driveTo(Distance, speedMin, speedMax);
                 collectorArm.setPosition(COLLECTOR_UP);
                 if (drive.isDone() && !drive.isBusy()) {
-                    waitTimer.reset();
-                    state = AUTO_STATE.WAIT;
-                }
-                break;
-            case TEST_MOVE2:
-                drive.arcTo(0, -moveDistance, -speedMin, -speedMax);
-                //drive.combinedCurves(0, 10, speedMin, speedMax, 0, 10, speedMin, speedMax);
-                collectorArm.setPosition(COLLECTOR_UP);
-                if (drive.isDone() && !drive.isBusy()) {
-                    waitTimer.reset();
-                    state = AUTO_STATE.WAIT;
-                }
-                break;
-            case WAIT:
-                if (waitTimer.seconds() >= waitTime) {
                     drive.setDoneFalse();
-                    if (oldState == AUTO_STATE.TEST_MOVE2) {
-                        state = AUTO_STATE.TEST_MOVE1;
-                    } else if (oldState == AUTO_STATE.TEST_MOVE1) {
-                        state = AUTO_STATE.TEST_MOVE2;
-                    }
+                    state = state.next();
                 }
                 break;
             // Stop processing
@@ -188,26 +130,18 @@ public class NewDriveTest extends MultiOpModeManager {
 
         //log what state it currently is in
         telemetry.addData("Auto Step: ", state);
-        telemetry.addData("left ticks", drive.leftPos());
-        telemetry.addData("right ticks", drive.rightPos());
-        telemetry.addData("leftVel", drive.leftVel());
-        telemetry.addData("rightVel", drive.rightVel());
-        telemetry.update();
     }
 
     @Override
     public void stop() {
-        state = AUTO_STATE.DONE;
         super.stop();
     }
 
     enum AUTO_STATE implements OrderedEnum {
-        TEST_MOVE1,
-        TEST_MOVE2,
-        WAIT,
+        MOVE,
         DONE;
 
-        public AUTO_STATE next() {
+        public ticksTest.AUTO_STATE next() {
             return OrderedEnumHelper.next(this);
         }
     }

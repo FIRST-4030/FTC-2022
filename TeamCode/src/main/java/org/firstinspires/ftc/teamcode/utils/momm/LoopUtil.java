@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
-import org.firstinspires.ftc.teamcode.robot.Globals;
+import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.Globals;
 
 import java.util.Vector;
 

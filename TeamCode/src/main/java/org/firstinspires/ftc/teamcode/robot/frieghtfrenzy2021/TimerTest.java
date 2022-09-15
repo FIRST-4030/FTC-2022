@@ -27,57 +27,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.robot;
+package org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.utils.gamepad.GAMEPAD;
-import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
-import org.firstinspires.ftc.teamcode.utils.gamepad.PAD_KEY;
-
 @Config
-@TeleOp(name = "ServoPosTest", group = "Test")
-public class ServoTester extends OpMode{
-    // Hardware
-    private Servo collectorArm = null;
-    private Servo mid = null;
-    private Servo low = null;
-    private Servo tilt = null;
-    // Constants used for hardware
-    private static double COLLECTOR_UP = 0.37;
-    private static double COLLECTOR_DOWN = 0.9;
+@Disabled
+@TeleOp(name = "TimerTest", group = "Test")
+public class TimerTest extends OpMode {
 
-    // Servo position test constants
-    private float servoPos = 0.5f;
-    private static final float INCREMENT = 0.01f;
+    private static double DUCK_POWER = 0;
+    private static double duckPowerMin = 0.65;  // min duck spinner speed (0 - 1.0)
+    private static double duckPowerMax = 0.9;  // max duck spinner speed (0 - 1.0)
+    private static double duckRampTime = 1.25;  // duck spinner ramp time (seconds, >0)
+    private static double timerRatio = 0;
 
     // Members
     private ElapsedTime runtime = new ElapsedTime();
-    private InputHandler in;
+    private ElapsedTime startRampTime1 = new ElapsedTime();
 
     @Override
     public void init() {
         boolean error = false;
         telemetry.addData("Status", "Initializing...");
-
-        // Initialize test servos and buttons
-        try {
-            collectorArm = hardwareMap.get(Servo.class, "CollectorArm");
-            mid = hardwareMap.get(Servo.class, "Depmid");
-            low = hardwareMap.get(Servo.class, "Deplow");
-            tilt = hardwareMap.get(Servo.class, "Deptilt");
-            Globals.opmode = this;
-            in = Globals.input(this);
-            in.register("+", GAMEPAD.driver1, PAD_KEY.dpad_up);
-            in.register("-", GAMEPAD.driver1, PAD_KEY.dpad_down);
-        } catch (Exception e) {
-            telemetry.log().add("Could not find servo");
-            error = true;
-        }
 
         // Initialization status
         String status = "Ready";
@@ -93,23 +69,23 @@ public class ServoTester extends OpMode{
 
     @Override
     public void start() {
+        runtime.reset();
     }
 
     @Override
     public void loop() {
-        in.loop();
-        // Shows number of servoPos
-        telemetry.addData("Pos:", servoPos);
-        // Moving the servo position and number should increase
-        if (in.down("+")) {
-            servoPos += INCREMENT;
-            servoPos = Math.min(1.0f, servoPos);
-        } else if (in.down("-")) {  // Moving the servo position and number should decrease
-            servoPos -= INCREMENT;
-            servoPos = Math.max(0.0f, servoPos);
+        // Duck spinner
+        if (gamepad1.a) startRampTime1.reset();
+        timerRatio = Math.max(Math.min(startRampTime1.seconds() / duckRampTime, 1.0), 0);
+        if (timerRatio != 0.0 && timerRatio != 1.0) {
+            DUCK_POWER = duckPowerMin + timerRatio * (duckPowerMax - duckPowerMin);
+        } else {
+            DUCK_POWER = 0.0;
         }
-        // Set position of desired servo
-        collectorArm.setPosition(servoPos);
+        telemetry.addData("Timer Ratio:", timerRatio);
+        telemetry.addData("Runtime:", runtime.seconds());
+        telemetry.addData("Runtime:", startRampTime1.seconds());
+        telemetry.addData("Duck Power:", DUCK_POWER);
     }
 
     @Override

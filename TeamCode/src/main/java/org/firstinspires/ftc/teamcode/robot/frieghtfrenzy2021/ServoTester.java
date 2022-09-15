@@ -27,38 +27,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.robot;
+package org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.Globals;
+import org.firstinspires.ftc.teamcode.utils.gamepad.GAMEPAD;
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
-import org.firstinspires.ftc.teamcode.utils.momm.MultiOpModeManager;
-import org.firstinspires.ftc.teamcode.utils.general.OrderedEnum;
-import org.firstinspires.ftc.teamcode.utils.general.OrderedEnumHelper;
+import org.firstinspires.ftc.teamcode.utils.gamepad.PAD_KEY;
 
 @Config
-@Disabled
-@Autonomous(name = "ticksTest", group = "Test")
-public class ticksTest extends MultiOpModeManager {
+@TeleOp(name = "ServoPosTest", group = "Test")
+public class ServoTester extends OpMode{
     // Hardware
-    private NewNewDrive drive;
     private Servo collectorArm = null;
+    private Servo mid = null;
+    private Servo low = null;
+    private Servo tilt = null;
+    // Constants used for hardware
+    private static double COLLECTOR_UP = 0.37;
+    private static double COLLECTOR_DOWN = 0.9;
 
-    // Constants
-    public static double speedMin = 0.1;
-    public static double speedMax = 0.8;
-    public static double r = 16;
-    public static double arcLength = 16;
-    public static double angle = arcLength / Math.PI * 180.0 / r;
-    public static double COLLECTOR_UP = 0.53;
-    public static int num = 0;
-    public static int Distance = 30;
+    // Servo position test constants
+    private float servoPos = 0.5f;
+    private static final float INCREMENT = 0.01f;
 
     // Members
-    private AUTO_STATE state = AUTO_STATE.DONE;
+    private ElapsedTime runtime = new ElapsedTime();
     private InputHandler in;
 
     @Override
@@ -66,24 +65,18 @@ public class ticksTest extends MultiOpModeManager {
         boolean error = false;
         telemetry.addData("Status", "Initializing...");
 
-        try {
-            super.register(new NewNewDrive());
-
-            drive = new NewNewDrive();
-            super.register(drive);
-
-            in = Globals.input(this);
-
-            super.init();
-        } catch (Exception e) {
-            telemetry.log().add(String.valueOf(e));
-            error = true;
-        }
-
+        // Initialize test servos and buttons
         try {
             collectorArm = hardwareMap.get(Servo.class, "CollectorArm");
+            mid = hardwareMap.get(Servo.class, "Depmid");
+            low = hardwareMap.get(Servo.class, "Deplow");
+            tilt = hardwareMap.get(Servo.class, "Deptilt");
+            Globals.opmode = this;
+            in = Globals.input(this);
+            in.register("+", GAMEPAD.driver1, PAD_KEY.dpad_up);
+            in.register("-", GAMEPAD.driver1, PAD_KEY.dpad_down);
         } catch (Exception e) {
-            telemetry.log().add("Could not find collector");
+            telemetry.log().add("Could not find servo");
             error = true;
         }
 
@@ -93,56 +86,34 @@ public class ticksTest extends MultiOpModeManager {
             status = "Hardware Error";
         }
         telemetry.addData("Status", status);
-        drive.enableLogging();
     }
 
     @Override
     public void init_loop() {
-        super.init_loop();
     }
 
     @Override
     public void start() {
-        super.start();
-        num = 0;
-        drive.setDoneFalse();
-        state = AUTO_STATE.MOVE;
     }
 
     @Override
     public void loop() {
         in.loop();
-
-        // Step through the auto commands
-        switch (state) {
-            case MOVE:
-                drive.driveTo(Distance, speedMin, speedMax);
-                collectorArm.setPosition(COLLECTOR_UP);
-                if (drive.isDone() && !drive.isBusy()) {
-                    drive.setDoneFalse();
-                    state = state.next();
-                }
-                break;
-            // Stop processing
-            case DONE:
-                break;
+        // Shows number of servoPos
+        telemetry.addData("Pos:", servoPos);
+        // Moving the servo position and number should increase
+        if (in.down("+")) {
+            servoPos += INCREMENT;
+            servoPos = Math.min(1.0f, servoPos);
+        } else if (in.down("-")) {  // Moving the servo position and number should decrease
+            servoPos -= INCREMENT;
+            servoPos = Math.max(0.0f, servoPos);
         }
-
-        //log what state it currently is in
-        telemetry.addData("Auto Step: ", state);
+        // Set position of desired servo
+        collectorArm.setPosition(servoPos);
     }
 
     @Override
     public void stop() {
-        super.stop();
-    }
-
-    enum AUTO_STATE implements OrderedEnum {
-        MOVE,
-        DONE;
-
-        public ticksTest.AUTO_STATE next() {
-            return OrderedEnumHelper.next(this);
-        }
     }
 }
