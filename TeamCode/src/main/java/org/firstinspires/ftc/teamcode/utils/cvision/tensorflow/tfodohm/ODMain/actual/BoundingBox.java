@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.utils.cvision.tensorflow.tfodohm.ODMain.actual;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector2f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector2F;
 
 public class BoundingBox {
     private float top = 0,
@@ -89,8 +89,8 @@ public class BoundingBox {
      * Does as the method says.
      * @return
      */
-    public Vector2f getCenter(){
-        return new Vector2f((right + left) / 2, (top + bottom) / 2);
+    public DepreciatedVector2F getCenter(){
+        return new DepreciatedVector2F((right + left) / 2, (top + bottom) / 2);
     }
 
     /**
@@ -104,8 +104,8 @@ public class BoundingBox {
      * @param index
      * @return corner vector
      */
-    public Vector2f getCorner(int index){
-        Vector2f output = new Vector2f();
+    public DepreciatedVector2F getCorner(int index){
+        DepreciatedVector2F output = new DepreciatedVector2F();
 
         //prevents index from going out of bounds
         if ((index >= 0) && (index <= 3)) {

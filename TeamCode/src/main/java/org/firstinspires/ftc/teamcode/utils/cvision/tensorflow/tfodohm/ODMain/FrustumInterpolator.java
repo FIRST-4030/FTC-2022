@@ -1,47 +1,47 @@
 package org.firstinspires.ftc.teamcode.utils.cvision.tensorflow.tfodohm.ODMain;
 
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.matrices.Matrix4f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices.DepreciatedMatrix4f;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.Plane3f;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.MathEx;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector2f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector3f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector4f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector2F;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector3F;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector4F;
 
 /**
  * This class simulates the viewable space of a camera
  */
 public class FrustumInterpolator {
 
-    private Matrix4f imgToLocal; //camera matrix will be used to modify frustum coordinates in local space
-    private Matrix4f camRot;
+    private DepreciatedMatrix4f imgToLocal; //camera matrix will be used to modify frustum coordinates in local space
+    private DepreciatedMatrix4f camRot;
 
     private double hFOV, vFOV; //horizontal and vertical fov, important for calculating the frustum later
-    private Vector4f fplane_right = new Vector4f(),
-                     fplane_bottom = new Vector4f(),
-                     fplane_center = new Vector4f();
+    private DepreciatedVector4F fplane_right = new DepreciatedVector4F(),
+                     fplane_bottom = new DepreciatedVector4F(),
+                     fplane_center = new DepreciatedVector4F();
 
-    private Vector3f camPos = new Vector3f();
+    private DepreciatedVector3F camPos = new DepreciatedVector3F();
     private Plane3f cardinalAxisPlane = Plane3f.XZ_PLANE;
 
     //presets for listed cameras
     public static FrustumInterpolator Logitech_C270 = new FrustumInterpolator(MathEx.findFOV(3.58, 2.02, 4.11));
 
-    public FrustumInterpolator(double horizontal_fov, double vertical_fov, Matrix4f cam_rot, Vector3f cam_pos){
+    public FrustumInterpolator(double horizontal_fov, double vertical_fov, DepreciatedMatrix4f cam_rot, DepreciatedVector3F cam_pos){
         this.hFOV = horizontal_fov;
         this.vFOV = vertical_fov;
 
-        this.imgToLocal = new Matrix4f();
+        this.imgToLocal = new DepreciatedMatrix4f();
         this.camRot = cam_rot;
         this.camPos = cam_pos;
 
         this.setupFrustum();
     }
 
-    public FrustumInterpolator(double[] fov, Matrix4f cam_rot, Vector3f cam_pos){
+    public FrustumInterpolator(double[] fov, DepreciatedMatrix4f cam_rot, DepreciatedVector3F cam_pos){
         this.hFOV = fov[0];
         this.vFOV = fov[1];
 
-        this.imgToLocal = new Matrix4f();
+        this.imgToLocal = new DepreciatedMatrix4f();
         this.camRot = cam_rot;
         this.camPos = cam_pos;
 
@@ -52,9 +52,9 @@ public class FrustumInterpolator {
         this.hFOV = fov[0];
         this.vFOV = fov[1];
 
-        this.imgToLocal = new Matrix4f();
-        this.camRot = new Matrix4f(); //cam_rot;
-        this.camPos = new Vector3f(); //cam_pos;
+        this.imgToLocal = new DepreciatedMatrix4f();
+        this.camRot = new DepreciatedMatrix4f(); //cam_rot;
+        this.camPos = new DepreciatedVector3F(); //cam_pos;
 
         this.setupFrustum();
     }
@@ -76,11 +76,11 @@ public class FrustumInterpolator {
 
         this.fpr_ = fpr; this.fpb_ = fpb;
 
-        fplane_right = camRot.matMul(new Vector4f(fpr, 0, 0, 1));
-        fplane_bottom = camRot.matMul(new Vector4f(0, fpb, 0, 1));
-        fplane_center = camRot.matMul(new Vector4f(0, 0, fpDistance, 1));
+        fplane_right = camRot.matMul(new DepreciatedVector4F(fpr, 0, 0, 1));
+        fplane_bottom = camRot.matMul(new DepreciatedVector4F(0, fpb, 0, 1));
+        fplane_center = camRot.matMul(new DepreciatedVector4F(0, 0, fpDistance, 1));
 
-        imgToLocal = new Matrix4f(new float[]
+        imgToLocal = new DepreciatedMatrix4f(new float[]
                 {fplane_right.getX(), fplane_bottom.getX(), fplane_center.getX(), camPos.getX(),
                         fplane_right.getY(), fplane_bottom.getY(), fplane_center.getY(), camPos.getY(),
                         fplane_right.getZ(), fplane_bottom.getZ(), fplane_center.getZ(), camPos.getZ(),
@@ -93,9 +93,9 @@ public class FrustumInterpolator {
      * @param bb_pos
      * @return XZ & bb_pos intersection
      */
-    public Vector3f convertIMGCoord(Vector2f bb_pos){
-        Vector3f castedVector = this.imgToLocal.matMul(new Vector4f(bb_pos.getX(), bb_pos.getY(), 1, 1)).getAsVec3f();
-        Vector3f output = this.cardinalAxisPlane.getVector3fInt(camPos, castedVector);
+    public DepreciatedVector3F convertIMGCoord(DepreciatedVector2F bb_pos){
+        DepreciatedVector3F castedVector = this.imgToLocal.matMul(new DepreciatedVector4F(bb_pos.getX(), bb_pos.getY(), 1, 1)).getAsVec3f();
+        DepreciatedVector3F output = this.cardinalAxisPlane.getVector3fInt(camPos, castedVector);
         return output;
     }
 
@@ -104,8 +104,8 @@ public class FrustumInterpolator {
      * @param bb_pos
      * @return XZ & bb_pos intersection
      */
-    public Vector3f convertIMGCoord(Vector4f bb_pos){
-        Vector3f output = this.cardinalAxisPlane.getVector3fInt(camPos, this.imgToLocal.matMul(bb_pos).getAsVec3f());
+    public DepreciatedVector3F convertIMGCoord(DepreciatedVector4F bb_pos){
+        DepreciatedVector3F output = this.cardinalAxisPlane.getVector3fInt(camPos, this.imgToLocal.matMul(bb_pos).getAsVec3f());
         return output;
     }
 
@@ -118,21 +118,21 @@ public class FrustumInterpolator {
      * GETTERS AND SETTERS
      */
 
-    public void setCamRot(Matrix4f newRotation){
+    public void setCamRot(DepreciatedMatrix4f newRotation){
         this.camRot = newRotation;
         this.setupFrustum();
     }
 
-    public void setCamPos(Vector3f newPosition){
+    public void setCamPos(DepreciatedVector3F newPosition){
         this.camPos = newPosition;
         this.setupFrustum();
     }
 
-    public Matrix4f getImgToLocal() {
+    public DepreciatedMatrix4f getImgToLocal() {
         return imgToLocal;
     }
 
-    public Matrix4f getCamRot() {
+    public DepreciatedMatrix4f getCamRot() {
         return camRot;
     }
 
@@ -144,19 +144,19 @@ public class FrustumInterpolator {
         return vFOV;
     }
 
-    public Vector4f getFplane_right() {
+    public DepreciatedVector4F getFplane_right() {
         return fplane_right;
     }
 
-    public Vector4f getFplane_bottom() {
+    public DepreciatedVector4F getFplane_bottom() {
         return fplane_bottom;
     }
 
-    public Vector4f getFplane_center() {
+    public DepreciatedVector4F getFplane_center() {
         return fplane_center;
     }
 
-    public Vector3f getCamPos() {
+    public DepreciatedVector3F getCamPos() {
         return camPos;
     }
 

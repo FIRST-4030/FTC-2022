@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.utils.general.maths.misc;
 
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector2f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector3f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector4f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector2F;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector3F;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector4F;
 
 import java.util.ArrayList;
 
@@ -38,11 +38,11 @@ public class MathEx {
      * @param t
      * @return interpolated Vector2f
      */
-    public static Vector2f lerp(Vector2f a, Vector2f b, float t){
+    public static DepreciatedVector2F lerp(DepreciatedVector2F a, DepreciatedVector2F b, float t){
         float nX = a.getX() + (b.getX() - a.getX()) * t;
         float nY = a.getY() + (b.getY() - a.getY()) * t;
 
-        return new Vector2f(nX, nY);
+        return new DepreciatedVector2F(nX, nY);
     }
 
     /**
@@ -53,12 +53,12 @@ public class MathEx {
      * @param t
      * @return interpolated Vector3f
      */
-    public static Vector3f lerp(Vector3f a, Vector3f b, float t){
+    public static DepreciatedVector3F lerp(DepreciatedVector3F a, DepreciatedVector3F b, float t){
         float nX = a.getX() + (b.getX() - a.getX()) * t;
         float nY = a.getY() + (b.getY() - a.getY()) * t;
         float nZ = a.getZ() + (b.getZ() - a.getZ()) * t;
 
-        return new Vector3f(nX, nY, nZ);
+        return new DepreciatedVector3F(nX, nY, nZ);
     }
 
     /**
@@ -69,13 +69,13 @@ public class MathEx {
      * @param t
      * @return interpolated Vector4f
      */
-    public static Vector4f lerp(Vector4f a, Vector4f b, float t){
+    public static DepreciatedVector4F lerp(DepreciatedVector4F a, DepreciatedVector4F b, float t){
         float nX = a.getX() + (b.getX() - a.getX()) * t;
         float nY = a.getY() + (b.getY() - a.getY()) * t;
         float nZ = a.getZ() + (b.getZ() - a.getZ()) * t;
         float nW = a.getW() + (b.getW() - a.getW()) * t;
 
-        return new Vector4f(nX, nY, nZ, nW);
+        return new DepreciatedVector4F(nX, nY, nZ, nW);
     }
     /**
      * quick clamping solution. Clamps a value between a min and max
@@ -110,7 +110,7 @@ public class MathEx {
      * @param l4
      * @return new Vector3f(ix, iy, 1);
      */
-    public static Vector2f llInt2d(Vector2f l1, Vector2f l2, Vector2f l3, Vector2f l4){
+    public static DepreciatedVector2F llInt2d(DepreciatedVector2F l1, DepreciatedVector2F l2, DepreciatedVector2F l3, DepreciatedVector2F l4){
         float x1 = l1.getX();
         float x2 = l2.getX();
 
@@ -137,7 +137,7 @@ public class MathEx {
         float ix = quick2fArrDet(new float[]{e1, e2x, e3, e4}) / denominator;
         float iy = quick2fArrDet(new float[]{e1, e2y, e3, e4}) / denominator;
 
-        return new Vector2f(ix, iy);
+        return new DepreciatedVector2F(ix, iy);
     }
 
     /**
@@ -217,9 +217,9 @@ public class MathEx {
      * @param t
      * @return interpolated vector2f
      */
-    public static Vector2f bezierCurveGen(ArrayList<Vector2f> controlPoints, float t){
-        ArrayList<Vector2f> cachedPoints = controlPoints, newCachedPoints = new ArrayList<>();
-        Vector2f tempPoint = new Vector2f();
+    public static DepreciatedVector2F bezierCurveGen(ArrayList<DepreciatedVector2F> controlPoints, float t){
+        ArrayList<DepreciatedVector2F> cachedPoints = controlPoints, newCachedPoints = new ArrayList<>();
+        DepreciatedVector2F tempPoint = new DepreciatedVector2F();
 
         if (controlPoints.size() < 1){ return null;} //abort
         else if (controlPoints.size() == 1){return controlPoints.get(0);}
@@ -250,13 +250,13 @@ public class MathEx {
      * @param t
      * @return output
      */
-    public Vector2f bezierCurveQ(Vector2f begin, Vector2f control, Vector2f end, float t){
-        Vector2f p0p1Diff = Vector2f.sub(begin, control);
-        Vector2f p2p1Diff = Vector2f.sub(end, control);
+    public DepreciatedVector2F bezierCurveQ(DepreciatedVector2F begin, DepreciatedVector2F control, DepreciatedVector2F end, float t){
+        DepreciatedVector2F p0p1Diff = DepreciatedVector2F.sub(begin, control);
+        DepreciatedVector2F p2p1Diff = DepreciatedVector2F.sub(end, control);
         float t1Squared = (1 - t) * (1 - t);
         float tSquared = t * t;
 
-        Vector2f output = Vector2f.add(control, Vector2f.add(Vector2f.mul(p0p1Diff, t1Squared),Vector2f.mul(p2p1Diff, tSquared)));
+        DepreciatedVector2F output = DepreciatedVector2F.add(control, DepreciatedVector2F.add(DepreciatedVector2F.mul(p0p1Diff, t1Squared), DepreciatedVector2F.mul(p2p1Diff, tSquared)));
         return output;
     }
 
@@ -268,20 +268,20 @@ public class MathEx {
      * @param t
      * @return
      */
-    public Vector2f bezierCurveQD(Vector2f begin, Vector2f control, Vector2f end, float t){
-        Vector2f p1p0Diff = Vector2f.sub(begin, control);
-        Vector2f p2p1Diff = Vector2f.sub(end, control);
+    public DepreciatedVector2F bezierCurveQD(DepreciatedVector2F begin, DepreciatedVector2F control, DepreciatedVector2F end, float t){
+        DepreciatedVector2F p1p0Diff = DepreciatedVector2F.sub(begin, control);
+        DepreciatedVector2F p2p1Diff = DepreciatedVector2F.sub(end, control);
         float t1 = 2 * (1 - t);
 
-        Vector2f output = Vector2f.add(Vector2f.mul(p1p0Diff, t1), Vector2f.mul(p2p1Diff, 2 * t));
+        DepreciatedVector2F output = DepreciatedVector2F.add(DepreciatedVector2F.mul(p1p0Diff, t1), DepreciatedVector2F.mul(p2p1Diff, 2 * t));
         return output;
     }
 
 
-    public Vector2f[] bezierCurveQArray(Vector2f begin, Vector2f control, Vector2f end, int steps){
-        Vector2f p0p1Diff = Vector2f.sub(begin, control);
-        Vector2f p2p1Diff = Vector2f.sub(end, control);
-        Vector2f[] output = new Vector2f[steps];
+    public DepreciatedVector2F[] bezierCurveQArray(DepreciatedVector2F begin, DepreciatedVector2F control, DepreciatedVector2F end, int steps){
+        DepreciatedVector2F p0p1Diff = DepreciatedVector2F.sub(begin, control);
+        DepreciatedVector2F p2p1Diff = DepreciatedVector2F.sub(end, control);
+        DepreciatedVector2F[] output = new DepreciatedVector2F[steps];
 
         float incr = 1 / steps;
         float t = 0, t1Squared, tSquared;
@@ -290,7 +290,7 @@ public class MathEx {
             t1Squared = (1 - t) * (1 - t);
             tSquared = t * t;
 
-            output[i] = Vector2f.add(control, Vector2f.add(Vector2f.mul(p0p1Diff, t1Squared),Vector2f.mul(p2p1Diff, tSquared)));
+            output[i] = DepreciatedVector2F.add(control, DepreciatedVector2F.add(DepreciatedVector2F.mul(p0p1Diff, t1Squared), DepreciatedVector2F.mul(p2p1Diff, tSquared)));
 
             t += incr;
         }
@@ -305,26 +305,26 @@ public class MathEx {
      * @param target
      * @return
      */
-    public static double[] makeArcV1(Vector2f target){
-        Vector2f int2f = target;
-        Vector2f targetMid = Vector2f.mul(target, 0.5f);
+    public static double[] makeArcV1(DepreciatedVector2F target){
+        DepreciatedVector2F int2f = target;
+        DepreciatedVector2F targetMid = DepreciatedVector2F.mul(target, 0.5f);
 
         //get the direction that the point from (0,0)
-        Vector2f int2fDir = int2f.normalized();
+        DepreciatedVector2F int2fDir = int2f.normalized();
 
         //find the normals through the direction (both a 90 & 270 rotation of int2fDir)
-        Vector2f int2fNorm90 = new Vector2f(-int2fDir.getY(), int2fDir.getX());
-        Vector2f int2fNorm270 = new Vector2f(int2fDir.getY(), -int2fDir.getX());
+        DepreciatedVector2F int2fNorm90 = new DepreciatedVector2F(-int2fDir.getY(), int2fDir.getX());
+        DepreciatedVector2F int2fNorm270 = new DepreciatedVector2F(int2fDir.getY(), -int2fDir.getX());
 
         //compare the direction of the normals using the dot product
-        Vector2f closestToXAxis = int2fDir.getX() <= 0 ? (int2fDir.getY() >= 0 ? int2fNorm90 : int2fNorm270) : (int2fDir.getY() <= 0 ? int2fNorm90 : int2fNorm270);
+        DepreciatedVector2F closestToXAxis = int2fDir.getX() <= 0 ? (int2fDir.getY() >= 0 ? int2fNorm90 : int2fNorm270) : (int2fDir.getY() <= 0 ? int2fNorm90 : int2fNorm270);
         closestToXAxis.mul(1000);
         closestToXAxis.add(targetMid);
 
-        Vector2f output = MathEx.llInt2d(new Vector2f(int2f.length() * 1000, 0), new Vector2f(int2f.length() * -1000,0), closestToXAxis, targetMid);
+        DepreciatedVector2F output = MathEx.llInt2d(new DepreciatedVector2F(int2f.length() * 1000, 0), new DepreciatedVector2F(int2f.length() * -1000,0), closestToXAxis, targetMid);
 
         assert output != null;
-        Vector2f diff = Vector2f.sub(int2f, output);
+        DepreciatedVector2F diff = DepreciatedVector2F.sub(int2f, output);
 
         double angle = Math.atan2(diff.getY(), diff.getX());
 
@@ -339,7 +339,7 @@ public class MathEx {
      * @param target
      * @return
      */
-    public static float[] makeArcV2(Vector2f target){
+    public static float[] makeArcV2(DepreciatedVector2F target){
         double length = target.length();
         double alpha = Math.atan2(target.getX(), target.getY());
         double beta = (pi/2) - alpha;
@@ -349,7 +349,7 @@ public class MathEx {
         return new float[]{ (float) radius, (float) arcLen};
     }
 
-    public static float[] makeArcV3(Vector2f target){
+    public static float[] makeArcV3(DepreciatedVector2F target){
         double length = target.length();
         double sign = Math.signum(target.getX());
         double theta = Math.atan2(Math.abs(target.getY()), Math.abs(target.getX()));

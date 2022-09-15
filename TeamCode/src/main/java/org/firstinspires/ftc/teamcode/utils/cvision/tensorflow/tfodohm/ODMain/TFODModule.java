@@ -10,10 +10,10 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.matrices.Matrix4f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.matrices.Matrix4fBuilder;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector2f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector3f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices.DepreciatedMatrix4f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices.DepreciatedMatrix4fBuilder;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector2F;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector3F;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +42,10 @@ public class TFODModule extends OpMode {
     //Object detection stuff
     private boolean busy = false;
     private boolean debug = true;
-    private ArrayList<Vector2f> bbCenterCubeBall = new ArrayList<>();
-    private ArrayList<Vector2f> bbCenterDuck = new ArrayList<>();
-    private ArrayList<Vector2f> bbCenterMarker = new ArrayList<>();
-    private Vector2f error_vector = new Vector2f(217456,202302);
+    private ArrayList<DepreciatedVector2F> bbCenterCubeBall = new ArrayList<>();
+    private ArrayList<DepreciatedVector2F> bbCenterDuck = new ArrayList<>();
+    private ArrayList<DepreciatedVector2F> bbCenterMarker = new ArrayList<>();
+    private DepreciatedVector2F error_vector = new DepreciatedVector2F(217456,202302);
     private int cLSCubeBall = 0, cLSDuck = 0, cLSMarker = 0, tLS = 0;
     private String telemetryStringCache = "";
     private CameraLens camera = new CameraLens(CameraLens.C270_FOV);
@@ -55,14 +55,14 @@ public class TFODModule extends OpMode {
      */
     public TFODModule(){
         //default these values
-        camera.setTranslation(new Vector3f(0, 0, 0));
-        camera.setRotation(new Matrix4f());
+        camera.setTranslation(new DepreciatedVector3F(0, 0, 0));
+        camera.setRotation(new DepreciatedMatrix4f());
     }
 
     /**
      * After calling this class, init() after setting variables
      */
-    public TFODModule(Vector3f camPosition, Matrix4f camRotation){
+    public TFODModule(DepreciatedVector3F camPosition, DepreciatedMatrix4f camRotation){
         camera.setTranslation(camPosition);
         camera.setRotation(camRotation);
     }
@@ -133,7 +133,7 @@ public class TFODModule extends OpMode {
     public void scan(){
         busy = true;
         String currentLabel;
-        Vector2f center = new Vector2f(), tLeft = new Vector2f(), bRight = new Vector2f();
+        DepreciatedVector2F center = new DepreciatedVector2F(), tLeft = new DepreciatedVector2F(), bRight = new DepreciatedVector2F();
 
         if (tfod != null) {
             bbCenterCubeBall.clear(); //clear
@@ -178,7 +178,7 @@ public class TFODModule extends OpMode {
      * Sort for Cubes & Balls (the closest to the center)
      * @return Vector2f bbCoordinate
      */
-    public Vector2f sortCBBB(){
+    public DepreciatedVector2F sortCBBB(){
         if (tfod != null) {
             busy = true;
             int storedIndex = 0;
@@ -209,7 +209,7 @@ public class TFODModule extends OpMode {
      * Sort for Ducks (the closest to the center)
      * @return Vector2f bbCoordinate
      */
-    public Vector2f sortDBB(){
+    public DepreciatedVector2F sortDBB(){
         if (tfod != null) {
             busy = true;
             int storedIndex = 0;
@@ -240,7 +240,7 @@ public class TFODModule extends OpMode {
      * Sort for Markers (the closest to the center)
      * @return Vector2f bbCoordinate
      */
-    public Vector2f sortMBB(){
+    public DepreciatedVector2F sortMBB(){
         if (tfod != null) {
             busy = true;
             int storedIndex = 0;
@@ -274,11 +274,11 @@ public class TFODModule extends OpMode {
      * @param state
      * @return
      */
-    public Vector2f sortBB(int state){
+    public DepreciatedVector2F sortBB(int state){
         if (tfod != null) {
             busy = true;
             int cLS;
-            ArrayList<Vector2f> bbCenterList;
+            ArrayList<DepreciatedVector2F> bbCenterList;
 
             switch (state) {
                 default:
@@ -325,11 +325,11 @@ public class TFODModule extends OpMode {
      * @param bbCoordinate
      * @return
      */
-    public Vector3f calcCoordinate(Vector2f bbCoordinate){
+    public DepreciatedVector3F calcCoordinate(DepreciatedVector2F bbCoordinate){
         if (bbCoordinate != error_vector) {
             return camera.findImgToLocal(bbCoordinate);
         }
-        return new Vector3f(0,0,0);
+        return new DepreciatedVector3F(0,0,0);
     }
 
     /**
@@ -385,9 +385,9 @@ public class TFODModule extends OpMode {
             tfod.setZoom(1.0, 16.0/9.0);
         }
 
-        Matrix4f lensRot = Matrix4f.matMul(Matrix4f.matMul(Matrix4fBuilder.buildRotY(-188) ,Matrix4fBuilder.buildRotX(-50)), Matrix4fBuilder.buildRotZ(180));
+        DepreciatedMatrix4f lensRot = DepreciatedMatrix4f.matMul(DepreciatedMatrix4f.matMul(DepreciatedMatrix4fBuilder.buildRotY(-188) , DepreciatedMatrix4fBuilder.buildRotX(-50)), DepreciatedMatrix4fBuilder.buildRotZ(180));
 
-        camera.setTranslation(new Vector3f(4.1f, 16.2f, -7.2f));
+        camera.setTranslation(new DepreciatedVector3F(4.1f, 16.2f, -7.2f));
         camera.setRotation(lensRot);
 
         telemetry.log().add("Vuforia Class Null? "+ vuforia == null ? "Yes" : "No");

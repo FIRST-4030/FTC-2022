@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.utils.general.maths.misc;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.utils.general.maths.misc.MathEx;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector2f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector3f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector4f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.VectorImpl;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector2F;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector3F;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector4F;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVectorImpl;
 
 //reference this video: https://youtu.be/KPoeNZZ6H4s
 
@@ -27,7 +25,7 @@ public class SecondOrderDynamics {
      * @param react
      * @param start
      */
-    public SecondOrderDynamics(double freq, double zeta, double react, VectorImpl start){
+    public SecondOrderDynamics(double freq, double zeta, double react, DepreciatedVectorImpl start){
 
         if (freq == 0) throw new IllegalArgumentException("The frequency must not be zero! Inputted: " + freq);
 
@@ -42,7 +40,7 @@ public class SecondOrderDynamics {
         this.output_derivative = null;
     }
 
-    public VectorImpl update(float timestep, VectorImpl input, VectorImpl inputDerivative){
+    public DepreciatedVectorImpl update(float timestep, DepreciatedVectorImpl input, DepreciatedVectorImpl inputDerivative){
         float[] in = input.getAsList();
         float[] inD;
         int iterations = (int) Math.ceil(timestep / t_crit);
@@ -65,14 +63,14 @@ public class SecondOrderDynamics {
         return vectorize(in);
     }
 
-    private VectorImpl vectorize(float[] fa){
+    private DepreciatedVectorImpl vectorize(float[] fa){
         switch (fa.length){
             case 2:
-                return new Vector2f(fa);
+                return new DepreciatedVector2F(fa);
             case 3:
-                return new Vector3f(fa);
+                return new DepreciatedVector3F(fa);
             case 4:
-                return new Vector4f(fa);
+                return new DepreciatedVector4F(fa);
             default:
                 return null;
         }

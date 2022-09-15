@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.misc.practice.controls;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector2f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector2F;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,7 +21,7 @@ public class ControllerHandler {
     }
 
     private ConcurrentHashMap<String, Boolean> button_map = new ConcurrentHashMap<>();
-    private Vector2f left_stick, right_stick;
+    private DepreciatedVector2F left_stick, right_stick;
 
     public ControllerHandler(Gamepad gamepad){
         Field[] gamepadFields = gamepad.getClass().getDeclaredFields();
@@ -31,7 +31,7 @@ public class ControllerHandler {
             }
         }
 
-        left_stick = new Vector2f();
-        right_stick = new Vector2f();
+        left_stick = new DepreciatedVector2F();
+        right_stick = new DepreciatedVector2F();
     }
 }

@@ -4,11 +4,11 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.utils.cvision.tensorflow.tfodohm.ODMain.TFODModule;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.matrices.Matrix4f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.matrices.Matrix4fBuilder;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices.DepreciatedMatrix4f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices.DepreciatedMatrix4fBuilder;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.MathEx;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector2f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector3f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector2F;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector3F;
 import org.firstinspires.ftc.teamcode.utils.momm.MultiOpModeManager;
 import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.NewNewDrive;
 import org.firstinspires.ftc.teamcode.utils.general.OrderedEnum;
@@ -23,8 +23,8 @@ public class TFDriveTest extends MultiOpModeManager {
     private AUTO_STATE state = AUTO_STATE.DONE;
     private AUTO_STATE oldState = AUTO_STATE.DONE;
 
-    private final Vector3f camera_pos = new Vector3f(5.5f, 15.5f, -7.5f);
-    private final Matrix4f camera_rot = Matrix4fBuilder.buildGenRot(-53, -185, 2);
+    private final DepreciatedVector3F camera_pos = new DepreciatedVector3F(5.5f, 15.5f, -7.5f);
+    private final DepreciatedMatrix4f camera_rot = DepreciatedMatrix4fBuilder.buildGenRot(-53, -185, 2);
 
     @Override
     public void init() {
@@ -51,7 +51,7 @@ public class TFDriveTest extends MultiOpModeManager {
         telemetry.addData("Vuforia Null? ", tfodModule.getVuforia() == null ? "Yes" : "No");
         telemetry.addData("IMU Null? ", drive.getImu() == null ? "Yes" : "No");
 
-        telemetry.log().add(tfodModule.calcCoordinate(new Vector2f(0,0)).toString());
+        telemetry.log().add(tfodModule.calcCoordinate(new DepreciatedVector2F(0,0)).toString());
     }
 
     @Override
@@ -68,8 +68,8 @@ public class TFDriveTest extends MultiOpModeManager {
 
     //Variables needed for looping
     private boolean scanned = false, sorted = false, calculated = false, startedMove = false, reversingMove = false;
-    private Vector2f tempV2, target;
-    private Vector3f targetPreCasted;
+    private DepreciatedVector2F tempV2, target;
+    private DepreciatedVector3F targetPreCasted;
     private double storedRadius, storedArcLength;
     private boolean inIMG = false;
 
@@ -119,7 +119,7 @@ public class TFDriveTest extends MultiOpModeManager {
                 calculated = false;
                 startedMove = false;
                 reversingMove = false;
-                target = new Vector2f(targetPreCasted.getX(), targetPreCasted.getZ());
+                target = new DepreciatedVector2F(targetPreCasted.getX(), targetPreCasted.getZ());
                 double[] f = MathEx.makeArcV1(target);
                 storedRadius = f[0];
                 storedArcLength = f[1];

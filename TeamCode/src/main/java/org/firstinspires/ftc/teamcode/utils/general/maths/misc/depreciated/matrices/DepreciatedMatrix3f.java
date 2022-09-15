@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.utils.general.maths.transforms.matrices;
+package org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices;
 
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector3f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector3F;
 
 import java.io.IOException;
 /*
@@ -8,17 +8,17 @@ import java.io.IOException;
 [3, 4, 5]
 [6, 7, 8]
 */
-public class Matrix3f {
+public class DepreciatedMatrix3f {
 
     private float[] m;
 
-    public Matrix3f(){
+    public DepreciatedMatrix3f(){
         m = new float[]{1.0f, 0.0f, 0.0f,
                         0.0f, 1.0f, 0.0f,
                         0.0f, 0.0f, 1.0f};
     }
 
-    public Matrix3f(float[] newMatrix) {
+    public DepreciatedMatrix3f(float[] newMatrix) {
         if (newMatrix.length == 9){
             m = newMatrix;
         } else {
@@ -27,7 +27,7 @@ public class Matrix3f {
         }
     }
     /*********************************************************************************/
-    public void add(Matrix3f b){
+    public void add(DepreciatedMatrix3f b){
         for (int i = 0; i < 9; i++){
             this.m[i] += b.m[i];
         }
@@ -39,33 +39,33 @@ public class Matrix3f {
         }
     }
 
-    public Vector3f matMul(Vector3f a){
+    public DepreciatedVector3F matMul(DepreciatedVector3F a){
         float nx = a.x * this.m[0] + a.y * this.m[1] + a.z * this.m[2];
         float ny = a.x * this.m[3] + a.y * this.m[4] + a.z * this.m[5];
         float nz = a.x * this.m[6] + a.y * this.m[7] + a.z * this.m[8];
 
-        return new Vector3f(nx, ny, nz);
+        return new DepreciatedVector3F(nx, ny, nz);
     }
     /*********************************************************************************/
-    public static Matrix3f add(Matrix3f a, Matrix3f b){
+    public static DepreciatedMatrix3f add(DepreciatedMatrix3f a, DepreciatedMatrix3f b){
         float[] newMat = new float[9];
         for (int i = 0; i < 9; i++){
             newMat[i] = a.m[i] + b.m[i];
         }
 
-        return new Matrix3f(newMat);
+        return new DepreciatedMatrix3f(newMat);
     }
 
-    public static Matrix3f mul(Matrix3f a, float b){
+    public static DepreciatedMatrix3f mul(DepreciatedMatrix3f a, float b){
         float[] newMat = new float[9];
         for (int i = 0; i < 9; i++){
             newMat[i] = a.m[i] * b;
         }
 
-        return new Matrix3f(newMat);
+        return new DepreciatedMatrix3f(newMat);
     }
 
-    public static Matrix3f matMul(Matrix3f a, Matrix3f b){
+    public static DepreciatedMatrix3f matMul(DepreciatedMatrix3f a, DepreciatedMatrix3f b){
         float[][] cols = new float[][] {b.getCol(0), b.getCol(1), b.getCol(2)};
         float[][] rows = new float[][] {a.getRow(0), a.getRow(1), a.getRow(2)};
         float[] output = new float[9];
@@ -76,7 +76,7 @@ public class Matrix3f {
             output[2 + i * 3] = cols[2][0] * rows[i][0] + cols[2][1] * rows[i][1] + cols[2][2] * rows[i][2];
         }
 
-        return new Matrix3f(output);
+        return new DepreciatedMatrix3f(output);
     }
     /*********************************************************************************/
     public float det(){
@@ -196,14 +196,14 @@ public class Matrix3f {
         return this.m;
     }
 
-    public Matrix3f getAsTranspose(){
-        return new Matrix3f(new float[]
+    public DepreciatedMatrix3f getAsTranspose(){
+        return new DepreciatedMatrix3f(new float[]
                 {m[0], m[3], m[6],
                  m[1], m[4], m[7],
                  m[2], m[5], m[8]});
     }
 
-    public Matrix3f getAsInversion(){
+    public DepreciatedMatrix3f getAsInversion(){
 
         if (this.det() == 0){
             System.out.println("Inverse doesn't exist! for: " + this.toString());
@@ -227,7 +227,7 @@ public class Matrix3f {
             cofactor_mat[i] *= det_inv;
         }
 
-        return new Matrix3f(cofactor_mat);
+        return new DepreciatedMatrix3f(cofactor_mat);
     }
     /*********************************************************************************/
     @Override

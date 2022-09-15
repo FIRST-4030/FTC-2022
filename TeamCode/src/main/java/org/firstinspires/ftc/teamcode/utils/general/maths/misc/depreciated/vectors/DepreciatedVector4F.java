@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors;
+package org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors;
 
 import java.io.IOException;
 
-public class Vector4f implements VectorImpl {
-    public static final Vector4f instance = new Vector4f(0, 0, 0, 0);
+public class DepreciatedVector4F implements DepreciatedVectorImpl {
+    public static final DepreciatedVector4F instance = new DepreciatedVector4F(0, 0, 0, 0);
     public float x, y, z, w;
 
-    public Vector4f(){
+    public DepreciatedVector4F(){
         x = 0; y = 0; z = 0; w = 1;
     }
 
-    public Vector4f(float[] list){
+    public DepreciatedVector4F(float[] list){
         if (list.length == 4){
             x = list[0]; y = list[1]; z = list[2]; w = list[3];
         } else {
@@ -19,14 +19,14 @@ public class Vector4f implements VectorImpl {
         }
     }
 
-    public Vector4f(float x, float y, float z){
+    public DepreciatedVector4F(float x, float y, float z){
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = 1;
     }
 
-    public Vector4f(float x, float y, float z, float w){
+    public DepreciatedVector4F(float x, float y, float z, float w){
         this.x = x;
         this.y = y;
         this.z = z;
@@ -77,25 +77,25 @@ public class Vector4f implements VectorImpl {
         this.w /= length;
     }
 
-    public Vector4f normalized(){
+    public DepreciatedVector4F normalized(){
         float length = this.length();
         float nx = this.x, ny = this.y,  nz = this.z,  nw = this.w;
         nx /= length;
         ny /= length;
         nz /= length;
         nw /= length;
-        return new Vector4f(nx, ny, nz, nw);
+        return new DepreciatedVector4F(nx, ny, nz, nw);
     }
 
 
-    public void add(Vector4f b){
+    public void add(DepreciatedVector4F b){
         this.x += b.x;
         this.y += b.y;
         this.z += b.z;
         this.w += b.w;
     }
 
-    public void sub(Vector4f b){
+    public void sub(DepreciatedVector4F b){
         this.x -= b.x;
         this.y -= b.y;
         this.z -= b.z;
@@ -116,32 +116,32 @@ public class Vector4f implements VectorImpl {
         this.w /= b;
     }
 
-    public float dot(Vector4f b){
+    public float dot(DepreciatedVector4F b){
         return this.x * b.x + this.y * b.y + this.z * b.z;
     }
 
-    public static Vector4f add(Vector4f a, Vector4f b){
-        return new Vector4f(a.x + b.x ,a.y + b.y, a.z + b.z, a.w + b.w);
+    public static DepreciatedVector4F add(DepreciatedVector4F a, DepreciatedVector4F b){
+        return new DepreciatedVector4F(a.x + b.x ,a.y + b.y, a.z + b.z, a.w + b.w);
     }
 
-    public static Vector4f sub(Vector4f a, Vector4f b){
-        return new Vector4f(a.x - b.x ,a.y - b.y, a.z - b.z, a.w - b.w);
+    public static DepreciatedVector4F sub(DepreciatedVector4F a, DepreciatedVector4F b){
+        return new DepreciatedVector4F(a.x - b.x ,a.y - b.y, a.z - b.z, a.w - b.w);
     }
 
-    public static Vector4f mul(Vector4f a, float b){
-        return new Vector4f(a.x * b, a.y * b, a.z * b, a.w * b);
+    public static DepreciatedVector4F mul(DepreciatedVector4F a, float b){
+        return new DepreciatedVector4F(a.x * b, a.y * b, a.z * b, a.w * b);
     }
 
-    public static Vector4f div(Vector4f a, float b){
-        return new Vector4f(a.x / b, a.y / b, a.z / b, a.w / b);
+    public static DepreciatedVector4F div(DepreciatedVector4F a, float b){
+        return new DepreciatedVector4F(a.x / b, a.y / b, a.z / b, a.w / b);
     }
 
-    public static float dot(Vector4f a, Vector4f b){
+    public static float dot(DepreciatedVector4F a, DepreciatedVector4F b){
         return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
     }
 
-    public Vector3f getAsVec3f(){
-        return new Vector3f(this.x, this.y, this.z);
+    public DepreciatedVector3F getAsVec3f(){
+        return new DepreciatedVector3F(this.x, this.y, this.z);
     }
 
     @Override

@@ -10,10 +10,10 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.matrices.Matrix4f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.matrices.Matrix4fBuilder;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector2f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector3f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices.DepreciatedMatrix4f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices.DepreciatedMatrix4fBuilder;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector2F;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector3F;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,19 +64,19 @@ public class TFODMain extends OpMode {
     private int objsListSize = 0;
     private HashMap<String, Boolean> objHMDetected;
     private ArrayList<Float> bbLeft = null, bbRight = null, bbTop = null, bbBottom = null; //coordinates for debugging
-    private ArrayList<Vector2f> bbTopLeft = null, bbBottomRight = null; //in the NDC standard for graphics
-    private ArrayList<Vector2f> bbMarkerTL = null, bbMarkerBR = null;
-    private Vector3f bbLocalPos = new Vector3f();
+    private ArrayList<DepreciatedVector2F> bbTopLeft = null, bbBottomRight = null; //in the NDC standard for graphics
+    private ArrayList<DepreciatedVector2F> bbMarkerTL = null, bbMarkerBR = null;
+    private DepreciatedVector3F bbLocalPos = new DepreciatedVector3F();
 
     //object to describe the camera frustum
     private FrustumInterpolator l270;
     //camera attributes (with testing defaults)
-    private Vector3f lensLocalPos = new Vector3f(4.1f, 6.2f, -7.2f);
-    private Matrix4f lensLocalRotation = Matrix4f.matMul(Matrix4f.matMul(Matrix4fBuilder.buildRotY(-8) ,Matrix4fBuilder.buildRotX(-45)), Matrix4fBuilder.buildRotZ(180));
+    private DepreciatedVector3F lensLocalPos = new DepreciatedVector3F(4.1f, 6.2f, -7.2f);
+    private DepreciatedMatrix4f lensLocalRotation = DepreciatedMatrix4f.matMul(DepreciatedMatrix4f.matMul(DepreciatedMatrix4fBuilder.buildRotY(-8) , DepreciatedMatrix4fBuilder.buildRotX(-45)), DepreciatedMatrix4fBuilder.buildRotZ(180));
 
     public TFODMain(){init();}
 
-    public TFODMain(Vector3f camLensLocalPos, Matrix4f camLensLocalRotation){
+    public TFODMain(DepreciatedVector3F camLensLocalPos, DepreciatedMatrix4f camLensLocalRotation){
         lensLocalPos = camLensLocalPos;
         lensLocalRotation = camLensLocalRotation;
         init();
@@ -149,7 +149,7 @@ public class TFODMain extends OpMode {
     @Override
     public void loop() {
         scan();
-        Vector2f bb = sortBB();
+        DepreciatedVector2F bb = sortBB();
         if (bb.getY() != -2) {
             bbLocalPos = l270.convertIMGCoord(bb);
         }
@@ -225,8 +225,8 @@ public class TFODMain extends OpMode {
                         bbRight.add(recognition.getRight());
                         bbBottom.add(recognition.getBottom());
 
-                        Vector2f normalizedTL = new Vector2f(recognition.getLeft() / imgWidth * 2 - 1, recognition.getTop() / imgHeight * 2 - 1);
-                        Vector2f normalizedBR = new Vector2f(recognition.getRight() / imgWidth * 2 - 1, recognition.getBottom() / imgHeight * 2 - 1);
+                        DepreciatedVector2F normalizedTL = new DepreciatedVector2F(recognition.getLeft() / imgWidth * 2 - 1, recognition.getTop() / imgHeight * 2 - 1);
+                        DepreciatedVector2F normalizedBR = new DepreciatedVector2F(recognition.getRight() / imgWidth * 2 - 1, recognition.getBottom() / imgHeight * 2 - 1);
 
 
                         //identify the recognized object, sets the detection status for all of them
@@ -268,14 +268,14 @@ public class TFODMain extends OpMode {
      * Calculates the center of the bounding boxes and find which are the closest to the center of screen space
      * @return closest Vector2f to the center of the image
      */
-    public Vector2f sortBB(){
+    public DepreciatedVector2F sortBB(){
         isBusy = true;
         //check for null pointers because those are always sneaky
         if ((bbTopLeft.size() != 0 && bbTopLeft != null) && (bbBottomRight.size() != 0 && bbBottomRight != null)){
 
             int loop_len = Math.min(bbTopLeft.size(), bbBottomRight.size()); //you can't guarantee the sizes are going to be the same, so as a precaution, I threw this here to prevent IndexOutOfArrayBounds exceptions
             float previous_len = 2; //length from the center, plus we are working in NDC space so the bounds for both x and y are between -1 & 1
-            Vector2f temp_tl, temp_br, center, closest = new Vector2f(0, 0); //allocate mem to these objects so I don't have to repeat the creation of an object in the for loop; also instantiate closest just in case somehow one of the elements is null
+            DepreciatedVector2F temp_tl, temp_br, center, closest = new DepreciatedVector2F(0, 0); //allocate mem to these objects so I don't have to repeat the creation of an object in the for loop; also instantiate closest just in case somehow one of the elements is null
 
             for (int i = 0; i < loop_len; i++){
                 //store the Vector2f gotten from the arraylist to avoid accidental mutation
@@ -285,7 +285,7 @@ public class TFODMain extends OpMode {
                 //check for null element, but this is probably redundant
                 if (temp_tl != null && temp_br != null) {
                     //find the center of the bounding box
-                    center = Vector2f.add(temp_tl, temp_br);
+                    center = DepreciatedVector2F.add(temp_tl, temp_br);
                     center.div(2);
 
                     //if center length is amazing and closest to the center, we overwrite closest and previous_len with center and center.length() respectively
@@ -301,13 +301,13 @@ public class TFODMain extends OpMode {
         }
 
         isBusy = false;
-        return new Vector2f(0, -2); //if we can't find the nearest, return a vector out of bounds
+        return new DepreciatedVector2F(0, -2); //if we can't find the nearest, return a vector out of bounds
     }
 
     public void calculateBBPos(){
         isBusy = true;
         scan();
-        Vector2f bb = sortBB();
+        DepreciatedVector2F bb = sortBB();
         if (bb.getY() == -2) {
             bbLocalPos = l270.convertIMGCoord(bb);
         }
@@ -319,31 +319,31 @@ public class TFODMain extends OpMode {
         markerToLocalSpace(null ,null, 15);
     }
 
-    public Vector2f markerToLocalSpace(Vector2f a, Vector2f b, float offset){
+    public DepreciatedVector2F markerToLocalSpace(DepreciatedVector2F a, DepreciatedVector2F b, float offset){
         isBusy = true;
         //get the line direction from (b - a) normalized
-        Vector2f lineDir = Vector2f.sub(b, a).normalized();
-        Vector2f lineNormal = new Vector2f(-lineDir.getY(), lineDir.getX());
+        DepreciatedVector2F lineDir = DepreciatedVector2F.sub(b, a).normalized();
+        DepreciatedVector2F lineNormal = new DepreciatedVector2F(-lineDir.getY(), lineDir.getX());
 
         //rotate by 90 to get vector normal of the line
-        Vector2f m = lineNormal;
+        DepreciatedVector2F m = lineNormal;
 
         //multiply it by offset to indicate how far the start position is from the marker
         m.mul(offset);
 
         //position vector m relative to the line AB
-        m.add(Vector2f.div(Vector2f.add(a, b), 2));
+        m.add(DepreciatedVector2F.div(DepreciatedVector2F.add(a, b), 2));
 
         //flip m
         m.mul(-1);
 
         //calculate the projection of the origin to the normals of vector m and flip it to get projected position
-        float kh = -1 * Vector2f.dot(lineDir, m);
-        float kv = -1 * Vector2f.dot(lineNormal, m);
+        float kh = -1 * DepreciatedVector2F.dot(lineDir, m);
+        float kv = -1 * DepreciatedVector2F.dot(lineNormal, m);
 
         isBusy = false;
         //use projection as actual positions
-        return new Vector2f(kh, kv);
+        return new DepreciatedVector2F(kh, kv);
     }
 
 
@@ -433,7 +433,7 @@ public class TFODMain extends OpMode {
         return isBusy;
     }
 
-    public Vector3f getBBToLocal(){
+    public DepreciatedVector3F getBBToLocal(){
         return this.bbLocalPos;
     }
 }

@@ -1,24 +1,24 @@
-package org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors;
+package org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import java.io.IOException;
 
-public class Vector2f implements VectorImpl {
-    public static final Vector2f instance = new Vector2f(0, 0);
+public class DepreciatedVector2F implements DepreciatedVectorImpl {
+    public static final DepreciatedVector2F instance = new DepreciatedVector2F(0, 0);
     public float x, y;
 
-    public Vector2f(){
+    public DepreciatedVector2F(){
         this.x = 0;
         this.y = 0;
     }
 
-    public Vector2f(float x, float y){
+    public DepreciatedVector2F(float x, float y){
         this.x = x;
         this.y = y;
     }
 
-    public Vector2f(float[] list){
+    public DepreciatedVector2F(float[] list){
         if (list.length == 2) {
             this.x = list[0];
             this.y = list[1];
@@ -50,19 +50,19 @@ public class Vector2f implements VectorImpl {
         this.y /= l;
     }
 
-    public Vector2f normalized(){
+    public DepreciatedVector2F normalized(){
         float l = this.length();
         float nx = this.x / l;
         float ny = this.y / l;
-        return new Vector2f(nx, ny);
+        return new DepreciatedVector2F(nx, ny);
     }
 
-    public void add(Vector2f b){
+    public void add(DepreciatedVector2F b){
         this.x += b.x;
         this.y += b.y;
     }
 
-    public void sub(Vector2f b){
+    public void sub(DepreciatedVector2F b){
         this.x -= b.x;
         this.y -= b.y;
     }
@@ -77,27 +77,27 @@ public class Vector2f implements VectorImpl {
         this.y /= b;
     }
 
-    public float dot(Vector2f b){
+    public float dot(DepreciatedVector2F b){
         return this.x * b.x + this.y * b.y;
     }
 
-    public static Vector2f add(Vector2f a, Vector2f b){
-        return new Vector2f(a.x + b.x ,a.y + b.y);
+    public static DepreciatedVector2F add(DepreciatedVector2F a, DepreciatedVector2F b){
+        return new DepreciatedVector2F(a.x + b.x ,a.y + b.y);
     }
 
-    public static Vector2f sub(Vector2f a, Vector2f b){
-        return new Vector2f(a.x - b.x ,a.y - b.y);
+    public static DepreciatedVector2F sub(DepreciatedVector2F a, DepreciatedVector2F b){
+        return new DepreciatedVector2F(a.x - b.x ,a.y - b.y);
     }
 
-    public static Vector2f mul(Vector2f a, float b){
-        return new Vector2f(a.x * b, a.y * b);
+    public static DepreciatedVector2F mul(DepreciatedVector2F a, float b){
+        return new DepreciatedVector2F(a.x * b, a.y * b);
     }
 
-    public static Vector2f div(Vector2f a, float b){
-        return new Vector2f(a.x / b, a.y / b);
+    public static DepreciatedVector2F div(DepreciatedVector2F a, float b){
+        return new DepreciatedVector2F(a.x / b, a.y / b);
     }
 
-    public static float dot(Vector2f a, Vector2f b){
+    public static float dot(DepreciatedVector2F a, DepreciatedVector2F b){
         return a.x * b.x + a.y * b.y;
     }
 

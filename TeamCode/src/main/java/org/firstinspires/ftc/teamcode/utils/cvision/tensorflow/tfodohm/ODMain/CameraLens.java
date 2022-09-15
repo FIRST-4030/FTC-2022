@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.utils.cvision.tensorflow.tfodohm.ODMain;
 
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.matrices.Matrix4f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices.DepreciatedMatrix4f;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.Plane3f;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.MathEx;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector2f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector3f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector4f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector2F;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector3F;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector4F;
 
 public class CameraLens {
     //For the isBusy() method
@@ -17,16 +17,16 @@ public class CameraLens {
     private final Plane3f xzPlane = Plane3f.XZ_PLANE; //define the plane for clipping the Camera Position to Calculated Vector 
 
     //NDC Img Attributes
-    private Vector4f imgRight = new Vector4f(1, 0, 0, 1);
-    private Vector4f imgBottom = new Vector4f(0, 1, 0, 1);
-    private Vector4f imgCenter = new Vector4f(0, 0, 1, 1);
+    private DepreciatedVector4F imgRight = new DepreciatedVector4F(1, 0, 0, 1);
+    private DepreciatedVector4F imgBottom = new DepreciatedVector4F(0, 1, 0, 1);
+    private DepreciatedVector4F imgCenter = new DepreciatedVector4F(0, 0, 1, 1);
 
     //Describing transforms, most importantly, the rotation and translation
-    private Matrix4f rotation = new Matrix4f();
-    private Vector3f translation = new Vector3f();
+    private DepreciatedMatrix4f rotation = new DepreciatedMatrix4f();
+    private DepreciatedVector3F translation = new DepreciatedVector3F();
 
     //Final output Matrix4f
-    private Matrix4f imgToLocal = new Matrix4f();
+    private DepreciatedMatrix4f imgToLocal = new DepreciatedMatrix4f();
 
     //Preset FOV value for the listed cameras (only the C270)
     public static final double[] C270_FOV = MathEx.findFOV(3.58, 2.02, 4.11);
@@ -36,7 +36,7 @@ public class CameraLens {
         this.vFOV = fov[1];
     }
 
-    public CameraLens(double[] fov, Vector3f lensPos, Matrix4f lensRot){
+    public CameraLens(double[] fov, DepreciatedVector3F lensPos, DepreciatedMatrix4f lensRot){
         this.hFOV = fov[0];
         this.vFOV = fov[1];
 
@@ -66,7 +66,7 @@ public class CameraLens {
         this.imgCenter = this.rotation.matMul(this.imgCenter);
 
         //using a property of Matrices (columns bending the x, y, z... space)
-        this.imgToLocal = new Matrix4f(
+        this.imgToLocal = new DepreciatedMatrix4f(
                 new float[]{this.imgRight.getX(), this.imgBottom.getX(), this.imgCenter.getX(), this.translation.getX(),
                             this.imgRight.getY(), this.imgBottom.getY(), this.imgCenter.getY(), this.translation.getY(),
                             this.imgRight.getZ(), this.imgBottom.getZ(), this.imgCenter.getZ(), this.translation.getZ(),
@@ -76,28 +76,28 @@ public class CameraLens {
         busy = false;
     }
 
-    public Vector3f findImgToLocal(Vector2f imgCoordinate){
+    public DepreciatedVector3F findImgToLocal(DepreciatedVector2F imgCoordinate){
         busy = true;
-        Vector3f preClippedVector = imgToLocal.matMul(new Vector4f(imgCoordinate.getX(), imgCoordinate.getY(), 1, 1)).getAsVec3f();
-        Vector3f output = this.xzPlane.getVector3fInt(this.translation, preClippedVector);
+        DepreciatedVector3F preClippedVector = imgToLocal.matMul(new DepreciatedVector4F(imgCoordinate.getX(), imgCoordinate.getY(), 1, 1)).getAsVec3f();
+        DepreciatedVector3F output = this.xzPlane.getVector3fInt(this.translation, preClippedVector);
         busy = false;
         return output;
     }
 
-    public Vector3f findImgToLocal(float imgX, float imgY){
+    public DepreciatedVector3F findImgToLocal(float imgX, float imgY){
         busy = true;
-        Vector3f preClippedVector = imgToLocal.matMul(new Vector4f(imgX, imgY, 1, 1)).getAsVec3f();
-        Vector3f output = this.xzPlane.getVector3fInt(this.translation, preClippedVector);
+        DepreciatedVector3F preClippedVector = imgToLocal.matMul(new DepreciatedVector4F(imgX, imgY, 1, 1)).getAsVec3f();
+        DepreciatedVector3F output = this.xzPlane.getVector3fInt(this.translation, preClippedVector);
         busy = false;
         return output;
     }
 
-    public void setTranslation(Vector3f newPosition){
+    public void setTranslation(DepreciatedVector3F newPosition){
         this.translation = newPosition;
         this.setupCameraMatrix();
     }
 
-    public void setRotation(Matrix4f newRotation){
+    public void setRotation(DepreciatedMatrix4f newRotation){
         this.rotation = newRotation;
         this.setupCameraMatrix();
     }
@@ -114,19 +114,19 @@ public class CameraLens {
         return this.vFOV;
     }
 
-    public Vector3f getTranslation(){
+    public DepreciatedVector3F getTranslation(){
         return this.translation;
     }
 
-    public Vector4f getImgRight(){
+    public DepreciatedVector4F getImgRight(){
         return this.imgRight;
     }
 
-    public Vector4f getImgBottom(){
+    public DepreciatedVector4F getImgBottom(){
         return this.imgBottom;
     }
 
-    public Vector4f getImgCenter(){
+    public DepreciatedVector4F getImgCenter(){
         return this.imgCenter;
     }
 
@@ -134,11 +134,11 @@ public class CameraLens {
         return this.xzPlane;
     }
 
-    public Matrix4f getRotation(){
+    public DepreciatedMatrix4f getRotation(){
         return this.rotation;
     }
 
-    public Matrix4f getImgToLocal(){
+    public DepreciatedMatrix4f getImgToLocal(){
         return this.imgToLocal;
     }
 
@@ -168,11 +168,11 @@ public class CameraLens {
             C_R_BC_BR
         }
 
-        private Vector3f TL, TC, TR,
+        private DepreciatedVector3F TL, TC, TR,
                           L,  C,  R,
                          BL, BC, BR;
 
-        private Vector3f topX1, topX2, botX1, botX2;
+        private DepreciatedVector3F topX1, topX2, botX1, botX2;
 
         private LERP_SCHEMA schema;
 
@@ -180,10 +180,10 @@ public class CameraLens {
             initVector2fs();
         }
 
-        public Vector3f calcImgToLocal(float imgX, float imgY){
-            Vector3f output = new Vector3f();
-            Vector3f topY = new Vector3f();
-            Vector3f botY = new Vector3f();
+        public DepreciatedVector3F calcImgToLocal(float imgX, float imgY){
+            DepreciatedVector3F output = new DepreciatedVector3F();
+            DepreciatedVector3F topY = new DepreciatedVector3F();
+            DepreciatedVector3F botY = new DepreciatedVector3F();
 
             switch (this.schema){
                 case TC_TL_C_L:
@@ -205,25 +205,25 @@ public class CameraLens {
 
         private void initVector2fs(){
             //init top Vec2fs
-            TL = new Vector3f();
-            TC = new Vector3f();
-            TR = new Vector3f();
+            TL = new DepreciatedVector3F();
+            TC = new DepreciatedVector3F();
+            TR = new DepreciatedVector3F();
 
             //init mid Vec2fs
-            L = new Vector3f();
-            C = new Vector3f();
-            R = new Vector3f();
+            L = new DepreciatedVector3F();
+            C = new DepreciatedVector3F();
+            R = new DepreciatedVector3F();
 
             //init bot Vec2fs
-            BL = new Vector3f();
-            BC = new Vector3f();
-            BR = new Vector3f();
+            BL = new DepreciatedVector3F();
+            BC = new DepreciatedVector3F();
+            BR = new DepreciatedVector3F();
 
             //init lerp vectors
-            topX1 = new Vector3f();
-            topX2 = new Vector3f();
-            botX1 = new Vector3f();
-            botX2 = new Vector3f();
+            topX1 = new DepreciatedVector3F();
+            topX2 = new DepreciatedVector3F();
+            botX1 = new DepreciatedVector3F();
+            botX2 = new DepreciatedVector3F();
         }
 
         public void setSchema(LERP_SCHEMA newSchema){
@@ -262,83 +262,83 @@ public class CameraLens {
             }
         }
 
-        public Vector3f getTL() {
+        public DepreciatedVector3F getTL() {
             return TL;
         }
 
-        public void setTL(Vector3f TL) {
+        public void setTL(DepreciatedVector3F TL) {
             this.TL = TL;
             updateVectors();
         }
 
-        public Vector3f getTC() {
+        public DepreciatedVector3F getTC() {
             return TC;
         }
 
-        public void setTC(Vector3f TC) {
+        public void setTC(DepreciatedVector3F TC) {
             this.TC = TC;
             updateVectors();
         }
 
-        public Vector3f getTR() {
+        public DepreciatedVector3F getTR() {
             return TR;
         }
 
-        public void setTR(Vector3f TR) {
+        public void setTR(DepreciatedVector3F TR) {
             this.TR = TR;
             updateVectors();
         }
 
-        public Vector3f getL() {
+        public DepreciatedVector3F getL() {
             return L;
         }
 
-        public void setL(Vector3f l) {
+        public void setL(DepreciatedVector3F l) {
             L = l;
             updateVectors();
         }
 
-        public Vector3f getC() {
+        public DepreciatedVector3F getC() {
             return C;
         }
 
-        public void setC(Vector3f c) {
+        public void setC(DepreciatedVector3F c) {
             C = c;
             updateVectors();
         }
 
-        public Vector3f getR() {
+        public DepreciatedVector3F getR() {
             return R;
         }
 
-        public void setR(Vector3f r) {
+        public void setR(DepreciatedVector3F r) {
             R = r;
             updateVectors();
         }
 
-        public Vector3f getBL() {
+        public DepreciatedVector3F getBL() {
             return BL;
         }
 
-        public void setBL(Vector3f BL) {
+        public void setBL(DepreciatedVector3F BL) {
             this.BL = BL;
             updateVectors();
         }
 
-        public Vector3f getBC() {
+        public DepreciatedVector3F getBC() {
             return BC;
         }
 
-        public void setBC(Vector3f BC) {
+        public void setBC(DepreciatedVector3F BC) {
             this.BC = BC;
             updateVectors();
         }
 
-        public Vector3f getBR() {
+        public DepreciatedVector3F getBR() {
             return BR;
         }
 
-        public void setBR(Vector3f BR) {
+        public void setBR(DepreciatedVector3F BR) {
             this.BR = BR;
             updateVectors();
         }

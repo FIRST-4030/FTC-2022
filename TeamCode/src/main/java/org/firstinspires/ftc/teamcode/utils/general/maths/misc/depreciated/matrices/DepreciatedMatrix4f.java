@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode.utils.general.maths.transforms.matrices;
+package org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices;
 
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.MathEx;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector4f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector4F;
 
 import java.io.IOException;
 
@@ -11,18 +11,18 @@ import java.io.IOException;
 [8,  9,10,11]
 [12,13,14,15]
 */
-public class Matrix4f {
+public class DepreciatedMatrix4f {
 
     private float[] m;
 
-    public Matrix4f(){
+    public DepreciatedMatrix4f(){
         m = new float[] {1.0f, 0.0f, 0.0f, 0.0f,
                          0.0f, 1.0f, 0.0f, 0.0f,
                          0.0f, 0.0f, 1.0f, 0.0f,
                          0.0f, 0.0f, 0.0f, 1.0f};
     }
 
-    public Matrix4f(float[] newMatrix){
+    public DepreciatedMatrix4f(float[] newMatrix){
         if (newMatrix.length == 16){
             m = newMatrix;
         } else {
@@ -31,7 +31,7 @@ public class Matrix4f {
         }
     }
     /*********************************************************************************/
-    public void add(Matrix4f b){
+    public void add(DepreciatedMatrix4f b){
         for (int i = 0; i < 16; i++){
             this.m[i] += b.m[i];
         }
@@ -43,33 +43,33 @@ public class Matrix4f {
         }
     }
 
-    public Vector4f matMul(Vector4f a){
+    public DepreciatedVector4F matMul(DepreciatedVector4F a){
         float nx = a.x * m[0] +  a.y * m[1] +  a.z * m[2] +  a.w * m[3];
         float ny = a.x * m[4] +  a.y * m[5] +  a.z * m[6] +  a.w * m[7];
         float nz = a.x * m[8] +  a.y * m[9] +  a.z * m[10] + a.w * m[11];
         float nw = a.x * m[12] + a.y * m[12] + a.z * m[13] + a.w * m[14];
-        return new Vector4f(nx, ny, nz, nw);
+        return new DepreciatedVector4F(nx, ny, nz, nw);
     }
     /*********************************************************************************/
-    public static Matrix3f add(Matrix4f a, Matrix4f b){
+    public static DepreciatedMatrix3f add(DepreciatedMatrix4f a, DepreciatedMatrix4f b){
         float[] newMat = new float[16];
         for (int i = 0; i < 9; i++){
             newMat[i] = a.m[i] + b.m[i];
         }
 
-        return new Matrix3f(newMat);
+        return new DepreciatedMatrix3f(newMat);
     }
 
-    public static Matrix3f mul(Matrix4f a, float b){
+    public static DepreciatedMatrix3f mul(DepreciatedMatrix4f a, float b){
         float[] newMat = new float[16];
         for (int i = 0; i < 9; i++){
             newMat[i] = a.m[i] * b;
         }
 
-        return new Matrix3f(newMat);
+        return new DepreciatedMatrix3f(newMat);
     }
 
-    public static Matrix4f matMul(Matrix4f a, Matrix4f b){
+    public static DepreciatedMatrix4f matMul(DepreciatedMatrix4f a, DepreciatedMatrix4f b){
         float[][] cols = new float[][] {b.getCol(0), b.getCol(1), b.getCol(2), b.getCol(3)};
         float[][] rows = new float[][] {a.getRow(0), a.getRow(1), a.getRow(2), a.getRow(3)};
         float[] output = new float[16];
@@ -81,7 +81,7 @@ public class Matrix4f {
             output[3 + i * 4] = cols[3][0] * rows[i][0] + cols[3][1] * rows[i][1] + cols[3][2] * rows[i][2] + cols[3][3] * rows[i][3];
         }
 
-        return new Matrix4f(output);
+        return new DepreciatedMatrix4f(output);
     }
     /*********************************************************************************/
 
@@ -144,15 +144,15 @@ public class Matrix4f {
 
     public float[] getAsFloatArray() {return this.m;}
 
-    public Matrix4f getAsTranspose(){
-        return new Matrix4f(new float[]
+    public DepreciatedMatrix4f getAsTranspose(){
+        return new DepreciatedMatrix4f(new float[]
                 {m[0], m[4], m[8],  m[12],
                  m[1], m[5], m[9],  m[13],
                  m[2], m[6], m[10], m[14],
                  m[3], m[7], m[11], m[15],});
     }
 
-    public Matrix4f getAsInversion(){
+    public DepreciatedMatrix4f getAsInversion(){
         if (this.det() == 0){return null;}
         float det_inv = 1 / this.det();
 
@@ -165,7 +165,7 @@ public class Matrix4f {
             cofactor_mat[i] *= det_inv;
         }
 
-        return new Matrix4f(cofactor_mat);
+        return new DepreciatedMatrix4f(cofactor_mat);
     }
     /*********************************************************************************/
     @Override

@@ -1,23 +1,23 @@
-package org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors;
+package org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors;
 
 import java.io.IOException;
 
-public class Vector3f implements VectorImpl {
+public class DepreciatedVector3F implements DepreciatedVectorImpl {
     public float x, y, z;
 
-    public Vector3f(){
+    public DepreciatedVector3F(){
         this.x = 0;
         this.y = 0;
         this.z = 1;
     }
 
-    public Vector3f(float x, float y, float z){
+    public DepreciatedVector3F(float x, float y, float z){
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public Vector3f(float[] list){
+    public DepreciatedVector3F(float[] list){
         if (list.length == 3) {
             this.x = list[0];
             this.y = list[1];
@@ -57,21 +57,21 @@ public class Vector3f implements VectorImpl {
         this.z /= l;
     }
 
-    public Vector3f normalized(){
+    public DepreciatedVector3F normalized(){
         float l = this.length();
         float nx = this.x / l;
         float ny = this.y / l;
         float nz = this.z / l;
-        return new Vector3f(nx, ny, nz);
+        return new DepreciatedVector3F(nx, ny, nz);
     }
 
-    public void add(Vector3f b){
+    public void add(DepreciatedVector3F b){
         this.x += b.x;
         this.y += b.y;
         this.z += b.z;
     }
 
-    public void sub(Vector3f b){
+    public void sub(DepreciatedVector3F b){
         this.x -= b.x;
         this.y -= b.y;
         this.z -= b.z;
@@ -89,27 +89,27 @@ public class Vector3f implements VectorImpl {
         this.z /= b;
     }
 
-    public float dot(Vector3f b){
+    public float dot(DepreciatedVector3F b){
         return this.x * b.x + this.y * b.y + this.z * b.z;
     }
 
-    public static Vector3f add(Vector3f a, Vector3f b){
-        return new Vector3f(a.x + b.x ,a.y + b.y, a.z + b.z);
+    public static DepreciatedVector3F add(DepreciatedVector3F a, DepreciatedVector3F b){
+        return new DepreciatedVector3F(a.x + b.x ,a.y + b.y, a.z + b.z);
     }
 
-    public static Vector3f sub(Vector3f a, Vector3f b){
-        return new Vector3f(a.x - b.x ,a.y - b.y, a.z - b.z);
+    public static DepreciatedVector3F sub(DepreciatedVector3F a, DepreciatedVector3F b){
+        return new DepreciatedVector3F(a.x - b.x ,a.y - b.y, a.z - b.z);
     }
 
-    public static Vector3f mul(Vector3f a, float b){
-        return new Vector3f(a.x * b, a.y * b, a.z * b);
+    public static DepreciatedVector3F mul(DepreciatedVector3F a, float b){
+        return new DepreciatedVector3F(a.x * b, a.y * b, a.z * b);
     }
 
-    public static Vector3f div(Vector3f a, float b){
-        return new Vector3f(a.x / b, a.y / b, a.z / b);
+    public static DepreciatedVector3F div(DepreciatedVector3F a, float b){
+        return new DepreciatedVector3F(a.x / b, a.y / b, a.z / b);
     }
 
-    public static float dot(Vector3f a, Vector3f b){
+    public static float dot(DepreciatedVector3F a, DepreciatedVector3F b){
         return a.x * b.x + a.y * b.y + a.z * b.z;
     }
 

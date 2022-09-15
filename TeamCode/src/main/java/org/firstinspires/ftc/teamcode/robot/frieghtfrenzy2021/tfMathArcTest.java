@@ -36,9 +36,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.NewNewDrive;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.MathEx;
-import org.firstinspires.ftc.teamcode.utils.general.maths.transforms.vectors.Vector2f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector2F;
 import org.firstinspires.ftc.teamcode.utils.momm.MultiOpModeManager;
 import org.firstinspires.ftc.teamcode.utils.general.OrderedEnum;
 import org.firstinspires.ftc.teamcode.utils.general.OrderedEnumHelper;
@@ -125,9 +124,9 @@ public class tfMathArcTest extends MultiOpModeManager {
     @Override
     public void loop() {
 
-        Vector2f targetVector;
+        DepreciatedVector2F targetVector;
 
-        targetVector = new Vector2f(arrayX[5], arrayY[5]);
+        targetVector = new DepreciatedVector2F(arrayX[5], arrayY[5]);
 
         double[] f = MathEx.makeArcV1(targetVector);
 
