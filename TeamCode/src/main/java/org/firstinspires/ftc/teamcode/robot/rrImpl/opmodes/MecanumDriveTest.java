@@ -5,9 +5,11 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 
 @Config
 @Autonomous(name="RRIMPLMecanumTest", group="Test")
@@ -17,6 +19,8 @@ public class MecanumDriveTest extends OpMode {
     DcMotor motorBackLeft;
     DcMotor motorFrontRight;
     DcMotor motorBackRight;
+
+    ColorRangeSensor RCR1;
     //drive
     public static SampleMecanumDrive drive;
 
@@ -33,6 +37,8 @@ public class MecanumDriveTest extends OpMode {
         motorBackLeft = hardwareMap.get(DcMotor.class,"BL");
         motorFrontRight = hardwareMap.get(DcMotor.class,"FR");
         motorBackRight = hardwareMap.get(DcMotor.class,"BR");
+
+        RCR1 = hardwareMap.get(ColorRangeSensor.class, "CS");
     }
 
     @Override
@@ -66,5 +72,9 @@ public class MecanumDriveTest extends OpMode {
         motorBackLeft.setPower(backLeftPower);
         motorFrontRight.setPower(-frontRightPower);
         motorBackRight.setPower(backRightPower);
+
+        telemetry.addData("Blue", RCR1.blue());
+        telemetry.addData("Red", RCR1.red());
+        telemetry.addData("Green", RCR1.green());
     }
 }
