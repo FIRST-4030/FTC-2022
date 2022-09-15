@@ -9,7 +9,9 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.MecanumMovementFactory;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 
 @Config
@@ -20,6 +22,7 @@ public class MecanumDriveTest extends OpMode {
     DcMotor motorBackLeft;
     DcMotor motorFrontRight;
     DcMotor motorBackRight;
+    MecanumMovementFactory MFac;
 
     RevColorRange RCR1;
     //drive
@@ -38,7 +41,8 @@ public class MecanumDriveTest extends OpMode {
         motorBackLeft = hardwareMap.get(DcMotor.class,"BL");
         motorFrontRight = hardwareMap.get(DcMotor.class,"FR");
         motorBackRight = hardwareMap.get(DcMotor.class,"BR");
-
+        MFac = new MecanumMovementFactory(hardwareMap, 1, 1.1, 1);
+        MFac.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
         RCR1 = new RevColorRange(hardwareMap, telemetry, "CS");
     }
 
@@ -63,6 +67,7 @@ public class MecanumDriveTest extends OpMode {
         double y = -gamepad1.left_stick_x * 0.5;
         double rx = -gamepad1.right_stick_x * 0.25;
 
+        /*
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx) / denominator;
         double backLeftPower = ( y - x - rx) / denominator;
@@ -74,6 +79,10 @@ public class MecanumDriveTest extends OpMode {
         motorFrontRight.setPower(-frontRightPower);
         motorBackRight.setPower(backRightPower);
 
+
+         */
+
+        MFac.update(new Vector3d(y, x, rx));
         NormalizedRGBA colorOutput = RCR1.color();
         telemetry.addData("Color Sensor output: \nR: " + colorOutput.red +
                                                        "\nG: " + colorOutput.green +
