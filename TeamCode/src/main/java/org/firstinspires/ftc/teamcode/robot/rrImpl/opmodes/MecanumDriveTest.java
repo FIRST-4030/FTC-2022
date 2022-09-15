@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
@@ -20,7 +21,7 @@ public class MecanumDriveTest extends OpMode {
     DcMotor motorFrontRight;
     DcMotor motorBackRight;
 
-    ColorRangeSensor RCR1;
+    RevColorRange RCR1;
     //drive
     public static SampleMecanumDrive drive;
 
@@ -38,7 +39,7 @@ public class MecanumDriveTest extends OpMode {
         motorFrontRight = hardwareMap.get(DcMotor.class,"FR");
         motorBackRight = hardwareMap.get(DcMotor.class,"BR");
 
-        RCR1 = hardwareMap.get(ColorRangeSensor.class, "CS");
+        RCR1 = new RevColorRange(hardwareMap, telemetry, "CS");
     }
 
     @Override
@@ -73,8 +74,10 @@ public class MecanumDriveTest extends OpMode {
         motorFrontRight.setPower(-frontRightPower);
         motorBackRight.setPower(backRightPower);
 
-        telemetry.addData("Blue", RCR1.blue());
-        telemetry.addData("Red", RCR1.red());
-        telemetry.addData("Green", RCR1.green());
+        NormalizedRGBA colorOutput = RCR1.color();
+        telemetry.addData("Color Sensor output: \nR: " + colorOutput.red +
+                                                       "\nG: " + colorOutput.green +
+                                                       "\nB: " + colorOutput.blue +
+                                                       "\nA: " + colorOutput.alpha, "");
     }
 }
