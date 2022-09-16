@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.utils.cvision.tensorflow.tfodohm.ODMain;
 
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices.DepreciatedMatrix4f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.misc.Plane3f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.DepreciatedPlane3f;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.MathEx;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector2F;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector3F;
@@ -21,7 +21,7 @@ public class FrustumInterpolator {
                      fplane_center = new DepreciatedVector4F();
 
     private DepreciatedVector3F camPos = new DepreciatedVector3F();
-    private Plane3f cardinalAxisPlane = Plane3f.XZ_PLANE;
+    private DepreciatedPlane3f cardinalAxisPlane = DepreciatedPlane3f.XZ_PLANE;
 
     //presets for listed cameras
     public static FrustumInterpolator Logitech_C270 = new FrustumInterpolator(MathEx.findFOV(3.58, 2.02, 4.11));
@@ -160,7 +160,7 @@ public class FrustumInterpolator {
         return camPos;
     }
 
-    public Plane3f getCardinalAxisPlane() {
+    public DepreciatedPlane3f getCardinalAxisPlane() {
         return cardinalAxisPlane;
     }
 }

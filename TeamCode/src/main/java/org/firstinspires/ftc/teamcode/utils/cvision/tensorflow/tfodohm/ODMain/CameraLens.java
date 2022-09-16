@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.utils.cvision.tensorflow.tfodohm.ODMain;
 
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices.DepreciatedMatrix4f;
-import org.firstinspires.ftc.teamcode.utils.general.maths.misc.Plane3f;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.DepreciatedPlane3f;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.MathEx;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector2F;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector3F;
@@ -14,7 +14,7 @@ public class CameraLens {
     //Camera Attributes
     private double hFOV = 1, vFOV = 1; //initialize with default values in just in case
     private final double zFar = 1000; //set the far plane/ will stretch the Z coordinate
-    private final Plane3f xzPlane = Plane3f.XZ_PLANE; //define the plane for clipping the Camera Position to Calculated Vector 
+    private final DepreciatedPlane3f xzPlane = DepreciatedPlane3f.XZ_PLANE; //define the plane for clipping the Camera Position to Calculated Vector
 
     //NDC Img Attributes
     private DepreciatedVector4F imgRight = new DepreciatedVector4F(1, 0, 0, 1);
@@ -130,7 +130,7 @@ public class CameraLens {
         return this.imgCenter;
     }
 
-    public Plane3f getXZPlane(){
+    public DepreciatedPlane3f getXZPlane(){
         return this.xzPlane;
     }
 
