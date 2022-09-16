@@ -29,7 +29,7 @@ public class MecanumDriveTest extends OpMode {
     public static SampleMecanumDrive drive;
 
     //poses
-    public static Pose2d startingPose = new Pose2d( 0, 0 );
+    public static Pose2d startingPose = new Pose2d( 0, 0);
 
     @Override
     public void init() {
@@ -41,7 +41,8 @@ public class MecanumDriveTest extends OpMode {
         motorBackLeft = hardwareMap.get(DcMotor.class,"BL");
         motorFrontRight = hardwareMap.get(DcMotor.class,"FR");
         motorBackRight = hardwareMap.get(DcMotor.class,"BR");
-        MFac = new MecanumMovementFactory(hardwareMap, 1, 1.1, 1);
+        double coefficientFactor = 1;
+        MFac = new MecanumMovementFactory(hardwareMap, 0.8 * coefficientFactor, 0.6 * coefficientFactor, 0.4 * coefficientFactor);
         MFac.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
         RCR1 = new RevColorRange(hardwareMap, telemetry, "CS");
     }
@@ -63,9 +64,9 @@ public class MecanumDriveTest extends OpMode {
 
          */
 
-        double x = gamepad1.left_stick_y * 0.6;
-        double y = -gamepad1.left_stick_x * 0.5;
-        double rx = -gamepad1.right_stick_x * 0.25;
+        double x = gamepad1.left_stick_y;
+        double y = -gamepad1.left_stick_x;
+        double rx = -gamepad1.right_stick_x;
 
         /*
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
@@ -82,11 +83,13 @@ public class MecanumDriveTest extends OpMode {
 
          */
 
-        MFac.update(new Vector3d(y, x, rx));
+        MFac.update(new Vector3d(y, x, rx), true);
         NormalizedRGBA colorOutput = RCR1.color();
         telemetry.addData("Color Sensor output: \nR: " + colorOutput.red +
                                                        "\nG: " + colorOutput.green +
                                                        "\nB: " + colorOutput.blue +
                                                        "\nA: " + colorOutput.alpha, "");
+
+        telemetry.addData("Output vector: ", MFac.out.toString());
     }
 }

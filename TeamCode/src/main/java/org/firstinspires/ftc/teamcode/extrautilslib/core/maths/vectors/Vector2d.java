@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors;
 
-import com.icaras84.extrautilslib.core.maths.vectors.EULVector;
-
 public class Vector2d implements EULVector<Vector2d> {
 
     public static Vector2d

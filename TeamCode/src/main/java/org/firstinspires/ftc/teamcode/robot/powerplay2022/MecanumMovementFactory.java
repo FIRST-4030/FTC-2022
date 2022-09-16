@@ -5,6 +5,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix4d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector4d;
@@ -20,13 +25,15 @@ public class MecanumMovementFactory {
     private HashMap<String, DcMotor> motorMap;
     private Matrix4d mecanumPowerRatioMatrix;
     private double forwardBackMovt, strafeMovt, turnMovt;
+    public Vector4d out;
 
     public MecanumMovementFactory(HardwareMap hardwareMap, double forwardBackCoefficient, double strafingCoefficient, double turnCoefficient){
         this.hardwareMap = hardwareMap;
         initIMU(hardwareMap);
 
         motorMap = new HashMap<>();
-        double normalizer = Math.max(Math.abs(forwardBackCoefficient) + Math.abs(strafingCoefficient) + Math.abs(turnCoefficient), 1);
+        //double normalizer = Math.max(Math.abs(forwardBackCoefficient) + Math.abs(strafingCoefficient) + Math.abs(turnCoefficient), 1);
+        double normalizer = 1;
         forwardBackMovt = forwardBackCoefficient / normalizer;
         strafeMovt = strafingCoefficient / normalizer;
         turnMovt = turnCoefficient / normalizer;
@@ -45,14 +52,38 @@ public class MecanumMovementFactory {
         Objects.requireNonNull(motorMap.get("BL")).setDirection(reverseBL ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
         Objects.requireNonNull(motorMap.get("BR")).setDirection(reverseBR ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
 
+        motorMap.get("FL").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorMap.get("FL").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorMap.get("FL").setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+        motorMap.get("FR").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorMap.get("FR").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorMap.get("FR").setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+        motorMap.get("BL").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorMap.get("BL").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorMap.get("BL").setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+        motorMap.get("BR").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorMap.get("BR").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorMap.get("BR").setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+
+
     }
 
-    public void update(Vector3d control){
+    public void update(Vector3d control, boolean fieldCentric){
         //create Vector4d 'in' from the passed in Vector3d(forward, strafe, turn)'s x, y, z, and an arbitrary w value
         //divide the input by the ratio found by max(|forward| + |strafe| + |turn|, 1)
-        Vector3d weighedControl = new Vector3d(control.x * forwardBackMovt, control.y * strafeMovt, control.z * turnMovt);
-        Vector4d in = (new Vector4d(weighedControl.x, weighedControl.y, weighedControl.z, 0)).div(Math.max(Math.abs(weighedControl.x) + Math.abs(weighedControl.y) + Math.abs(weighedControl.z), 1));
-        Vector4d out = mecanumPowerRatioMatrix.times(in);
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        Matrix3d rot = fieldCentric ? Matrix3d.makeAffineRotation(-angles.firstAngle) : new Matrix3d();
+        Vector3d weighedControl = rot.times(new Vector3d(control.x * forwardBackMovt, control.y * strafeMovt, control.z * turnMovt));
+        Vector4d in = (new Vector4d(weighedControl.x, weighedControl.y, weighedControl.z, 0));
+        out = mecanumPowerRatioMatrix.times(in).div(Math.max(Math.abs(weighedControl.x) + Math.abs(weighedControl.y) + Math.abs(weighedControl.z), 1));
 
         //set the motor powers as referenced in the hashmap
         Objects.requireNonNull(motorMap.get("FL")).setPower(out.x);
@@ -65,7 +96,7 @@ public class MecanumMovementFactory {
         //set up IMU parameters for basic angle tracking
         BNO055IMU.Parameters imuParams = new BNO055IMU.Parameters();
         imuParams.mode = BNO055IMU.SensorMode.IMU;
-        imuParams.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imuParams.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imuParams.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         imuParams.loggingEnabled = false;
 
