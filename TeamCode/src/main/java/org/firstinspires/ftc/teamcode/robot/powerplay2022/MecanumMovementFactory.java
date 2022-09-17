@@ -4,10 +4,12 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.sun.tools.javac.util.Pair;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
@@ -21,6 +23,8 @@ import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined
 
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Stack;
+import java.util.Vector;
 
 public class MecanumMovementFactory {
 
@@ -34,6 +38,11 @@ public class MecanumMovementFactory {
     private double acceptableError = 0.05;
     private Position recordedPos = new Position();
     public Vector4d out;
+    public AccelIntegratorSemiImplicitEuler sme;
+    public boolean isDone;
+    public double elapsed_time;
+    public Stack<Pair<String, Double>> cmdStack;
+    public Vector<Pair<String, Double>> cmdCache;
 
     public MecanumMovementFactory(HardwareMap hardwareMap, double forwardBackCoefficient, double strafingCoefficient, double turnCoefficient){
         this.hardwareMap = hardwareMap;
@@ -46,6 +55,8 @@ public class MecanumMovementFactory {
         strafeMovt = strafingCoefficient / normalizer;
         turnMovt = turnCoefficient / normalizer;
         initMatrix();
+
+        initCMD();
     }
 
     public void mapMotors(String frontLeft, boolean reverseFL, String backLeft, boolean reverseBL, String frontRight, boolean reverseFR, String backRight, boolean reverseBR){
@@ -104,6 +115,10 @@ public class MecanumMovementFactory {
         update(modulation, true);
     }
 
+    public Position getPos(){
+        return imu.getPosition();
+    }
+
     public boolean alignX(Vector2d input){
 
         Position currentPos = imu.getPosition();
@@ -145,8 +160,9 @@ public class MecanumMovementFactory {
     }
 
     private void calcPos(Vector2d target){
+        sme.update(imu.getLinearAcceleration());
         Vector2d delta = new Vector2d();
-        Position integratedPos = imu.getPosition();
+        Position integratedPos = sme.getPosition();
 
         integratedPos.x -= recordedPos.x;
         integratedPos.y -= recordedPos.y;
@@ -162,19 +178,97 @@ public class MecanumMovementFactory {
 
     }
 
+    public void forward(double t){
+        cmdCache.add(new Pair<>("forward", t));
+    }
+    public void back(double t){
+        cmdCache.add(new Pair<>("back", t));
+    }
+    public void left(double t){
+        cmdCache.add(new Pair<>("left", t));
+    }
+    public void right(double t){
+        cmdCache.add(new Pair<>("right", t));
+    }
+    public void turnLeft(double t){
+        cmdCache.add(new Pair<>("turnLeft", t));
+    }
+    public void turnRight(double t){
+        cmdCache.add(new Pair<>("turnRight", t));
+    }
+    public void sit(double t){
+        cmdCache.add(new Pair<>("sit", t));
+    }
+    public void build(){
+        int length = cmdCache.size();
+
+        for(int i = 0; i < length; i++){
+            cmdStack.push(cmdCache.get(length - i - 1));
+        }
+    }
+
+    public void execute(double dt){
+        if(isDone && cmdStack.size() != 0){ cmdStack.pop(); elapsed_time = 0; modulation.x = 0; modulation.y = 0; modulation.z = 0; }
+        Pair<String, Double> cmd = cmdStack.peek();
+        elapsed_time += dt;
+
+        if(elapsed_time >= cmd.snd && cmd.snd != -1){ isDone = true; }
+        else {
+            switch (cmd.fst) {
+                case "forward":
+                    isDone = false;
+                    modulation.y = -1;
+                    break;
+                case "back":
+                    isDone = false;
+                    modulation.y = 1;
+                    break;
+                case "left":
+                    isDone = false;
+                    modulation.x = 1;
+                    break;
+                case "right":
+                    isDone = false;
+                    modulation.x = -1;
+                    break;
+                case "turnLeft":
+                    isDone = false;
+                    modulation.z = 1;
+                    break;
+                case "turnRight":
+                    isDone = false;
+                    modulation.z = -1;
+                    break;
+                case "sit":
+                    isDone = false;
+                    modulation.x = 0;
+                    modulation.y = 0;
+                    modulation.z= 0;
+                    break;
+            }
+        }
+
+        update(modulation, true);
+    }
+
     private void initIMU(HardwareMap hardwareMap){
         //set up IMU parameters for basic angle tracking
         BNO055IMU.Parameters imuParams = new BNO055IMU.Parameters();
         imuParams.mode = BNO055IMU.SensorMode.IMU;
         imuParams.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imuParams.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        imuParams.accelerationIntegrationAlgorithm = new AccelIntegratorSemiImplicitEuler();
+        //imuParams.accelerationIntegrationAlgorithm = new AccelIntegrationVerlet();
         imuParams.loggingEnabled = false;
+        long time = System.nanoTime();
+        sme = new AccelIntegratorSemiImplicitEuler();
+        sme.initialize(imuParams, new Position(DistanceUnit.METER, 0, 0, 0, time), new Velocity(DistanceUnit.METER, 0, 0, 0, time));
 
         //pass those parameters to 'imu' when the hardware map fetches the IMU
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(imuParams);
 
+
+        //imu.startAccelerationIntegration(new Position(DistanceUnit.METER, 0, 0, 0, time), new Velocity(DistanceUnit.METER, 0, 0, 0, time), 5);
         recordedPos = imu.getPosition();
     }
 
@@ -186,5 +280,16 @@ public class MecanumMovementFactory {
                 {1, -1,  1, 0},
                 {1,  1, -1, 0}
         });
+    }
+
+    private void initCMD(){
+        isDone = false;
+        elapsed_time = 0;
+        cmdStack = new Stack<>();
+        cmdCache = new Vector<>();
+    }
+
+    public void dispose(){
+        imu.stopAccelerationIntegration();
     }
 }

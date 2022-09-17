@@ -47,6 +47,10 @@ public class MecanumDriveTest extends LoopUtil {
         MFac = new MecanumMovementFactory(hardwareMap, 0.8 * coefficientFactor, 0.6 * coefficientFactor, 0.4 * coefficientFactor);
         MFac.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
         RCR1 = new RevColorRange(hardwareMap, telemetry, "CS");
+
+        MFac.forward(-1);
+
+        MFac.build();
     }
 
     @Override
@@ -69,18 +73,21 @@ public class MecanumDriveTest extends LoopUtil {
         //tra.end();
         //submit trajectory
         //drive.followTrajectory(tra);
+
         /*
         double rx = (gamepad1.right_stick_x)/2;
         double y = (-gamepad1.left_stick_y)/2;
         double x = (gamepad1.left_stick_x)/2;
 
+
          */
 
-        double x = gamepad1.left_stick_y;
-        double y = -gamepad1.left_stick_x;
-        double rx = -gamepad1.right_stick_x;
 
+        double x = gamepad1.left_stick_y / 2;
+        double y = -gamepad1.left_stick_x / 2;
+        double rx = -gamepad1.right_stick_x / 2;
         /*
+
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx) / denominator;
         double backLeftPower = ( y - x - rx) / denominator;
@@ -94,10 +101,16 @@ public class MecanumDriveTest extends LoopUtil {
 
 
          */
+
+
+        //MFac.update(new Vector3d(y, x, rx), true);
+        //if(!MFac.alignX(new Vector2d(0.5, 0.5)) && !MFac.alignY(new Vector2d(0.5, 0.5))){
+        //    MFac.update();
+        //}
+
         MFac.update(new Vector3d(y, x, rx), true);
-        if(!MFac.alignX(new Vector2d(0.5, 0.5)) && !MFac.alignY(new Vector2d(0.5, 0.5))){
-            MFac.update();
-        }
+        //MFac.execute(deltaTime);
+
         NormalizedRGBA colorOutput = RCR1.color();
         telemetry.addData("Color Sensor output: \nR: " + colorOutput.red +
                 "\nG: " + colorOutput.green +
@@ -105,6 +118,8 @@ public class MecanumDriveTest extends LoopUtil {
                 "\nA: " + colorOutput.alpha, "");
 
         telemetry.addData("Output vector: ", MFac.out.toString());
+        telemetry.addData("Current X: ", MFac.getPos().x);
+        telemetry.addData("Current Y: ", MFac.getPos().y);
     }
 
     @Override
@@ -114,6 +129,6 @@ public class MecanumDriveTest extends LoopUtil {
 
     @Override
     public void opStop() {
-
+        MFac.dispose();
     }
 }
