@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utils.general.maths.integration;
+package org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,8 +9,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
+import org.firstinspires.ftc.teamcode.utils.general.maths.integration.AccelerationIntegrationUtil;
 
-public class AccelIntegratorSemiImplicitEuler implements AccelerationIntegrationUtil {
+public class AccelIntegrationVerlet implements AccelerationIntegrationUtil {
 
     private Position lastPosition;
     private Velocity lastVelocity;
@@ -82,16 +83,16 @@ public class AccelIntegratorSemiImplicitEuler implements AccelerationIntegration
         lastAcceleration = currentAcceleration;
         currentAcceleration = linearAcceleration;
 
-        //velocity += acceleration * deltaTime
-        lastVelocity = currentVelocity;
-        currentVelocity.xVeloc += currentAcceleration.xAccel * deltaTime;
-        currentVelocity.yVeloc += currentAcceleration.yAccel * deltaTime;
-        currentVelocity.zVeloc += currentAcceleration.zAccel * deltaTime;
-
-        //position += velocity * deltaTime
+        //literally the Störmer-Verlet integration routine found on Wikipedia
         lastPosition = currentPosition;
-        currentPosition.x += currentVelocity.xVeloc * deltaTime;
-        currentPosition.y += currentVelocity.yVeloc * deltaTime;
-        currentPosition.z += currentVelocity.zVeloc * deltaTime;
+        currentPosition.x = lastPosition.x + currentVelocity.xVeloc * deltaTime + 0.5 * currentAcceleration.xAccel * deltaTime * deltaTime;
+        currentPosition.y = lastPosition.y + currentVelocity.yVeloc * deltaTime + 0.5 * currentAcceleration.yAccel * deltaTime * deltaTime;
+        currentPosition.z = lastPosition.z + currentVelocity.zVeloc * deltaTime + 0.5 * currentAcceleration.zAccel * deltaTime * deltaTime;
+
+        //age old technique of calculating velocity by delta position over delta time
+        lastVelocity = currentVelocity;
+        currentVelocity.xVeloc = (currentPosition.x - lastPosition.x) / deltaTime;
+        currentVelocity.yVeloc = (currentPosition.y - lastPosition.y) / deltaTime;
+        currentVelocity.zVeloc = (currentPosition.z - lastPosition.z) / deltaTime;
     }
 }

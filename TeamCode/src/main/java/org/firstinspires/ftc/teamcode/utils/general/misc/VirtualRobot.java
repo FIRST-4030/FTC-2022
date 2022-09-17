@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix4d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
-import org.firstinspires.ftc.teamcode.utils.general.maths.integration.AccelIntegratorSemiImplicitEuler;
+import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.AccelIntegratorSemiImplicitEuler;
 
 public class VirtualRobot {
 
