@@ -13,11 +13,12 @@ import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.MecanumMovementFactory;
+import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 
 @Config
 @Autonomous(name="RRIMPLMecanumTest", group="Test")
-public class MecanumDriveTest extends OpMode {
+public class MecanumDriveTest extends LoopUtil {
 
     DcMotor motorFrontLeft;
     DcMotor motorBackLeft;
@@ -33,7 +34,7 @@ public class MecanumDriveTest extends OpMode {
     public static Pose2d startingPose = new Pose2d( 0, 0);
 
     @Override
-    public void init() {
+    public void opInit() {
         //initialize drive and virtual position
         //drive = new SampleMecanumDrive(hardwareMap);
         //drive.setPoseEstimate(startingPose);
@@ -49,11 +50,21 @@ public class MecanumDriveTest extends OpMode {
     }
 
     @Override
-    public void loop() {
+    public void opInitLoop() {
+
+    }
+
+    @Override
+    public void opStart() {
+
+    }
+
+    @Override
+    public void opUpdate(double deltaTime) {
         //build trajectory that goes forward by 24 inches
         //Trajectory tra = drive.trajectoryBuilder(startingPose)
-               // .forward(24)
-               // .build();
+        // .forward(24)
+        // .build();
 
         //tra.end();
         //submit trajectory
@@ -85,14 +96,24 @@ public class MecanumDriveTest extends OpMode {
          */
         MFac.update(new Vector3d(y, x, rx), true);
         if(!MFac.alignX(new Vector2d(0.5, 0.5)) && !MFac.alignY(new Vector2d(0.5, 0.5))){
-           MFac.update();
+            MFac.update();
         }
         NormalizedRGBA colorOutput = RCR1.color();
         telemetry.addData("Color Sensor output: \nR: " + colorOutput.red +
-                                                       "\nG: " + colorOutput.green +
-                                                       "\nB: " + colorOutput.blue +
-                                                       "\nA: " + colorOutput.alpha, "");
+                "\nG: " + colorOutput.green +
+                "\nB: " + colorOutput.blue +
+                "\nA: " + colorOutput.alpha, "");
 
         telemetry.addData("Output vector: ", MFac.out.toString());
+    }
+
+    @Override
+    public void opFixedUpdate(double deltaTime) {
+
+    }
+
+    @Override
+    public void opStop() {
+
     }
 }

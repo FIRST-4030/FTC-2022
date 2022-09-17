@@ -157,10 +157,10 @@ public class MecanumMovementFactory {
         delta.x = target.x - integratedPos.x;
         delta.y = target.y - integratedPos.y;
         double distance =  delta.length();
-        boolean farEnough = distance > acceptableError * 2;
+        boolean far = distance > acceptableError * 2;
 
-        modulation.x = EULMathEx.doubleClamp(-1, 1, farEnough ? delta.x / distance : delta.x);
-        modulation.y = EULMathEx.doubleClamp(-1, 1, farEnough ? delta.y / distance : delta.y);
+        modulation.x = EULMathEx.doubleClamp(-1, 1, far ? delta.x / distance : delta.x);
+        modulation.y = EULMathEx.doubleClamp(-1, 1, far ? delta.y / distance : delta.y);
 
     }
 
