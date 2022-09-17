@@ -74,7 +74,7 @@ public class AccelIntegratorRK4 implements AccelerationIntegrationUtil{
         output.xAccel = (currentAcceleration.xAccel - lastAcceleration.xAccel) / ((currentAcceleration.acquisitionTime - lastAcceleration.acquisitionTime) * EULConstants.NANO2SEC);
         output.yAccel = (currentAcceleration.yAccel - lastAcceleration.yAccel) / ((currentAcceleration.acquisitionTime - lastAcceleration.acquisitionTime) * EULConstants.NANO2SEC);
         output.zAccel = (currentAcceleration.zAccel - lastAcceleration.zAccel) / ((currentAcceleration.acquisitionTime - lastAcceleration.acquisitionTime) * EULConstants.NANO2SEC);
-        output.acquisitionTime = (long) ((currentAcceleration.acquisitionTime - lastAcceleration.acquisitionTime) * EULConstants.NANO2SEC);
+        output.acquisitionTime = currentAcceleration.acquisitionTime - lastAcceleration.acquisitionTime;
         return output;
     }
 
@@ -139,7 +139,7 @@ public class AccelIntegratorRK4 implements AccelerationIntegrationUtil{
 
         double dt = getAccelerationDerivative().acquisitionTime * EULConstants.NANO2SEC;
 
-        a = calcAcceleration(lastState,0.0f,          dt, lastDerivative);
+        a = calcAcceleration(lastState,      dt,          dt, lastDerivative);
         b = calcAcceleration(lastState,      dt, dt*0.5f,              a);
         c = calcAcceleration(lastState,      dt, dt*0.5f,              b);
         d = calcAcceleration(lastState,      dt,          dt,              c);

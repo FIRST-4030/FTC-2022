@@ -14,4 +14,8 @@ public class EULMathEx {
 
     public static final double DEG2RAD = PI / 180;
     public static final double RAD2DEG = 180 / PI;
+
+    public static double doubleClamp(double min, double max, double value){
+        return Math.min(max, Math.max(min, value));
+    }
 }

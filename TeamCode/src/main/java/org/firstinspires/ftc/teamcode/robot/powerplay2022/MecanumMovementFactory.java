@@ -9,10 +9,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.teamcode.drives.swerve.PID;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.EULMathEx;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix4d;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector4d;
+import org.firstinspires.ftc.teamcode.utils.general.maths.integration.AccelIntegratorSemiImplicitEuler;
+import org.firstinspires.ftc.teamcode.utils.general.maths.misc.MathEx;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -25,6 +32,9 @@ public class MecanumMovementFactory {
     private HashMap<String, DcMotor> motorMap;
     private Matrix4d mecanumPowerRatioMatrix;
     private double forwardBackMovt, strafeMovt, turnMovt;
+    private Vector3d modulation = new Vector3d();
+    private double acceptableError = 0.05;
+    private Position recordedPos = new Position();
     public Vector4d out;
 
     public MecanumMovementFactory(HardwareMap hardwareMap, double forwardBackCoefficient, double strafingCoefficient, double turnCoefficient){
@@ -92,17 +102,82 @@ public class MecanumMovementFactory {
         Objects.requireNonNull(motorMap.get("BR")).setPower(out.w);
     }
 
+    public void update(){
+        update(modulation, true);
+    }
+
+    public boolean alignX(Vector2d input){
+
+        Position currentPos = imu.getPosition();
+        Velocity currentVelocity = imu.getVelocity();
+        boolean outputBool = (input.x - currentPos.x) <= acceptableError;
+
+        calcPos(input);
+
+        Vector3d output = new Vector3d();
+        output.x = modulation.x;
+        output.y = 0;
+        output.z = 0;
+        /*
+        if(!outputBool) {
+            update(output, true);
+        }
+
+         */
+        return outputBool;
+    }
+
+    public boolean alignY(Vector2d input){
+        Position currentPos = imu.getPosition();
+        Velocity currentVelocity = imu.getVelocity();
+        boolean outputBool = (input.x - currentPos.x) <= acceptableError;
+
+        calcPos(input);
+
+        Vector3d output = new Vector3d();
+        output.x = 0;
+        output.y = modulation.y;
+        output.z = 0;
+
+        /*
+        update(output, true);
+
+         */
+        return outputBool;
+    }
+
+    private void calcPos(Vector2d target){
+        Vector2d delta = new Vector2d();
+        Position integratedPos = imu.getPosition();
+
+        integratedPos.x -= recordedPos.x;
+        integratedPos.y -= recordedPos.y;
+        integratedPos.z -= recordedPos.z;
+
+        delta.x = target.x - integratedPos.x;
+        delta.y = target.y - integratedPos.y;
+        double distance =  delta.length();
+        boolean farEnough = distance > acceptableError * 2;
+
+        modulation.x = EULMathEx.doubleClamp(-1, 1, farEnough ? delta.x / distance : delta.x);
+        modulation.y = EULMathEx.doubleClamp(-1, 1, farEnough ? delta.y / distance : delta.y);
+
+    }
+
     private void initIMU(HardwareMap hardwareMap){
         //set up IMU parameters for basic angle tracking
         BNO055IMU.Parameters imuParams = new BNO055IMU.Parameters();
         imuParams.mode = BNO055IMU.SensorMode.IMU;
         imuParams.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imuParams.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        imuParams.accelerationIntegrationAlgorithm = new AccelIntegratorSemiImplicitEuler();
         imuParams.loggingEnabled = false;
 
         //pass those parameters to 'imu' when the hardware map fetches the IMU
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(imuParams);
+
+        recordedPos = imu.getPosition();
     }
 
     private void initMatrix(){

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.MecanumMovementFactory;
@@ -82,8 +83,10 @@ public class MecanumDriveTest extends OpMode {
 
 
          */
-
         MFac.update(new Vector3d(y, x, rx), true);
+        if(!MFac.alignX(new Vector2d(0.5, 0.5)) && !MFac.alignY(new Vector2d(0.5, 0.5))){
+           MFac.update();
+        }
         NormalizedRGBA colorOutput = RCR1.color();
         telemetry.addData("Color Sensor output: \nR: " + colorOutput.red +
                                                        "\nG: " + colorOutput.green +
