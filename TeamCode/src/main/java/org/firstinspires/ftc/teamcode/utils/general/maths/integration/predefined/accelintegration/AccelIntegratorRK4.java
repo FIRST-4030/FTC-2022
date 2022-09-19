@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined;
+package org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.accelintegration;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

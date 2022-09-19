@@ -28,8 +28,8 @@ public class EULArrays {
         return output;
     }
 
-    public Stack<Object> flipStack(Stack<?> input){
-        Stack<Object> output = new Stack<>();
+    public static <T> Stack<T> stackFlip(Stack<T> input){
+        Stack<T> output = new Stack<>();
         int length = input.size();
         for (int i = 0; i < length; i++) {
             output.push(input.pop());

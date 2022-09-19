@@ -19,12 +19,12 @@ import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix4d
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector4d;
-import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.AccelIntegratorSemiImplicitEuler;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULArrays;
+import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.accelintegration.AccelIntegratorSemiImplicitEuler;
 
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Stack;
-import java.util.Vector;
 
 public class MecanumMovementFactory {
 
@@ -46,7 +46,7 @@ public class MecanumMovementFactory {
     public boolean isDone;
     public double elapsed_time;
     public Stack<Pair<String, Double>> cmdStack;
-    public Vector<Pair<String, Double>> cmdCache;
+    public Stack<Pair<String, Double>> cmdCache;
 
     public MecanumMovementFactory(HardwareMap hardwareMap, double forwardBackCoefficient, double strafingCoefficient, double turnCoefficient){
         this.hardwareMap = hardwareMap;
@@ -213,12 +213,9 @@ public class MecanumMovementFactory {
         cmdCache.add(new Pair<>("idle", t));
         return this;
     }
-    public void build(){
-        int length = cmdCache.size();
 
-        for(int i = 0; i < length; i++){
-            cmdStack.push(cmdCache.get(length - i - 1));
-        }
+    public void build(){
+        cmdStack = EULArrays.stackFlip(cmdCache);
     }
 
     public void execute(double dt){
@@ -300,7 +297,7 @@ public class MecanumMovementFactory {
         isDone = false;
         elapsed_time = 0;
         cmdStack = new Stack<>();
-        cmdCache = new Vector<>();
+        cmdCache = new Stack<>();
     }
 
     private void initCoefficients(){
