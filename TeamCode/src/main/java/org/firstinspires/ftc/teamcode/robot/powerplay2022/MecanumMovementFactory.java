@@ -183,26 +183,35 @@ public class MecanumMovementFactory {
 
     }
 
-    public void forward(double t){
+    //cmd queueing methods
+
+    public MecanumMovementFactory forward(double t){
         cmdCache.add(new Pair<>("forward", t));
+        return this;
     }
-    public void back(double t){
+    public MecanumMovementFactory back(double t){
         cmdCache.add(new Pair<>("back", t));
+        return this;
     }
-    public void left(double t){
+    public MecanumMovementFactory left(double t){
         cmdCache.add(new Pair<>("left", t));
+        return this;
     }
-    public void right(double t){
+    public MecanumMovementFactory right(double t){
         cmdCache.add(new Pair<>("right", t));
+        return this;
     }
-    public void turnLeft(double t){
+    public MecanumMovementFactory turnLeft(double t){
         cmdCache.add(new Pair<>("turnLeft", t));
+        return this;
     }
-    public void turnRight(double t){
+    public MecanumMovementFactory turnRight(double t){
         cmdCache.add(new Pair<>("turnRight", t));
+        return this;
     }
-    public void sit(double t){
-        cmdCache.add(new Pair<>("sit", t));
+    public MecanumMovementFactory idle(double t){
+        cmdCache.add(new Pair<>("idle", t));
+        return this;
     }
     public void build(){
         int length = cmdCache.size();
@@ -244,11 +253,11 @@ public class MecanumMovementFactory {
                     isDone = false;
                     modulation.z = -1;
                     break;
-                case "sit":
+                case "idle":
                     isDone = false;
                     modulation.x = 0;
                     modulation.y = 0;
-                    modulation.z= 0;
+                    modulation.z = 0;
                     break;
             }
         }

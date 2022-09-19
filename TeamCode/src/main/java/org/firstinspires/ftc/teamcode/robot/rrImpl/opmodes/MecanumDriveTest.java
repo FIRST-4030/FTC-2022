@@ -48,9 +48,8 @@ public class MecanumDriveTest extends LoopUtil {
         MFac.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
         RCR1 = new RevColorRange(hardwareMap, telemetry, "CS");
 
-        MFac.forward(-1);
-
-        MFac.build();
+        MFac.forward(-1)
+                .build();
     }
 
     @Override
