@@ -34,11 +34,15 @@ public class MecanumMovementFactory {
     private HashMap<String, DcMotor> motorMap;
     private Matrix4d mecanumPowerRatioMatrix;
     private double forwardBackMovt, strafeMovt, turnMovt;
+    private double coefficientSum;
     private Vector3d modulation = new Vector3d();
     private double acceptableError = 0.05;
+
     private Position recordedPos = new Position();
     public Vector4d out;
     public AccelIntegratorSemiImplicitEuler sme;
+
+    //sequential execution of commands
     public boolean isDone;
     public double elapsed_time;
     public Stack<Pair<String, Double>> cmdStack;
@@ -49,11 +53,12 @@ public class MecanumMovementFactory {
         initIMU(hardwareMap);
 
         motorMap = new HashMap<>();
-        //double normalizer = Math.max(Math.abs(forwardBackCoefficient) + Math.abs(strafingCoefficient) + Math.abs(turnCoefficient), 1);
-        double normalizer = 1;
-        forwardBackMovt = forwardBackCoefficient / normalizer;
-        strafeMovt = strafingCoefficient / normalizer;
-        turnMovt = turnCoefficient / normalizer;
+        forwardBackMovt = forwardBackCoefficient;
+        strafeMovt = strafingCoefficient;
+        turnMovt = turnCoefficient;
+
+        coefficientSum = Math.abs(forwardBackMovt) + Math.abs(strafeMovt) + Math.abs(turnMovt);
+
         initMatrix();
 
         initCMD();
@@ -100,9 +105,9 @@ public class MecanumMovementFactory {
         //divide the input by the ratio found by max(|forward| + |strafe| + |turn|, 1)
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
         Matrix3d rot = fieldCentric ? Matrix3d.makeAffineRotation(-angles.firstAngle) : new Matrix3d();
-        Vector3d weighedControl = rot.times(new Vector3d(control.x * forwardBackMovt, control.y * strafeMovt, control.z * turnMovt));
-        Vector4d in = (new Vector4d(weighedControl.x, weighedControl.y, weighedControl.z, 0));
-        out = mecanumPowerRatioMatrix.times(in).div(Math.max(Math.abs(weighedControl.x) + Math.abs(weighedControl.y) + Math.abs(weighedControl.z), 1));
+        Vector3d internalControl = rot.times(new Vector3d(control.x, control.y, control.z));
+        Vector4d in = new Vector4d(internalControl.x, internalControl.y, internalControl.z, 0);
+        out = mecanumPowerRatioMatrix.times(in).div(Math.max(coefficientSum, 1));
 
         //set the motor powers as referenced in the hashmap
         Objects.requireNonNull(motorMap.get("FL")).setPower(out.x);
@@ -275,10 +280,10 @@ public class MecanumMovementFactory {
     private void initMatrix(){
         //4th column discards W component of the Vector4f multiplied with the matrix
         mecanumPowerRatioMatrix = new Matrix4d(new double[][]{
-                {1,  1,  1, 0},
-                {1, -1, -1, 0},
-                {1, -1,  1, 0},
-                {1,  1, -1, 0}
+                {strafeMovt,  forwardBackMovt,  turnMovt, 0},
+                {strafeMovt, -forwardBackMovt, -turnMovt, 0},
+                {strafeMovt, -forwardBackMovt,  turnMovt, 0},
+                {strafeMovt,  forwardBackMovt, -turnMovt, 0}
         });
     }
 
@@ -287,6 +292,10 @@ public class MecanumMovementFactory {
         elapsed_time = 0;
         cmdStack = new Stack<>();
         cmdCache = new Vector<>();
+    }
+
+    private void initCoefficients(){
+        coefficientSum = Math.abs(forwardBackMovt) + Math.abs(strafeMovt) + Math.abs(turnMovt);
     }
 
     public void dispose(){
