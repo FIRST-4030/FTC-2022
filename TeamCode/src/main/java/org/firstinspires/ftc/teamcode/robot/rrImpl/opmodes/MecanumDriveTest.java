@@ -32,7 +32,8 @@ public class MecanumDriveTest extends LoopUtil {
     MecanumMovementFactory MFac;
     RevColorRange RCR1;
     ColorView CV1;
-    public MecanumTrajectory[] cmdStacks;
+    MecanumTrajectory[] cmdStacks;
+    Stack<Pair<String, Double>> inUse;
 
     //drive
     public static SampleMecanumDrive drive;
@@ -53,7 +54,7 @@ public class MecanumDriveTest extends LoopUtil {
         motorFrontRight = hardwareMap.get(DcMotor.class,"FR");
         motorBackRight = hardwareMap.get(DcMotor.class,"BR");
         double coefficientFactor = 1;
-        MFac = new MecanumMovementFactory(hardwareMap, 0.8 * coefficientFactor, 0.6 * coefficientFactor, 0.4 * coefficientFactor);
+        MFac = new MecanumMovementFactory(hardwareMap, 1 * coefficientFactor, 1.1 * coefficientFactor, 1 * coefficientFactor);
         MFac.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
         RCR1 = new RevColorRange(hardwareMap, telemetry, "CS");
         CV1 = new ColorView(RCR1.color(), RCR1.distance());
@@ -63,13 +64,17 @@ public class MecanumDriveTest extends LoopUtil {
         }
 
 
-        cmdStacks[0].forward(1800);
+        cmdStacks[0].forward(-1);
         cmdStacks[0].idle(500);
         cmdStacks[0].turnLeft(1050);
         cmdStacks[0].idle(500);
         cmdStacks[0].right(800);
         cmdStacks[0].idle(-1);
         cmdStacks[0].build();
+
+        inUse = cmdStacks[0].getCmdStack();
+
+        MFac.cmdStack = inUse;
     }
 
     @Override
@@ -128,10 +133,10 @@ public class MecanumDriveTest extends LoopUtil {
         //}
 
         MFac.update(new Vector3d(y, x, rx), true);
-        MFac.execute(deltaTime, cmdStacks[0].getCmdStack());
+        //MFac.execute(deltaTime);
 
         NormalizedRGBA colorOutput = RCR1.color();
-        CV1.update(RCR1.color(), RCR1.distance());
+        //CV1.update(RCR1.color(), RCR1.distance());
         telemetry.addData("Color Sensor output: \nR: " + colorOutput.red +
                 "\nG: " + colorOutput.green +
                 "\nB: " + colorOutput.blue +

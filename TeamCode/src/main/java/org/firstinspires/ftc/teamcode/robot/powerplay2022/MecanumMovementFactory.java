@@ -47,7 +47,7 @@ public class MecanumMovementFactory {
     //sequential execution of commands
     public boolean isDone;
     public double elapsed_time;
-    //
+    public Stack<Pair<String, Double>> cmdStack;
     //public Stack<Pair<String, Double>> cmdCache;
 
     public MecanumMovementFactory(HardwareMap hardwareMap, double forwardBackCoefficient, double strafingCoefficient, double turnCoefficient){
@@ -107,7 +107,7 @@ public class MecanumMovementFactory {
         //divide the input by the ratio found by max(|forward| + |strafe| + |turn|, 1)
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
         Matrix3d rot = fieldCentric ? Matrix3d.makeAffineRotation(-angles.firstAngle) : new Matrix3d();
-        Vector3d internalControl = rot.times(new Vector3d(control.x, control.y, control.z));
+        Vector3d internalControl = rot.times(new Vector3d(control.x * strafeMovt, control.y * forwardBackMovt, control.z * turnMovt));
         Vector4d in = new Vector4d(internalControl.x, internalControl.y, internalControl.z, 0);
         out = mecanumPowerRatioMatrix.times(in).div(Math.max(coefficientSum, 1));
 
@@ -189,9 +189,9 @@ public class MecanumMovementFactory {
 
 
 
-    public void execute(double dt, Stack<Pair<String, Double>> inputStack){
-        if(isDone && inputStack.size() != 0){ inputStack.pop(); elapsed_time = 0; modulation.x = 0; modulation.y = 0; modulation.z = 0; }
-        Pair<String, Double> cmd = inputStack.peek();
+    public void execute(double dt){
+        if(isDone && cmdStack.size() != 0){ cmdStack.pop(); elapsed_time = 0; modulation.x = 0; modulation.y = 0; modulation.z = 0; }
+        Pair<String, Double> cmd = cmdStack.peek();
         elapsed_time += dt;
 
         if(elapsed_time >= cmd.snd && cmd.snd != -1){ isDone = true; }
@@ -257,10 +257,10 @@ public class MecanumMovementFactory {
     private void initMatrix(){
         //4th column discards W component of the Vector4f multiplied with the matrix
         mecanumPowerRatioMatrix = new Matrix4d(new double[][]{
-                {strafeMovt,  forwardBackMovt,  turnMovt, 0},
-                {strafeMovt, -forwardBackMovt, -turnMovt, 0},
-                {strafeMovt, -forwardBackMovt,  turnMovt, 0},
-                {strafeMovt,  forwardBackMovt, -turnMovt, 0}
+                {1,  1,  1, 0},
+                {1, -1, -1, 0},
+                {1, -1,  1, 0},
+                {1,  1, -1, 0}
         });
     }
 
