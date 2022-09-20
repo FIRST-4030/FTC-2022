@@ -37,9 +37,9 @@ public class DriveTest extends LoopUtil {
 
     @Override
     public void opFixedUpdate(double deltaTime) {
-        joystick.x = gamepad1.left_stick_x * 0.75;
-        joystick.y = -gamepad1.left_stick_y * 0.75;
-        joystick.z = gamepad1.right_stick_x * 0.75;
+        joystick.x = gamepad1.left_stick_x;
+        joystick.y = -gamepad1.left_stick_y;
+        joystick.z = gamepad1.right_stick_x;
 
         drive.update(joystick, true);
     }

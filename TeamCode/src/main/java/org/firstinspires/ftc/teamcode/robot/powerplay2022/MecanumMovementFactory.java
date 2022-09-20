@@ -96,10 +96,6 @@ public class MecanumMovementFactory {
         motorMap.get("BR").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorMap.get("BR").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorMap.get("BR").setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
-
-
     }
 
     public void update(Vector3d control, boolean fieldCentric){
