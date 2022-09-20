@@ -38,8 +38,8 @@ public class RK4Integrator implements ImuIntegration{
 
     private double lastElapsedTime, currentElapsedTime;
 
-    private Vector3d currentAccel, currentVeloc, currentPos;
-    private Vector3d lastAccel, lastVeloc, lastPos;
+    private Vector3d currentAccel;
+    private Vector3d lastAccel;
     private State lastState, currentState;
     private Derivative lastDerivative, currentDerivative;
 
@@ -55,12 +55,12 @@ public class RK4Integrator implements ImuIntegration{
 
     @Override
     public Vector3d getLastVelocity() {
-        return lastVeloc;
+        return lastState.vel;
     }
 
     @Override
     public Vector3d getLastPosition() {
-        return lastPos;
+        return lastState.pos;
     }
 
     @Override
@@ -75,27 +75,23 @@ public class RK4Integrator implements ImuIntegration{
 
     @Override
     public Vector3d getCurrentVelocity() {
-        return currentVeloc;
+        return currentState.vel;
     }
 
     @Override
     public Vector3d getCurrentPosition() {
-        return currentPos;
+        return currentState.pos;
     }
 
     @Override
     public void init() {
         lastElapsedTime = 0;
         lastAccel = new Vector3d();
-        lastVeloc = new Vector3d();
-        lastPos = new Vector3d();
         lastState = new State();
         lastDerivative = new Derivative();
 
         currentElapsedTime = 0;
         currentAccel = new Vector3d();
-        currentVeloc = new Vector3d();
-        currentPos = new Vector3d();
         currentState = new State();
         currentDerivative = new Derivative();
 
