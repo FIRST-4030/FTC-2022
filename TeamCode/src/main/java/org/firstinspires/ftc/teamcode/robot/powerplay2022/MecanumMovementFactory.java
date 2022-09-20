@@ -42,11 +42,13 @@ public class MecanumMovementFactory {
     public Vector4d out;
     public AccelIntegratorSemiImplicitEuler sme;
 
+
+
     //sequential execution of commands
     public boolean isDone;
     public double elapsed_time;
-    public Stack<Pair<String, Double>> cmdStack;
-    public Stack<Pair<String, Double>> cmdCache;
+    //
+    //public Stack<Pair<String, Double>> cmdCache;
 
     public MecanumMovementFactory(HardwareMap hardwareMap, double forwardBackCoefficient, double strafingCoefficient, double turnCoefficient){
         this.hardwareMap = hardwareMap;
@@ -185,42 +187,11 @@ public class MecanumMovementFactory {
 
     //cmd queueing methods
 
-    public MecanumMovementFactory forward(double t){
-        cmdCache.add(new Pair<>("forward", t));
-        return this;
-    }
-    public MecanumMovementFactory back(double t){
-        cmdCache.add(new Pair<>("back", t));
-        return this;
-    }
-    public MecanumMovementFactory left(double t){
-        cmdCache.add(new Pair<>("left", t));
-        return this;
-    }
-    public MecanumMovementFactory right(double t){
-        cmdCache.add(new Pair<>("right", t));
-        return this;
-    }
-    public MecanumMovementFactory turnLeft(double t){
-        cmdCache.add(new Pair<>("turnLeft", t));
-        return this;
-    }
-    public MecanumMovementFactory turnRight(double t){
-        cmdCache.add(new Pair<>("turnRight", t));
-        return this;
-    }
-    public MecanumMovementFactory idle(double t){
-        cmdCache.add(new Pair<>("idle", t));
-        return this;
-    }
 
-    public void build(){
-        cmdStack = EULArrays.stackFlip(cmdCache);
-    }
 
-    public void execute(double dt){
-        if(isDone && cmdStack.size() != 0){ cmdStack.pop(); elapsed_time = 0; modulation.x = 0; modulation.y = 0; modulation.z = 0; }
-        Pair<String, Double> cmd = cmdStack.peek();
+    public void execute(double dt, Stack<Pair<String, Double>> inputStack){
+        if(isDone && inputStack.size() != 0){ inputStack.pop(); elapsed_time = 0; modulation.x = 0; modulation.y = 0; modulation.z = 0; }
+        Pair<String, Double> cmd = inputStack.peek();
         elapsed_time += dt;
 
         if(elapsed_time >= cmd.snd && cmd.snd != -1){ isDone = true; }
@@ -296,8 +267,8 @@ public class MecanumMovementFactory {
     private void initCMD(){
         isDone = false;
         elapsed_time = 0;
-        cmdStack = new Stack<>();
-        cmdCache = new Stack<>();
+        //cmdStack = new Stack<>();
+        //cmdCache = new Stack<>();
     }
 
     private void initCoefficients(){

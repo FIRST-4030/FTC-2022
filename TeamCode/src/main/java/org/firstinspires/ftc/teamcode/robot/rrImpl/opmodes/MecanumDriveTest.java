@@ -8,13 +8,18 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.sun.tools.javac.util.Pair;
 
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.ColorView;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.MecanumMovementFactory;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.MecanumTrajectory;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
+
+import java.util.Stack;
 
 @Config
 @Autonomous(name="RRIMPLMecanumTest", group="Test")
@@ -25,8 +30,10 @@ public class MecanumDriveTest extends LoopUtil {
     DcMotor motorFrontRight;
     DcMotor motorBackRight;
     MecanumMovementFactory MFac;
-
     RevColorRange RCR1;
+    ColorView CV1;
+    public MecanumTrajectory[] cmdStacks;
+
     //drive
     public static SampleMecanumDrive drive;
 
@@ -38,6 +45,8 @@ public class MecanumDriveTest extends LoopUtil {
         //initialize drive and virtual position
         //drive = new SampleMecanumDrive(hardwareMap);
         //drive.setPoseEstimate(startingPose);
+        cmdStacks = new MecanumTrajectory[3];
+
 
         motorFrontLeft = hardwareMap.get(DcMotor.class,"FL");
         motorBackLeft = hardwareMap.get(DcMotor.class,"BL");
@@ -47,9 +56,20 @@ public class MecanumDriveTest extends LoopUtil {
         MFac = new MecanumMovementFactory(hardwareMap, 0.8 * coefficientFactor, 0.6 * coefficientFactor, 0.4 * coefficientFactor);
         MFac.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
         RCR1 = new RevColorRange(hardwareMap, telemetry, "CS");
+        CV1 = new ColorView(RCR1.color(), RCR1.distance());
 
-        MFac.forward(-1)
-                .build();
+        for(int i = 0; i < cmdStacks.length; i++){
+            cmdStacks[i] = new MecanumTrajectory();
+        }
+
+
+        cmdStacks[0].forward(1800);
+        cmdStacks[0].idle(500);
+        cmdStacks[0].turnLeft(1050);
+        cmdStacks[0].idle(500);
+        cmdStacks[0].right(800);
+        cmdStacks[0].idle(-1);
+        cmdStacks[0].build();
     }
 
     @Override
@@ -108,9 +128,10 @@ public class MecanumDriveTest extends LoopUtil {
         //}
 
         MFac.update(new Vector3d(y, x, rx), true);
-        //MFac.execute(deltaTime);
+        MFac.execute(deltaTime, cmdStacks[0].getCmdStack());
 
         NormalizedRGBA colorOutput = RCR1.color();
+        CV1.update(RCR1.color(), RCR1.distance());
         telemetry.addData("Color Sensor output: \nR: " + colorOutput.red +
                 "\nG: " + colorOutput.green +
                 "\nB: " + colorOutput.blue +
@@ -119,6 +140,8 @@ public class MecanumDriveTest extends LoopUtil {
         telemetry.addData("Output vector: ", MFac.out.toString());
         telemetry.addData("Current X: ", MFac.getPos().x);
         telemetry.addData("Current Y: ", MFac.getPos().y);
+        telemetry.addData("Distance: ", RCR1.distance());
+        telemetry.addData("Color: ", CV1.getColor());
     }
 
     @Override
