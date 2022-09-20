@@ -29,7 +29,7 @@ public class CustomMecanumDrive {
     private double coefficientSum;
     private Vector4d out;
 
-    private double outputMultiplier;
+    private double outputMultiplier = 1;
 
     public CustomMecanumDrive(HardwareMap hardwareMap, double forwardBackCoefficient, double strafingCoefficient, double turnCoefficient){
         this.hardwareMap = hardwareMap;
@@ -125,7 +125,7 @@ public class CustomMecanumDrive {
     }
 
     public void setOutputMultiplier(double nPower){
-        this.outputMultiplier = EULMathEx.doubleClamp(-1, 1, nPower);
+        this.outputMultiplier = EULMathEx.doubleClamp(-1, 1, -nPower);
         initMatrix();
     }
 }
