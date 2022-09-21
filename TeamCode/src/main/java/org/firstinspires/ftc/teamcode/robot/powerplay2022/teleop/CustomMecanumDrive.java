@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix3d
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix4d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector4d;
+import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.VerletIntegrator;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -22,6 +23,7 @@ public class CustomMecanumDrive {
 
     private HardwareMap hardwareMap;
     public BNO055IMU imu;
+    public VerletIntegrator verletIntegrator;
 
     private HashMap<String, DcMotor> motorMap;
     private Matrix4d mecanumPowerRatioMatrix;
@@ -43,6 +45,8 @@ public class CustomMecanumDrive {
         coefficientSum = Math.abs(forwardBackMovt) + Math.abs(strafeMovt) + Math.abs(turnMovt);
 
         initMatrix();
+        verletIntegrator = new VerletIntegrator();
+        verletIntegrator.init();
     }
 
     public void mapMotors(String frontLeft, boolean reverseFL, String backLeft, boolean reverseBL, String frontRight, boolean reverseFR, String backRight, boolean reverseBR){
@@ -77,7 +81,7 @@ public class CustomMecanumDrive {
         motorMap.get("BR").setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void update(Vector3d control, boolean fieldCentric){
+    public void update(Vector3d control, boolean fieldCentric, double dt){
         //create Vector4d 'in' from the passed in Vector3d(forward, strafe, turn)'s x, y, z, and an arbitrary w value
         //divide the input by the ratio found by max(|forward| + |strafe| + |turn|, 1)
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
@@ -91,6 +95,8 @@ public class CustomMecanumDrive {
         Objects.requireNonNull(motorMap.get("BL")).setPower(out.y);
         Objects.requireNonNull(motorMap.get("FR")).setPower(out.z);
         Objects.requireNonNull(motorMap.get("BR")).setPower(out.w);
+
+        verletIntegrator.integrate(imu.getLinearAcceleration(), dt);
     }
 
     private void initIMU(HardwareMap hardwareMap){
@@ -113,7 +119,7 @@ public class CustomMecanumDrive {
                 {strafeMovt, -forwardBackMovt, -turnMovt, 0},
                 {strafeMovt, -forwardBackMovt,  turnMovt, 0},
                 {strafeMovt,  forwardBackMovt, -turnMovt, 0}
-        }).times(1/coefficientSum).times(outputMultiplier));
+        }).times(1/coefficientSum).times(-outputMultiplier));
     }
 
     private void initCoefficients(){
@@ -125,7 +131,7 @@ public class CustomMecanumDrive {
     }
 
     public void setOutputMultiplier(double nPower){
-        this.outputMultiplier = EULMathEx.doubleClamp(-1, 1, -nPower);
+        this.outputMultiplier = EULMathEx.doubleClamp(-1, 1, nPower);
         initMatrix();
     }
 }

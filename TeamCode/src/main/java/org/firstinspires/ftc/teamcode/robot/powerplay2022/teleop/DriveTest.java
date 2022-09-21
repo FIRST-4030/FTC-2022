@@ -20,7 +20,6 @@ public class DriveTest extends LoopUtil {
         drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
         drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
 
-        drive.setOutputMultiplier(0.75);
         joystick = new Vector3d();
     }
 
@@ -36,17 +35,17 @@ public class DriveTest extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
-
-    }
-
-    @Override
-    public void opFixedUpdate(double deltaTime) {
         joystick.x = gamepad1.left_stick_x;
         joystick.y = -gamepad1.left_stick_y;
         joystick.z = gamepad1.right_stick_x;
 
-        drive.update(joystick, true);
+        drive.update(joystick, true, deltaTime);
         telemetry.addData("Angle: ", drive.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
+    }
+
+    @Override
+    public void opFixedUpdate(double deltaTime) {
+
     }
 
     @Override
