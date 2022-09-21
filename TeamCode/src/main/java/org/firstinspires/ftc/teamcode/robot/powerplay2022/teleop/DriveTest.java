@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.robot.powerplay2022.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.MecanumMovementFactory;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
@@ -9,14 +12,15 @@ import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 @TeleOp(name = "MecanumTestDrive", group = "Test")
 public class DriveTest extends LoopUtil {
 
-    MecanumMovementFactory drive;
+    CustomMecanumDrive drive;
     Vector3d joystick;
 
     @Override
     public void opInit() {
-        drive = new MecanumMovementFactory(hardwareMap, 1, 1.1, 1);
+        drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
         drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
 
+        drive.setOutputMultiplier(0.5);
         joystick = new Vector3d();
     }
 
@@ -42,6 +46,7 @@ public class DriveTest extends LoopUtil {
         joystick.z = gamepad1.right_stick_x;
 
         drive.update(joystick, false);
+        telemetry.addData("Angle: ", drive.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
     }
 
     @Override

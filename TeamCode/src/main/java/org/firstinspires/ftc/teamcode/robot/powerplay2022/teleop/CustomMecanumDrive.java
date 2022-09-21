@@ -21,7 +21,7 @@ import java.util.Objects;
 public class CustomMecanumDrive {
 
     private HardwareMap hardwareMap;
-    private BNO055IMU imu;
+    public BNO055IMU imu;
 
     private HashMap<String, DcMotor> motorMap;
     private Matrix4d mecanumPowerRatioMatrix;
@@ -81,8 +81,8 @@ public class CustomMecanumDrive {
         //create Vector4d 'in' from the passed in Vector3d(forward, strafe, turn)'s x, y, z, and an arbitrary w value
         //divide the input by the ratio found by max(|forward| + |strafe| + |turn|, 1)
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        Matrix3d rot = fieldCentric ? Matrix3d.makeAffineRotation(angles.firstAngle) : new Matrix3d();
-        Vector3d rotated = rot.times(control);
+        Matrix3d rot = fieldCentric ? Matrix3d.makeAffineRotation(-angles.firstAngle) : new Matrix3d();
+        Vector3d rotated = rot.times(control.unaryMinus());
         Vector4d internalControl = new Vector4d(rotated.x, rotated.y, rotated.z, 1);
         out = mecanumPowerRatioMatrix.times(internalControl).div(Math.max(coefficientSum, 1));
 
