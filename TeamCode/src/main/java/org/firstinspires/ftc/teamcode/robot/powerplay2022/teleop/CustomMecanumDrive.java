@@ -23,15 +23,18 @@ import java.util.Objects;
 
 public class CustomMecanumDrive {
 
-    private HardwareMap hardwareMap;
-    private BNO055IMU imu;
-    private ImuIntegration integrator;
+    protected HardwareMap hardwareMap;
+    protected BNO055IMU imu;
+    protected ImuIntegration integrator;
 
-    private HashMap<String, DcMotor> motorMap;
-    private Matrix4d mecanumPowerRatioMatrix;
-    private double forwardBackMovt, strafeMovt, turnMovt;
-    private double coefficientSum;
-    private Vector4d out;
+    protected HashMap<String, DcMotor> motorMap;
+    protected Matrix4d mecanumPowerRatioMatrix;
+    protected double forwardBackMovt, strafeMovt, turnMovt;
+    protected double coefficientSum;
+    protected Vector3d virtualJoystick;
+    protected MecanumDriveTrajectory followTrajectory;
+    protected boolean fieldCentricMode = true;
+    protected Vector4d out;
 
     private double outputMultiplier = 1;
 
@@ -105,6 +108,28 @@ public class CustomMecanumDrive {
         acceleration.yAccel -= gravity.yAccel;
         acceleration.zAccel -= gravity.zAccel;
         integrator.integrate(acceleration, dt);
+    }
+
+    public void followTrajectory(double dt){
+        MecanumDriveState<?> state = followTrajectory.getCurrentStateStack().peek();
+        if (state.isDone() && !followTrajectory.isCurrentStateStackEmpty()) {
+            followTrajectory.pop();
+            virtualJoystick.x = 0;
+            virtualJoystick.y = 0;
+            virtualJoystick.z = 0;
+        }
+
+        if(state.isDone()){} else {
+            switch (state.condition.getName()){
+                case "TimeCondition":
+                    state.update(dt);
+                    break;
+                default:
+
+            }
+        }
+
+        update(virtualJoystick, fieldCentricMode, dt);
     }
 
     private void initIMU(HardwareMap hardwareMap){

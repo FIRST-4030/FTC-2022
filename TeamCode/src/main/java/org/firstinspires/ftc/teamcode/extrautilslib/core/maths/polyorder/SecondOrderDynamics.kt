@@ -1,9 +1,9 @@
 @file:Suppress("FINITE_BOUNDS_VIOLATION_IN_JAVA")
 
-package com.icaras84.extrautilslib.core.maths.polyorder
+package org.firstinspires.ftc.teamcode.extrautilslib.core.maths.polyorder
 
-import com.icaras84.extrautilslib.core.maths.vectors.EULVector
 import com.icaras84.extrautilslib.core.maths.vectors.times
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.EULVector
 import kotlin.math.*
 
 open class SecondOrderDynamics<T : EULVector<*>>(frequency : Double, dampening : Double, reaction : Double, start : T) {
