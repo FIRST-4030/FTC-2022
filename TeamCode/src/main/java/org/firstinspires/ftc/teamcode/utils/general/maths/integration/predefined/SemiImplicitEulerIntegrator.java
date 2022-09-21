@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefine
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 
 public class SemiImplicitEulerIntegrator implements ImuIntegration{
 
@@ -64,9 +65,11 @@ public class SemiImplicitEulerIntegrator implements ImuIntegration{
     }
 
     @Override
-    public void integrate(Acceleration accel, double deltaTime) {
+    public void integrate(Acceleration accel, double deltaTimeMs) {
         lastElapsedTime = currentElapsedTime;
-        currentElapsedTime += deltaTime;
+        currentElapsedTime += deltaTimeMs;
+
+        double deltaTime = deltaTimeMs * EULConstants.MS2SEC;
 
         lastAccel = currentAccel;
         currentAccel = new Vector3d(accel.xAccel, accel.yAccel, accel.zAccel);

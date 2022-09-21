@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector4d;
 import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.ImuIntegration;
 import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.RK4Integrator;
-import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.VerletIntegrator;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -25,8 +24,8 @@ import java.util.Objects;
 public class CustomMecanumDrive {
 
     private HardwareMap hardwareMap;
-    public BNO055IMU imu;
-    public ImuIntegration integrator;
+    private BNO055IMU imu;
+    private ImuIntegration integrator;
 
     private HashMap<String, DcMotor> motorMap;
     private Matrix4d mecanumPowerRatioMatrix;
@@ -36,16 +35,17 @@ public class CustomMecanumDrive {
 
     private double outputMultiplier = 1;
 
-    public CustomMecanumDrive(HardwareMap hardwareMap, double forwardBackCoefficient, double strafingCoefficient, double turnCoefficient){
+    public CustomMecanumDrive(HardwareMap hardwareMap, ImuIntegration integrator, double forwardBackCoefficient, double strafingCoefficient, double turnCoefficient){
         this.hardwareMap = hardwareMap;
+        this.integrator = integrator;
         initIMU(hardwareMap);
 
-        motorMap = new HashMap<>();
-        forwardBackMovt = forwardBackCoefficient;
-        strafeMovt = strafingCoefficient;
-        turnMovt = turnCoefficient;
+        this.motorMap = new HashMap<>();
+        this.forwardBackMovt = forwardBackCoefficient;
+        this.strafeMovt = strafingCoefficient;
+        this.turnMovt = turnCoefficient;
 
-        coefficientSum = Math.abs(forwardBackMovt) + Math.abs(strafeMovt) + Math.abs(turnMovt);
+        this.coefficientSum = Math.abs(forwardBackMovt) + Math.abs(strafeMovt) + Math.abs(turnMovt);
 
         initMatrix();
         integrator = new RK4Integrator();
@@ -141,5 +141,13 @@ public class CustomMecanumDrive {
     public void setOutputMultiplier(double nPower){
         this.outputMultiplier = EULMathEx.doubleClamp(-1, 1, nPower);
         initMatrix();
+    }
+
+    public BNO055IMU getImu(){
+        return imu;
+    }
+
+    public ImuIntegration getIntegrator(){
+        return integrator;
     }
 }

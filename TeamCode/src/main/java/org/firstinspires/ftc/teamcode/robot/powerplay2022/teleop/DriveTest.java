@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
+import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.VerletIntegrator;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
 @TeleOp(name = "MecanumTestDrive", group = "Test")
@@ -16,7 +17,7 @@ public class DriveTest extends LoopUtil {
 
     @Override
     public void opInit() {
-        drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
+        drive = new CustomMecanumDrive(hardwareMap, new VerletIntegrator(), 1, 1.1, 1);
         drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
 
         joystick = new Vector3d();
@@ -39,9 +40,9 @@ public class DriveTest extends LoopUtil {
         joystick.z = gamepad1.right_stick_x;
 
         drive.update(joystick, true, deltaTime);
-        telemetry.addData("Angle: ", drive.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
-        telemetry.addData("Position(Integrated): ", drive.integrator.getCurrentPosition());
-        telemetry.addData("Velocity(Integrated): ", drive.integrator.getCurrentVelocity());
+        telemetry.addData("Angle: ", drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
+        telemetry.addData("Position(Integrated): ", drive.getIntegrator().getCurrentPosition());
+        telemetry.addData("Velocity(Integrated): ", drive.getIntegrator().getCurrentVelocity());
     }
 
     @Override

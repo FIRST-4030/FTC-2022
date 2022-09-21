@@ -16,5 +16,5 @@ public interface ImuIntegration {
     Vector3d getCurrentPosition();
 
     void init();
-    void integrate(Acceleration accel, double deltaTime);
+    void integrate(Acceleration accel, double deltaTimeMs);
 }

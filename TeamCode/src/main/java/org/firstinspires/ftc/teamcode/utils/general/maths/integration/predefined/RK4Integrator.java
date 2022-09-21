@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefine
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.accelintegration.AccelIntegratorRK4;
 
 public class RK4Integrator implements ImuIntegration{
@@ -106,7 +107,7 @@ public class RK4Integrator implements ImuIntegration{
         state.vel.y += derivative.dVel.y * dt1;
         state.vel.z += derivative.dVel.z * dt1;
 
-        Vector3d accelSlope = currentAccel.minus(lastAccel);
+        Vector3d accelSlope = currentAccel.minus(lastAccel).div(dt1);
 
         Derivative output = new Derivative();
         output.dPos = state.vel;
@@ -118,11 +119,12 @@ public class RK4Integrator implements ImuIntegration{
     }
 
     @Override
-    public void integrate(Acceleration accel, double deltaTime) {
+    public void integrate(Acceleration accel, double deltaTimeMs) {
         Derivative a, b, c, d, output = new Derivative();
         lastElapsedTime = currentElapsedTime;
-        currentElapsedTime += deltaTime;
+        currentElapsedTime += deltaTimeMs;
 
+        double deltaTime = deltaTimeMs * EULConstants.MS2SEC;
         lastAccel = currentAccel;
         currentAccel = new Vector3d(accel.xAccel, accel.yAccel, accel.zAccel);
 
@@ -130,10 +132,10 @@ public class RK4Integrator implements ImuIntegration{
 
         lastDerivative = currentDerivative;
 
-        a = calcDerivative(lastState, deltaTime, deltaTime * 0.5, lastDerivative);
-        b = calcDerivative(lastState, deltaTime, deltaTime * 0.5,              a);
-        c = calcDerivative(lastState, deltaTime, deltaTime * 0.5,              b);
-        d = calcDerivative(lastState, deltaTime, deltaTime * 1  ,              c);
+        a = calcDerivative(lastState, deltaTime, deltaTime * 0.5, new Derivative());
+        b = calcDerivative(lastState, deltaTime, deltaTime * 0.5,                a);
+        c = calcDerivative(lastState, deltaTime, deltaTime * 0.5,                b);
+        d = calcDerivative(lastState, deltaTime, deltaTime * 1  ,                c);
 
         output.dPos.x = 1/6d * (a.dPos.x + 2 * (b.dPos.x + c.dPos.x) + d.dPos.x);
         output.dPos.y = 1/6d * (a.dPos.y + 2 * (b.dPos.y + c.dPos.y) + d.dPos.y);
