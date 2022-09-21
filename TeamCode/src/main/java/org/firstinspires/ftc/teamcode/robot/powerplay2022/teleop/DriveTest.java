@@ -45,7 +45,7 @@ public class DriveTest extends LoopUtil {
         joystick.y = -gamepad1.left_stick_y;
         joystick.z = gamepad1.right_stick_x;
 
-        drive.update(joystick, false);
+        drive.update(joystick, true);
         telemetry.addData("Angle: ", drive.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
     }
 
