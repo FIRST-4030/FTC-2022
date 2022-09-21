@@ -131,4 +131,12 @@ public class Matrix2d implements EULMatrix<Matrix2d, Vector2d>{
         }
         return new Matrix2d(m);
     }
+
+    public static Matrix2d makeRotation(double angle){
+        double rs = Math.sin(angle); double rc = Math.cos(angle);
+        return new Matrix2d(new double[][]{
+                {rc, -rs},
+                {rs,  rc}
+        });
+    }
 }

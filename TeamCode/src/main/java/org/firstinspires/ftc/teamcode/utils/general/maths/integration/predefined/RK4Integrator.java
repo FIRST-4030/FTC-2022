@@ -107,7 +107,7 @@ public class RK4Integrator implements ImuIntegration{
         state.vel.y += derivative.dVel.y * dt1;
         state.vel.z += derivative.dVel.z * dt1;
 
-        Vector3d accelSlope = currentAccel.minus(lastAccel).div(dt1);
+        Vector3d accelSlope = (currentAccel.minus(lastAccel).div((currentElapsedTime - lastElapsedTime))).times(EULConstants.MS2SEC);
 
         Derivative output = new Derivative();
         output.dPos = state.vel;

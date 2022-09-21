@@ -4,5 +4,12 @@ public class MecanumDriveState {
 
     private boolean isDone = true;
 
+    public MecanumDriveState(){
+
+    }
+
+    public boolean isDone(){
+        return isDone;
+    }
 
 }
