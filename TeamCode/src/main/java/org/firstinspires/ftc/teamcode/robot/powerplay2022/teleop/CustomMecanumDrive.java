@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -14,6 +15,8 @@ import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix3d
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix4d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector4d;
+import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.ImuIntegration;
+import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.RK4Integrator;
 import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.VerletIntegrator;
 
 import java.util.HashMap;
@@ -23,7 +26,7 @@ public class CustomMecanumDrive {
 
     private HardwareMap hardwareMap;
     public BNO055IMU imu;
-    public VerletIntegrator verletIntegrator;
+    public ImuIntegration integrator;
 
     private HashMap<String, DcMotor> motorMap;
     private Matrix4d mecanumPowerRatioMatrix;
@@ -45,8 +48,8 @@ public class CustomMecanumDrive {
         coefficientSum = Math.abs(forwardBackMovt) + Math.abs(strafeMovt) + Math.abs(turnMovt);
 
         initMatrix();
-        verletIntegrator = new VerletIntegrator();
-        verletIntegrator.init();
+        integrator = new RK4Integrator();
+        integrator.init();
     }
 
     public void mapMotors(String frontLeft, boolean reverseFL, String backLeft, boolean reverseBL, String frontRight, boolean reverseFR, String backRight, boolean reverseBR){
@@ -96,7 +99,12 @@ public class CustomMecanumDrive {
         Objects.requireNonNull(motorMap.get("FR")).setPower(out.z);
         Objects.requireNonNull(motorMap.get("BR")).setPower(out.w);
 
-        verletIntegrator.integrate(imu.getAcceleration(), dt);
+        Acceleration acceleration = imu.getLinearAcceleration();
+        Acceleration gravity = imu.getGravity();
+        acceleration.xAccel -= gravity.xAccel;
+        acceleration.yAccel -= gravity.yAccel;
+        acceleration.zAccel -= gravity.zAccel;
+        integrator.integrate(acceleration, dt);
     }
 
     private void initIMU(HardwareMap hardwareMap){
