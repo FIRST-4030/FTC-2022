@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.MecanumMovementFactory;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
@@ -39,7 +40,7 @@ public class DriveTest extends LoopUtil {
         joystick.y = -gamepad1.left_stick_y;
         joystick.z = gamepad1.right_stick_x;
 
-        drive.update(joystick, true, deltaTime);
+        drive.update(joystick, true, deltaTime * EULConstants.MS2SEC);
         telemetry.addData("Angle: ", drive.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
         telemetry.addData("Position(Integrated): ", drive.verletIntegrator.getCurrentPosition());
     }
