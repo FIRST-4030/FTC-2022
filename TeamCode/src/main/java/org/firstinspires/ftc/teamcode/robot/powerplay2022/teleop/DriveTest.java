@@ -40,7 +40,8 @@ public class DriveTest extends LoopUtil {
 
         drive.update(joystick, true, deltaTime);
         telemetry.addData("Angle: ", drive.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
-        telemetry.addData("Position(Integrated): ", drive.verletIntegrator.getCurrentPosition());
+        telemetry.addData("Position(Integrated): ", drive.integrator.getCurrentPosition());
+        telemetry.addData("Velocity(Integrated): ", drive.integrator.getCurrentVelocity());
     }
 
     @Override
