@@ -125,7 +125,7 @@ public class CustomMecanumDrive {
     }
 
     public void setOutputMultiplier(double nPower){
-        this.outputMultiplier = EULMathEx.doubleClamp(-1, 1, nPower);
+        this.outputMultiplier = EULMathEx.doubleClamp(-1, 1, -nPower);
         initMatrix();
     }
 }

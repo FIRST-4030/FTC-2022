@@ -20,7 +20,7 @@ public class DriveTest extends LoopUtil {
         drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
         drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
 
-        drive.setOutputMultiplier(0.5);
+        drive.setOutputMultiplier(0.75);
         joystick = new Vector3d();
     }
 
