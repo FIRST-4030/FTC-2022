@@ -96,7 +96,7 @@ public class CustomMecanumDrive {
         Objects.requireNonNull(motorMap.get("FR")).setPower(out.z);
         Objects.requireNonNull(motorMap.get("BR")).setPower(out.w);
 
-        verletIntegrator.integrate(imu.getLinearAcceleration(), dt);
+        verletIntegrator.integrate(imu.getAcceleration(), dt);
     }
 
     private void initIMU(HardwareMap hardwareMap){
