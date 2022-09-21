@@ -81,16 +81,16 @@ public class CustomMecanumDrive {
         //create Vector4d 'in' from the passed in Vector3d(forward, strafe, turn)'s x, y, z, and an arbitrary w value
         //divide the input by the ratio found by max(|forward| + |strafe| + |turn|, 1)
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        Matrix3d rot = fieldCentric ? Matrix3d.makeAffineRotation(-angles.firstAngle) : new Matrix3d();
+        Matrix3d rot = fieldCentric ? Matrix3d.makeAffineRotation(angles.firstAngle) : new Matrix3d();
         Vector3d rotated = rot.times(control);
         Vector4d internalControl = new Vector4d(rotated.x, rotated.y, rotated.z, 1);
         out = mecanumPowerRatioMatrix.times(internalControl).div(Math.max(coefficientSum, 1));
 
         //set the motor powers as referenced in the hashmap
-        Objects.requireNonNull(motorMap.get("FL")).setPower(-out.x);
-        Objects.requireNonNull(motorMap.get("BL")).setPower(-out.y);
-        Objects.requireNonNull(motorMap.get("FR")).setPower(-out.z);
-        Objects.requireNonNull(motorMap.get("BR")).setPower(-out.w);
+        Objects.requireNonNull(motorMap.get("FL")).setPower(out.x);
+        Objects.requireNonNull(motorMap.get("BL")).setPower(out.y);
+        Objects.requireNonNull(motorMap.get("FR")).setPower(out.z);
+        Objects.requireNonNull(motorMap.get("BR")).setPower(out.w);
     }
 
     private void initIMU(HardwareMap hardwareMap){

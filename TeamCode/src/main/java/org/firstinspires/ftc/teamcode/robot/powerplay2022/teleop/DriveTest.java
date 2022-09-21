@@ -41,7 +41,7 @@ public class DriveTest extends LoopUtil {
         joystick.y = -gamepad1.left_stick_y;
         joystick.z = gamepad1.right_stick_x;
 
-        drive.update(joystick, true);
+        drive.update(joystick, false);
     }
 
     @Override
