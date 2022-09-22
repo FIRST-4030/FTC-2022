@@ -63,7 +63,7 @@ public class MecanumDriveTest extends LoopUtil {
             cmdStacks[i] = new MecanumTrajectory();
         }
 
-
+        //cmdStack[0]
         cmdStacks[0].forward(-1);
         cmdStacks[0].idle(500);
         cmdStacks[0].turnLeft(1050);
