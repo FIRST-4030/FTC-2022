@@ -8,6 +8,7 @@ public class VerletIntegrator implements ImuIntegration{
 
     private double lastElapsedTime, currentElapsedTime;
 
+    private Vector3d nextPosition;
     private Vector3d currentAccel, currentVeloc, currentPos;
     private Vector3d lastAccel, lastVeloc, lastPos;
 
@@ -62,6 +63,8 @@ public class VerletIntegrator implements ImuIntegration{
         currentAccel = new Vector3d();
         currentVeloc = new Vector3d();
         currentPos = new Vector3d();
+        
+        nextPosisiton = new Vector3d();
     }
 
     @Override
@@ -75,9 +78,10 @@ public class VerletIntegrator implements ImuIntegration{
         currentAccel = new Vector3d(accel.xAccel, accel.yAccel, accel.zAccel);
 
         lastPos = currentPos;
-        currentPos.x = lastPos.x * 2 - lastPos.x + currentAccel.x * deltaTime * deltaTime;
-        currentPos.y = lastPos.y * 2 - lastPos.y + currentAccel.y * deltaTime * deltaTime;;
-        currentPos.z = lastPos.z * 2 - lastPos.z + currentAccel.z * deltaTime * deltaTime;;
+        currentPos = nextPosition;
+        nextPosition.x = currentPos.x * 2 - lastPos.x + currentAccel.x * deltaTime * deltaTime;
+        nextPosition.y = currentPos.y * 2 - lastPos.y + currentAccel.y * deltaTime * deltaTime;;
+        nextPosition.z = currentPos.z * 2 - lastPos.z + currentAccel.z * deltaTime * deltaTime;;
 
         lastVeloc = currentVeloc;
         currentVeloc = currentPos.minus(lastPos).div(currentElapsedTime - lastElapsedTime);
