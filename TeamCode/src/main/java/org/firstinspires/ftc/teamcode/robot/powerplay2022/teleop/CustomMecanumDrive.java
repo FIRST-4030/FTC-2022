@@ -51,7 +51,7 @@ public class CustomMecanumDrive {
         this.coefficientSum = Math.abs(forwardBackMovt) + Math.abs(strafeMovt) + Math.abs(turnMovt);
 
         initMatrix();
-        this.integrator = new RK4Integrator();
+        this.integrator = integrator;
         this.integrator.init();
     }
 
