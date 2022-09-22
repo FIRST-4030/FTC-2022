@@ -64,7 +64,7 @@ public class VerletIntegrator implements ImuIntegration{
         currentVeloc = new Vector3d();
         currentPos = new Vector3d();
         
-        nextPosisiton = new Vector3d();
+        nextPosition = new Vector3d();
     }
 
     @Override
