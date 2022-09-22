@@ -51,8 +51,8 @@ public class CustomMecanumDrive {
         this.coefficientSum = Math.abs(forwardBackMovt) + Math.abs(strafeMovt) + Math.abs(turnMovt);
 
         initMatrix();
-        integrator = new RK4Integrator();
-        integrator.init();
+        this.integrator = new RK4Integrator();
+        this.integrator.init();
     }
 
     public void mapMotors(String frontLeft, boolean reverseFL, String backLeft, boolean reverseBL, String frontRight, boolean reverseFR, String backRight, boolean reverseBR){
