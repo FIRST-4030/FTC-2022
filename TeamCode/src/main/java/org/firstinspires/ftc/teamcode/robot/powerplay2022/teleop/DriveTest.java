@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robot.powerplay2022.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
@@ -44,6 +45,8 @@ public class DriveTest extends LoopUtil {
         telemetry.addData("Position(Integrated): ", drive.getIntegrator().getCurrentPosition());
         telemetry.addData("Velocity(Integrated): ", drive.getIntegrator().getCurrentVelocity());
         telemetry.addData("Acceleration: ", drive.getImu().getLinearAcceleration());
+        AngularVelocity avel = drive.getImu().getAngularVelocity();
+        telemetry.addData("Turn Velocity: ", new Vector3d(avel.xRotationRate, avel.yRotationRate, avel.zRotationRate));
     }
 
     @Override

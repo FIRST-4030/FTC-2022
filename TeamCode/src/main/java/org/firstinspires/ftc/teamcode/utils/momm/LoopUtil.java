@@ -160,7 +160,7 @@ public abstract class LoopUtil extends OpMode{
         MIN_WAIT_LIMIT = 0.1;
 
         //set fixed updates per second; in this case, the denominator states that there will be 60 updates per second
-        UPDATE_CAP = 1.0 / 60.0;
+        UPDATE_CAP = 1.0 / 30.0;
 
         //let the subclass initialize
         opInit();
