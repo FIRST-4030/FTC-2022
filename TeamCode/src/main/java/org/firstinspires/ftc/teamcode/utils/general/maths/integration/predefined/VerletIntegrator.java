@@ -80,10 +80,10 @@ public class VerletIntegrator implements ImuIntegration{
         lastPos = currentPos;
         currentPos = nextPosition;
         nextPosition.x = currentPos.x * 2 - lastPos.x + currentAccel.x * deltaTime * deltaTime;
-        nextPosition.y = currentPos.y * 2 - lastPos.y + currentAccel.y * deltaTime * deltaTime;;
-        nextPosition.z = currentPos.z * 2 - lastPos.z + currentAccel.z * deltaTime * deltaTime;;
+        nextPosition.y = currentPos.y * 2 - lastPos.y + currentAccel.y * deltaTime * deltaTime;
+        nextPosition.z = currentPos.z * 2 - lastPos.z + currentAccel.z * deltaTime * deltaTime;
 
         lastVeloc = currentVeloc;
-        currentVeloc = currentPos.minus(lastPos).div(currentElapsedTime - lastElapsedTime);
+        currentVeloc = currentPos.minus(lastPos).div(deltaTime);
     }
 }

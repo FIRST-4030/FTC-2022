@@ -104,9 +104,9 @@ public class CustomMecanumDrive {
 
         Acceleration acceleration = imu.getLinearAcceleration();
         Acceleration gravity = imu.getGravity();
-        acceleration.xAccel -= gravity.xAccel;
-        acceleration.yAccel -= gravity.yAccel;
-        acceleration.zAccel -= gravity.zAccel;
+        acceleration.xAccel -= 0;
+        acceleration.yAccel -= 0;
+        acceleration.zAccel -= 0;
         integrator.integrate(acceleration, dt);
     }
 
