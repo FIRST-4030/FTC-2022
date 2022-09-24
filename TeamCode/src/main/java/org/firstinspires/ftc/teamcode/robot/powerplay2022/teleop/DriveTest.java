@@ -20,7 +20,7 @@ public class DriveTest extends LoopUtil {
 
     @Override
     public void opInit() {
-        drive = new CustomMecanumDrive(hardwareMap, new VerletIntegrator(), 1, 1.1, 1);
+        drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
         drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
 
         joystick = new Vector3d();
@@ -57,8 +57,6 @@ public class DriveTest extends LoopUtil {
 
         drive.update(joystick, true, deltaTime);
         telemetry.addData("Angle: ", drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
-        telemetry.addData("Position(Integrated): ", drive.getIntegrator().getCurrentPosition());
-        telemetry.addData("Velocity(Integrated): ", drive.getIntegrator().getCurrentVelocity());
         telemetry.addData("Acceleration: ", drive.getImu().getLinearAcceleration());
         AngularVelocity avel = drive.getImu().getAngularVelocity();
         telemetry.addData("Turn Velocity: ", new Vector3d(avel.xRotationRate, avel.yRotationRate, avel.zRotationRate));

@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -15,34 +14,34 @@ import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix3d
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix4d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector4d;
-import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.ImuIntegration;
-import org.firstinspires.ftc.teamcode.utils.general.maths.integration.predefined.RK4Integrator;
 
 import java.util.HashMap;
 import java.util.Objects;
 
-public class CustomMecanumDrive {
+public class CustomMecanumDrive extends CustomDrive{
 
+    /*
     protected HardwareMap hardwareMap;
     protected BNO055IMU imu;
-    protected ImuIntegration integrator;
+     */
 
-    protected HashMap<String, DcMotor> motorMap;
+    //protected HashMap<String, DcMotor> motorMap;
+
+    //mecanum specific stuff
     protected Matrix4d mecanumPowerRatioMatrix;
     protected double forwardBackMovt, strafeMovt, turnMovt;
     protected double coefficientSum;
-    protected Vector3d virtualJoystick;
     protected MecanumDriveTrajectory followTrajectory;
     protected boolean fieldCentricMode = true;
+
     protected Vector4d out;
-    public double deltaTime;
+    //public double deltaTime;
 
     private double outputMultiplier = 1;
 
-    public CustomMecanumDrive(HardwareMap hardwareMap, ImuIntegration integrator, double forwardBackCoefficient, double strafingCoefficient, double turnCoefficient){
+    public CustomMecanumDrive(HardwareMap hardwareMap, double forwardBackCoefficient, double strafingCoefficient, double turnCoefficient){
         this.hardwareMap = hardwareMap;
-        this.integrator = integrator;
-        initIMU(hardwareMap);
+        initImu();
 
         this.motorMap = new HashMap<>();
         this.forwardBackMovt = forwardBackCoefficient;
@@ -52,9 +51,9 @@ public class CustomMecanumDrive {
         this.coefficientSum = Math.abs(forwardBackMovt) + Math.abs(strafeMovt) + Math.abs(turnMovt);
 
         initMatrix();
-        this.integrator = integrator;
-        this.integrator.init();
-        this.deltaTime = 1;
+        //this.deltaTime = 1;
+
+        initVirtualRobot();
     }
 
     public void mapMotors(String frontLeft, boolean reverseFL, String backLeft, boolean reverseBL, String frontRight, boolean reverseFR, String backRight, boolean reverseBR){
@@ -90,6 +89,9 @@ public class CustomMecanumDrive {
     }
 
     public void update(Vector3d control, boolean fieldCentric, double dt){
+        virtualRobot.updateHeading();
+        virtualRobot.updateTime(dt);
+
         //create Vector4d 'in' from the passed in Vector3d(forward, strafe, turn)'s x, y, z, and an arbitrary w value
         //divide the input by the ratio found by max(|forward| + |strafe| + |turn|, 1)
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
@@ -103,38 +105,28 @@ public class CustomMecanumDrive {
         Objects.requireNonNull(motorMap.get("BL")).setPower(out.y);
         Objects.requireNonNull(motorMap.get("FR")).setPower(out.z);
         Objects.requireNonNull(motorMap.get("BR")).setPower(out.w);
-
-        Acceleration acceleration = imu.getLinearAcceleration();
-        Acceleration gravity = imu.getGravity();
-        acceleration.xAccel -= 0;
-        acceleration.yAccel -= 0;
-        acceleration.zAccel -= 0;
-        integrator.integrate(acceleration, dt);
     }
 
     public void followTrajectory(double dt){
-        MecanumDriveState<?> state = followTrajectory.getCurrentStateStack().peek();
-        if (state.isDone() && !followTrajectory.isCurrentStateStackEmpty()) {
-            followTrajectory.pop();
-            virtualJoystick.x = 0;
-            virtualJoystick.y = 0;
-            virtualJoystick.z = 0;
-        }
-
-        if(state.isDone()){} else {
-            switch (state.condition.getName()){
-                case "TimeCondition":
-                    state.update(dt);
-                    break;
-                default:
-
+        virtualRobot.updateHeading();
+        virtualRobot.updateTime(dt);
+        MecanumDriveState state = followTrajectory.getCurrentStateStack().peek();
+        if(state.isDone()){
+            if (!followTrajectory.isCurrentStateStackEmpty()) {
+                followTrajectory.pop();
+                virtualRobot.virtualJoystick.x = 0;
+                virtualRobot.virtualJoystick.y = 0;
+                virtualRobot.virtualJoystick.z = 0;
             }
+        } else {
+            state.update();
         }
 
-        update(virtualJoystick, fieldCentricMode, dt);
+        update(virtualRobot.virtualJoystick, fieldCentricMode, dt);
     }
 
-    private void initIMU(HardwareMap hardwareMap){
+    @Override
+    protected void initImu(){
         //set up IMU parameters for basic angle tracking
         BNO055IMU.Parameters imuParams = new BNO055IMU.Parameters();
         imuParams.mode = BNO055IMU.SensorMode.IMU;
@@ -172,9 +164,5 @@ public class CustomMecanumDrive {
 
     public BNO055IMU getImu(){
         return imu;
-    }
-
-    public ImuIntegration getIntegrator(){
-        return integrator;
     }
 }

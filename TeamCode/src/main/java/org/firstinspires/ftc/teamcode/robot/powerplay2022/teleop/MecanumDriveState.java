@@ -1,78 +1,81 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.teleop;
 
-public class MecanumDriveState<E extends MecanumDriveState.Conditional<?>> {
+import org.firstinspires.ftc.teamcode.utils.general.misc.VirtualRobot;
 
-    public interface Conditional<T>{
+public class MecanumDriveState {
+
+    public interface Conditional{
         boolean isDone();
-        void update(Object value);
+        void update(VirtualRobot virtualRobot);
         String getName();
     }
 
-    public static class TimeCondition implements Conditional<Double>{
+    public static class TimeCondition implements Conditional{
+        public double elapsedTime;
+        public double targetTime;
 
-        private String name = "TimeCondition";
-        private double timeEnd, currentTime;
-        public TimeCondition(double end){
-            this.timeEnd = end;
-            currentTime = 0;
+        public TimeCondition(double targetTime){
+            this.targetTime = targetTime;
+            elapsedTime = 0;
         }
 
         @Override
         public boolean isDone() {
-            return timeEnd <= currentTime && timeEnd != -1;
+            return elapsedTime >= targetTime && targetTime != -1;
         }
 
         @Override
-        public void update(Object value) {
-            currentTime = (double) value;
+        public void update(VirtualRobot virtualRobot) {
+            elapsedTime += virtualRobot.getDeltaTime();
         }
-
         @Override
         public String getName() {
-            return name;
+            return getClass().getSimpleName();
         }
     }
 
-    public static class ValueCondition<T extends Comparable> implements Conditional<T>{
+    public static class HeadingCondition implements Conditional{
 
-        private T endValue, currentValue, acceptable;
-        private String name = "ValueCondition: ";
-        public ValueCondition(T endValue, T acceptableRange){
-            this.endValue = endValue;
-            this.name += endValue.getClass().getSimpleName();
+        public double target;
+        public double actual;
+        public double marginOfError;
+
+        public HeadingCondition(double target, double marginOfError){
+            this.target = target;
+            this.actual = -1;
+            this.marginOfError = marginOfError;
         }
 
         @Override
         public boolean isDone() {
-            return endValue.compareTo(currentValue) == 0;
+            return (Math.abs(target - actual) <= marginOfError);
         }
 
         @Override
-        public void update(Object value) {
-            currentValue = (T) value;
+        public void update(VirtualRobot virtualRobot) {
+            actual = virtualRobot.getHeadingAngle();
         }
 
         @Override
         public String getName() {
-            return name;
+            return getClass().getSimpleName();
         }
     }
 
-    public E condition;
-    public Runnable state;
     public String name;
-
-    public MecanumDriveState(String name,Runnable state, E condition){
+    public Runnable state;
+    public Conditional conditional;
+    public MecanumDriveState(String name, Runnable state, Conditional conditional){
         this.name = name;
-        this.condition = condition;
         this.state = state;
+        this.conditional = conditional;
+    }
+
+    public void update(){
+        state.run();
     }
 
     public boolean isDone(){
-        return condition.isDone();
-    }
-
-    public void update(Object dt){
-        condition.update(dt);
+        return conditional.isDone();
     }
 }

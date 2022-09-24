@@ -74,6 +74,10 @@ public class Vector3d implements EULVector<Vector3d> {
         return new Vector3d(x / len, y / len, z / len);
     }
 
+    public Vector3d cross(Vector3d other){
+        return new Vector3d(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x);
+    }
+
     @Override
     public Vector3d plus(Object other) {
         Vector3d other_ = other instanceof Vector3d ? (Vector3d) other : new Vector3d();
