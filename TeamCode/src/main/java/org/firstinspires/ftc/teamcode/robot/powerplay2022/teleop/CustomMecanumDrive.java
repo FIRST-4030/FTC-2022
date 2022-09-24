@@ -35,6 +35,7 @@ public class CustomMecanumDrive {
     protected MecanumDriveTrajectory followTrajectory;
     protected boolean fieldCentricMode = true;
     protected Vector4d out;
+    public double deltaTime;
 
     private double outputMultiplier = 1;
 
@@ -53,6 +54,7 @@ public class CustomMecanumDrive {
         initMatrix();
         this.integrator = integrator;
         this.integrator.init();
+        this.deltaTime = 1;
     }
 
     public void mapMotors(String frontLeft, boolean reverseFL, String backLeft, boolean reverseBL, String frontRight, boolean reverseFR, String backRight, boolean reverseBR){

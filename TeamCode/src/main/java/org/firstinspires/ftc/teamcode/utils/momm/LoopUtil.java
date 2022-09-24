@@ -21,7 +21,7 @@ public abstract class LoopUtil extends OpMode{
     public final InputHandler input;
 
 
-    private ElapsedTime loop_timer;
+    protected ElapsedTime loop_timer;
 
     private boolean
             timeStart = false,

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.robot.powerplay2022;
 
 public class AnglePID {
     public double currentTime, previousTime, currentError, previousError, correctionPower;
-    private double Kp, Ki, Kd, i;
+    public double Kp, Ki, Kd, p, i, d;
 
     public AnglePID(double KP, double KI, double KD){ //Kp should be 1/pi, Kd should be 0.00025, Ki ???
         currentTime = 0; currentError = 0; previousTime = 0; previousError = 0; i = 0;
@@ -18,14 +18,14 @@ public class AnglePID {
         previousError = currentError;
         currentError = targetAngle - currentAngle;
 
-        double p = Kp * currentError;
+        p = Kp * currentError;
 
         i += Ki * (currentError * deltaTime);
 
         if ( i>1 ){ i=1; }
         if ( i<-1 ){ i=-1; }
 
-        double d = Kd * (currentError - previousError) / deltaTime;
+        d = Kd * (currentError - previousError) / deltaTime;
 
         correctionPower = p+i+d;
 
