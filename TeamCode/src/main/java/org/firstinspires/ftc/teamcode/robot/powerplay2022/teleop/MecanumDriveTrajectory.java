@@ -20,7 +20,8 @@ public class MecanumDriveTrajectory {
         this.stateStack = new Stack<>();
         this.copy = new Stack<>();
         this.drive = drive;
-        Apid = new AnglePID(1/Math.PI, 0.000001, 1/4000);
+        //Apid = new AnglePID(1/Math.PI, 0.000001, 1/4000);
+        Apid = new AnglePID(1/Math.PI, 0, 1/4000);
     }
 
     public void build(){
