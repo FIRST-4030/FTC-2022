@@ -10,7 +10,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.Globals;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.AnglePID;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.ColorView;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
+import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 
 @Config
 @TeleOp(name = "PowerPlayMecanum", group = "Test")
@@ -24,6 +26,9 @@ public class DriveTest extends LoopUtil {
     public static boolean lastStateLB = false, lastStateRB = false,currentStateLB = false, currentStateRB = false;
     public static double pGain = 0, iGain = 0, dGain = 0;
 
+    RevColorRange RCR2;
+    ColorView CV2;
+
     @Override
     public void opInit() {
 
@@ -35,9 +40,9 @@ public class DriveTest extends LoopUtil {
 
         joystick = new Vector3d();
 
-        pGain = 1/(Math.PI * 2.5);
+        pGain = 1/(Math.PI * 3);
         iGain = 0;
-        dGain = 65;
+        dGain = 88;
 
         //Apid = new AnglePID(1/Math.PI, 0.000001, 1/4000);
         Apid = new AnglePID(pGain, iGain, dGain);
@@ -49,6 +54,9 @@ public class DriveTest extends LoopUtil {
         lastStateLB = false;
         currentStateLB = false;
         currentStateRB = false;
+
+        RCR2 = new RevColorRange(hardwareMap, telemetry, "rcr");
+        CV2 = new ColorView(RCR2.color(), RCR2.distance());
     }
 
     @Override
@@ -118,6 +126,8 @@ public class DriveTest extends LoopUtil {
         //joystick.z = gamepad1.right_stick_x;
         joystick.z -= Apid.correctionPower;
 
+        CV2.update(RCR2.color(), RCR2.distance());
+
         drive.update(joystick, true, deltaTime);
         telemetry.addData("Angle: ", drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
         telemetry.addData("Acceleration: ", drive.getImu().getLinearAcceleration());
@@ -128,6 +138,11 @@ public class DriveTest extends LoopUtil {
         telemetry.addData("I: ", Apid.i);
         telemetry.addData("D: ", Apid.d);
         telemetry.addData("Correction: ", Apid.correctionPower);
+        telemetry.addData("Color: ", CV2.getColor());
+        telemetry.addData("Red: ", RCR2.color().red);
+        telemetry.addData("Blue: ", RCR2.color().blue);
+        telemetry.addData("Green: ", RCR2.color().green);
+        telemetry.addData("Distance: ", RCR2.distance());
     }
 
     @Override
