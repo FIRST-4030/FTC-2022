@@ -10,6 +10,15 @@ public class AlgorithmicCorrection {
         double process(double scalar);
     }
 
+    public static class RELU implements InterpolationAlgorithm{
+        public RELU(){}
+
+        @Override
+        public double process(double scalar) {
+            return -scalar + 1; //-x + 1
+        }
+    }
+
     public static class CustomizableRELU implements InterpolationAlgorithm{
 
         private double slope;
@@ -22,7 +31,30 @@ public class AlgorithmicCorrection {
 
         @Override
         public double process(double scalar) {
-            return Math.max(0, scalar * slope + yIntercept);
+            return Math.max(0, scalar * slope + yIntercept); //-mx + yIntercept
+        }
+    }
+
+    public static class Cosine implements InterpolationAlgorithm{
+        public Cosine(){}
+
+        @Override
+        public double process(double scalar) {
+            return Math.cos(scalar * Math.PI / 2); //cos(xπ/2)
+        }
+    }
+
+    public static class Sqrt implements InterpolationAlgorithm{
+
+        private double outputMultiplier;
+
+        public Sqrt(double outputMultiplier){
+            this.outputMultiplier = outputMultiplier;
+        }
+
+        @Override
+        public double process(double scalar) {
+            return outputMultiplier * Math.sqrt(scalar + 1); //sqrt(-x + 1)
         }
     }
 
@@ -32,9 +64,55 @@ public class AlgorithmicCorrection {
 
         @Override
         public double process(double scalar) {
-            return (scalar - 1) * (scalar - 1);//(x - 1)^2
+            return -(scalar * scalar) + 1; //-x^2 + 1
         }
     }
+
+    public static class Cubic implements InterpolationAlgorithm{
+        public Cubic(){}
+
+        @Override
+        public double process(double scalar) {
+            return -(scalar * scalar * scalar) + 1; //-x^3 + 1
+        }
+    }
+
+    public static class Quartic implements InterpolationAlgorithm{
+        public Quartic(){}
+
+        @Override
+        public double process(double scalar) {
+            return -(scalar * scalar * scalar * scalar) + 1; //-x^4 + 1
+        }
+    }
+
+    public static class Quintic implements InterpolationAlgorithm{
+
+        public Quintic(){}
+
+        @Override
+        public double process(double scalar) {
+            return -(scalar * scalar * scalar * scalar * scalar) + 1; // -x^5 + 1
+        }
+    }
+
+    public static class Polynomial implements InterpolationAlgorithm{
+        private int degree;
+        public Polynomial(int degree){
+            this.degree = degree;
+        }
+
+        @Override
+        public double process(double scalar) {
+            double x = 1;
+            for (int i = 0; i < degree; i++) {
+                x *= scalar;
+            }
+            return -x + 1; //-x^n + 1
+        }
+    }
+
+    //member variable declaration under here
 
     private double output;
     private Matrix2d actualRotation;
@@ -95,7 +173,7 @@ public class AlgorithmicCorrection {
         //in-line if is for resolving exact value conditions even though they are rare
         correctionSign = Math.signum(headingVector.times(perpendicularTargetVector)) == 0? 1: -Math.signum(headingVector.times(perpendicularTargetVector));
 
-        //input the scalar into the interpolation and multiply by the correction sign
+        //input the (1 - scalar) into the interpolation and multiply by the correction sign
         output = interpolationAlgorithm.process(1 - targetDistance) * correctionSign;
     }
 

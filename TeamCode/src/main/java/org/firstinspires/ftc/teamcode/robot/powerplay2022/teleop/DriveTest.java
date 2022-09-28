@@ -62,7 +62,7 @@ public class DriveTest extends LoopUtil {
         RCR2 = new RevColorRange(hardwareMap, telemetry, "rcr");
         CV2 = new ColorView(RCR2.color(), RCR2.distance());
 
-        correction = new AlgorithmicCorrection(new AlgorithmicCorrection.CustomizableRELU(1, 0));
+        correction = new AlgorithmicCorrection(new AlgorithmicCorrection.Cubic());
     }
 
     @Override
