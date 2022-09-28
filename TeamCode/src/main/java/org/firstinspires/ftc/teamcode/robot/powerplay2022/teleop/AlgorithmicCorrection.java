@@ -26,6 +26,16 @@ public class AlgorithmicCorrection {
         }
     }
 
+    public static class Quadratic implements InterpolationAlgorithm{
+
+        public Quadratic(){}
+
+        @Override
+        public double process(double scalar) {
+            return (scalar - 1) * (scalar - 1);//(x - 1)^2
+        }
+    }
+
     private double output;
     private Matrix2d actualRotation;
     private Matrix2d targetRotation;
