@@ -26,6 +26,10 @@ public class DriveTest extends LoopUtil {
     public static boolean lastStateLB = false, lastStateRB = false,currentStateLB = false, currentStateRB = false;
     public static double pGain = 0, iGain = 0, dGain = 0;
 
+
+    //Algorithm-based correction (not PID)
+    public static AlgorithmicCorrection correction;
+
     RevColorRange RCR2;
     ColorView CV2;
 
@@ -57,6 +61,8 @@ public class DriveTest extends LoopUtil {
 
         RCR2 = new RevColorRange(hardwareMap, telemetry, "rcr");
         CV2 = new ColorView(RCR2.color(), RCR2.distance());
+
+        correction = new AlgorithmicCorrection(new AlgorithmicCorrection.CustomizableRELU(1, 0));
     }
 
     @Override
@@ -95,6 +101,7 @@ public class DriveTest extends LoopUtil {
             angleIndex = 0;
         }
 
+        /*
         switch(angleIndex){
             case 0:
                 Apid.update(deltaTime, angles[angleIndex], drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
@@ -121,10 +128,21 @@ public class DriveTest extends LoopUtil {
                 }
                 break;
         }
+
+         */
+
+        correction.update(angles[angleIndex], drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, false);
+
         joystick.x = gamepad1.left_stick_x;
         joystick.y = -gamepad1.left_stick_y;
-        //joystick.z = gamepad1.right_stick_x;
-        joystick.z -= Apid.correctionPower;
+
+        //joystick.z = gamepad1.right_stick_x; //manual steering
+
+        //joystick.z -= Apid.correctionPower; //correction steering (PID)
+
+        joystick.z = correction.getOutput(); //an algorithm directly controls the rotation instead of adding to it
+
+
 
         CV2.update(RCR2.color(), RCR2.distance());
 
