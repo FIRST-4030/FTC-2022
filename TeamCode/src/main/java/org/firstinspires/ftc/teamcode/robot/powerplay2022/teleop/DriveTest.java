@@ -48,7 +48,7 @@ public class DriveTest extends LoopUtil {
         iGain = 0;
         dGain = 88;
 
-        //Apid = new AnglePID(1/Math.PI, 0.000001, 1/4000);
+        Apid = new AnglePID(1/Math.PI, 0.000001, 1/4000);
         Apid = new AnglePID(pGain, iGain, dGain);
         angles = new double[]{ 0, Math.PI/2,  Math.PI, -Math.PI/2};
 
@@ -62,7 +62,7 @@ public class DriveTest extends LoopUtil {
         RCR2 = new RevColorRange(hardwareMap, telemetry, "rcr");
         CV2 = new ColorView(RCR2.color(), RCR2.distance());
 
-        correction = new AlgorithmicCorrection(new AlgorithmicCorrection.Cubic());
+        correction = new AlgorithmicCorrection(new AlgorithmicCorrection.SigmoidPiecewise());
     }
 
     @Override
@@ -100,7 +100,6 @@ public class DriveTest extends LoopUtil {
         } else if (angleIndex >= 4){
             angleIndex = 0;
         }
-
         /*
         switch(angleIndex){
             case 0:
@@ -128,8 +127,9 @@ public class DriveTest extends LoopUtil {
                 }
                 break;
         }
-
          */
+
+
 
         correction.update(angles[angleIndex], drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, false);
 
@@ -138,9 +138,9 @@ public class DriveTest extends LoopUtil {
 
         //joystick.z = gamepad1.right_stick_x; //manual steering
 
-        //joystick.z -= Apid.correctionPower; //correction steering (PID)
+       // joystick.z = -1*Apid.correctionPower; //correction steering (PID)
 
-        joystick.z = correction.getOutput(); //an algorithm directly controls the rotation instead of adding to it
+        joystick.z = correction.getOutput() * 0.5; //an algorithm directly controls the rotation instead of adding to it
 
 
 
@@ -161,6 +161,8 @@ public class DriveTest extends LoopUtil {
         telemetry.addData("Blue: ", RCR2.color().blue);
         telemetry.addData("Green: ", RCR2.color().green);
         telemetry.addData("Distance: ", RCR2.distance());
+
+        correction.log(telemetry);
     }
 
     @Override

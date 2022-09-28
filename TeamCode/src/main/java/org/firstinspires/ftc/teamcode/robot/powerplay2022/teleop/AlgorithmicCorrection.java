@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.teleop;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.EULMathEx;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 
@@ -41,6 +42,26 @@ public class AlgorithmicCorrection {
         @Override
         public double process(double scalar) {
             return Math.cos(scalar * Math.PI / 2); //cos(xπ/2)
+        }
+    }
+
+    public static class SigmoidPiecewise implements InterpolationAlgorithm{
+
+        public SigmoidPiecewise(){}
+
+        @Override
+        public double process(double scalar) {
+            return EULMathEx.doubleClamp(0, 1, (((-1.03)/(1+(Math.pow(Math.E, -1*(11*scalar - 5.5))))) + 1.01)); //-x^2 + 1
+        }
+    }
+
+    public static class QuadraticEase implements InterpolationAlgorithm{
+
+        public QuadraticEase(){}
+
+        @Override
+        public double process(double scalar) {
+            return (scalar - 1) * (scalar - 1); //(1-x)^2 + 1
         }
     }
 
@@ -174,7 +195,7 @@ public class AlgorithmicCorrection {
         correctionSign = Math.signum(headingVector.times(perpendicularTargetVector)) == 0? 1: -Math.signum(headingVector.times(perpendicularTargetVector));
 
         //input the (1 - scalar) into the interpolation and multiply by the correction sign
-        output = interpolationAlgorithm.process(1 - targetDistance) * correctionSign;
+        output = interpolationAlgorithm.process(targetDistance) * correctionSign;
     }
 
     public double getOutput(){
