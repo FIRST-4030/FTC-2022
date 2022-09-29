@@ -85,42 +85,57 @@ public class Input {
         }
     }
 
-    // Active fires from key down until key up
+    /**
+     * Active fires from key down until key up
+     */
     public boolean active() {
         return active;
     }
 
-    // Down fires only on key down
+    /**
+     * Down fires only on key down
+     */
     public boolean down() {
         return (!lastActive && active);
     }
 
-    // Up fires only on key up
+    /**
+     * Up fires only on key up
+     */
     public boolean up() {
         return (lastActive && !active);
     }
-
-    // Changed fires when the boolean or float value changes
+    /**
+     * Changed fires when the boolean or float value changes
+     */
     public boolean changed() {
         return (active != lastActive || lastValue != value);
     }
 
-    // Auto fires on key down() and every autoDelay milliseconds until release
+    /**
+     * Auto fires on key down() and every autoDelay milliseconds until release
+     */
     public boolean auto() {
         return auto;
     }
 
-    // Toggle fires after a key down/up cycle until the next down/up cycle
+    /**
+     * Toggle fires after a key down/up cycle until the next down/up cycle
+     */
     public boolean toggle() {
         return toggle;
     }
 
-    // Held fires heldDelay ms after down(), if nothing has changed since then
+    /**
+     * Held fires heldDelay ms after down(), if nothing has changed since then
+     */
     public boolean held() {
         return held;
     }
 
-    // Value returns the analog value of this input, or 0/1 for digital inputs
+    /**
+     * Value returns the analog value of this input, or 0/1 for digital inputs
+     */
     public float value() {
         return value;
     }

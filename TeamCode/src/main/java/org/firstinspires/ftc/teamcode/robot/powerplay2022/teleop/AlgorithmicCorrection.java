@@ -195,7 +195,7 @@ public class AlgorithmicCorrection {
         correctionSign = Math.signum(headingVector.times(perpendicularTargetVector)) == 0? 1: -Math.signum(headingVector.times(perpendicularTargetVector));
 
         //input the (1 - scalar) into the interpolation and multiply by the correction sign
-        output = interpolationAlgorithm.process(targetDistance) * correctionSign;
+        output = interpolationAlgorithm.process(1 - targetDistance) * correctionSign;
     }
 
     public double getOutput(){
@@ -204,11 +204,13 @@ public class AlgorithmicCorrection {
 
     public void log(Telemetry telemetry){
         //logs the general data of correction, stored heading and target, shortest path scalar, correction sign... etc.
+        telemetry.addData(getClass().getSimpleName(), " log BEGIN");
         telemetry.addData("Correction Output: ", output);
         telemetry.addData("Heading Vector: ", headingVector);
         telemetry.addData("Target Vector: ", targetVector);
         telemetry.addData("Target Perpendicular Vector: ", perpendicularTargetVector);
         telemetry.addData("Distance Scalar: ", targetDistance + "π");
         telemetry.addData("Correction Sign: ", correctionSign);
+        telemetry.addData(getClass().getSimpleName(), " log END");
     }
 }
