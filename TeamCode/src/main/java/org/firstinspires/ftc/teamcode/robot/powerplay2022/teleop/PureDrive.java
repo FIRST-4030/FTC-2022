@@ -65,7 +65,7 @@ public class PureDrive extends LoopUtil {
     public void handleInput(){
         //simple toggle between field centric and relative mode
         //used gamepads.up() to give the ability to buffer the input instead of it reacting right away
-        if (gamepadHandler.up("D1:RT")){
+        if (gamepadHandler.up("D1:LT")){
             fieldCentricMode = !fieldCentricMode;
         }
 
