@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -164,5 +165,12 @@ public class CustomMecanumDrive extends CustomDrive{
 
     public BNO055IMU getImu(){
         return imu;
+    }
+
+    public void logMotorPos(Telemetry telemetry){
+        telemetry.addData("FL Power: ", Objects.requireNonNull(motorMap.get("FL")).getCurrentPosition());
+        telemetry.addData("FR Power: ", Objects.requireNonNull(motorMap.get("FR")).getCurrentPosition());
+        telemetry.addData("BL Power: ", Objects.requireNonNull(motorMap.get("BL")).getCurrentPosition());
+        telemetry.addData("BR Power: ", Objects.requireNonNull(motorMap.get("BR")).getCurrentPosition());
     }
 }

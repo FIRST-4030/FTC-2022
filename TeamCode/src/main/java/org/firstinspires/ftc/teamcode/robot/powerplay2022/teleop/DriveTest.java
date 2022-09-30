@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.Globals;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.AnglePID;
@@ -20,6 +21,7 @@ public class DriveTest extends LoopUtil {
 
     public static CustomMecanumDrive drive  = null;
     public static Vector3d joystick = new Vector3d();
+    public static Vector2d right_stick = new Vector2d();
     public static AnglePID Apid = null;
     public static double[] angles = null;
     public static int angleIndex = 0;
@@ -43,6 +45,7 @@ public class DriveTest extends LoopUtil {
         drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
 
         joystick = new Vector3d();
+        right_stick = new Vector2d();
 
         pGain = 1/(Math.PI * 3);
         iGain = 0;
@@ -62,7 +65,7 @@ public class DriveTest extends LoopUtil {
         RCR2 = new RevColorRange(hardwareMap, telemetry, "rcr");
         CV2 = new ColorView(RCR2.color(), RCR2.distance());
 
-        correction = new AlgorithmicCorrection(new AlgorithmicCorrection.SigmoidPiecewise());
+        correction = new AlgorithmicCorrection(new AlgorithmicCorrection.Polynomial(25));
     }
 
     @Override
@@ -140,7 +143,7 @@ public class DriveTest extends LoopUtil {
 
        // joystick.z = -1*Apid.correctionPower; //correction steering (PID)
 
-        joystick.z = correction.getOutput() * 0.5; //an algorithm directly controls the rotation instead of adding to it
+        joystick.z = correction.getOutput() * 0.8; //an algorithm directly controls the rotation instead of adding to it
 
 
 

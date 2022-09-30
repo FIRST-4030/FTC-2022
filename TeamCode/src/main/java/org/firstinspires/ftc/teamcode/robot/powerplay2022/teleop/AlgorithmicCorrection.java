@@ -198,6 +198,36 @@ public class AlgorithmicCorrection {
         output = interpolationAlgorithm.process(1 - targetDistance) * correctionSign;
     }
 
+    public void update(double actualAngle, Vector2d joystick, boolean normalize){
+        //find the rotation matrices for the angles passed in
+        targetRotation = Matrix2d.makeRotation(Math.atan2(joystick.y, joystick.x));
+        actualRotation = Matrix2d.makeRotation(actualAngle);
+
+        //multiply prerequisite vectors to be used later on
+        targetVector = targetRotation.times(new Vector2d(0, 1));
+        perpendicularTargetVector = new Vector2d(targetVector.y, -targetVector.x);
+        headingVector = actualRotation.times(new Vector2d(0, 1));
+
+        //normalize if true to make sure the length of the vectors are 1
+        //if on, it might waste cpu cycles to make sure
+        if (normalize) {
+            targetVector.normalize();
+            perpendicularTargetVector.normalize();
+            headingVector.normalize();
+        }
+
+        //since the dot product is [-1, 1], we shift it to [0, 2] then divide to normalize it to [0, 1]
+        //this distance represents the shortest from the target (on a unit circle)
+        targetDistance = (targetVector.unaryMinus().times(headingVector) + 1) / 2;
+
+        //finds if the vector is to the right or left (robot's space; not world space)
+        //in-line if is for resolving exact value conditions even though they are rare
+        correctionSign = Math.signum(headingVector.times(perpendicularTargetVector)) == 0? 1: -Math.signum(headingVector.times(perpendicularTargetVector));
+
+        //input the (1 - scalar) into the interpolation and multiply by the correction sign
+        output = interpolationAlgorithm.process(1 - targetDistance) * correctionSign;
+    }
+
     public double getOutput(){
         return output;
     }

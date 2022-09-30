@@ -35,6 +35,7 @@ public class PureDrive extends LoopUtil {
 
         drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
         drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
+        drive.setOutputMultiplier(-1);
     }
 
     @Override
@@ -60,6 +61,8 @@ public class PureDrive extends LoopUtil {
         //I don't use drive.setOutputMultiplier because there is no way I waste CPU cycles on rebuilding the matrix
 
         drive.update(joystick.times(outputSpeed), fieldCentricMode, deltaTime);
+
+        logData();
     }
 
     public void handleInput(){
@@ -83,7 +86,7 @@ public class PureDrive extends LoopUtil {
             outputSpeed = EULMathEx.doubleClamp(0, 1, outputSpeed);
         }
         if (gamepadHandler.up("D1:DPAD_DOWN")){ //decrease outputSpeed by decimalPlace
-            decimalPlace -= decimalPlace;
+            outputSpeed -= decimalPlace;
             outputSpeed = EULMathEx.doubleClamp(0, 1, outputSpeed);
         }
 
@@ -103,7 +106,9 @@ public class PureDrive extends LoopUtil {
         telemetry.addData(className, "log BEGIN"); //log header for this OpMode
         telemetry.addData("Field Centric Mode: ", fieldCentricMode ? "WORLD_SPACE" : "RELATIVE_SPACE");
         telemetry.addData("Drive Speed: ", outputSpeed);
+        telemetry.addData("Place: ", decimalPlace);
         telemetry.addData("", drive.getVirtualRobot().toString());
+        drive.logMotorPos(telemetry);
         telemetry.addData(className, "log END"); //log footer for this OpMode
     }
 }

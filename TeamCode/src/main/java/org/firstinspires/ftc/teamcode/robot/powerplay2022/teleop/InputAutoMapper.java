@@ -93,7 +93,7 @@ public class InputAutoMapper {
         for (int id = 0; id < 2; id++){
             GAMEPAD driver = drivers[id];
             for (PAD_KEY key: keys) {
-                output.register("D" + id + ":" + padKeyLegend.get(key), driver, key);
+                output.register("D" + (id + 1) + ":" + padKeyLegend.get(key), driver, key);
             }
         }
 
