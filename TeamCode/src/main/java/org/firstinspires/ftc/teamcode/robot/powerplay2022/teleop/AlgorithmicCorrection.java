@@ -129,7 +129,8 @@ public class AlgorithmicCorrection {
             for (int i = 0; i < degree; i++) {
                 x *= scalar;
             }
-            return -x + 1; //-x^n + 1
+            //return 1-x; //-x^n + 1
+            return (-x + 1);
         }
     }
 
@@ -145,14 +146,18 @@ public class AlgorithmicCorrection {
 
     private double targetDistance; //a scalar value based on half of the circumference
     private double correctionSign;
+    private Vector2d lastVector;
     private InterpolationAlgorithm interpolationAlgorithm;
+    private double targetAngle;
 
     public AlgorithmicCorrection(){
         this.interpolationAlgorithm = new CustomizableRELU(1, 1);
+        init();
     }
 
     public AlgorithmicCorrection(InterpolationAlgorithm algorithm){
         this.interpolationAlgorithm = algorithm;
+        init();
     }
 
     protected void init(){
@@ -163,9 +168,11 @@ public class AlgorithmicCorrection {
         this.headingVector = new Vector2d(1, 0);
         this.targetVector = new Vector2d(1, 0);
         this.perpendicularTargetVector = new Vector2d(1, 0);
+        this.lastVector = new Vector2d(0, -1);
 
         this.targetDistance = 0;
         this.correctionSign = 1;
+        this.targetAngle = 0;
     }
 
     public void update(double actualAngle, double targetAngle, boolean normalize){
@@ -200,11 +207,18 @@ public class AlgorithmicCorrection {
 
     public void update(double actualAngle, Vector2d joystick, boolean normalize){
         //find the rotation matrices for the angles passed in
-        targetRotation = Matrix2d.makeRotation(Math.atan2(joystick.y, joystick.x));
+        if (joystick.length() >= 0.5) {
+            lastVector = joystick;
+        }else{
+            lastVector = lastVector;
+        }
+
+        //targetAngle = Math.atan2(lastVector.y, lastVector.x);
+        //targetRotation = Matrix2d.makeRotation(targetAngle);
         actualRotation = Matrix2d.makeRotation(actualAngle);
 
         //multiply prerequisite vectors to be used later on
-        targetVector = targetRotation.times(new Vector2d(0, 1));
+        targetVector = lastVector.normalized();
         perpendicularTargetVector = new Vector2d(targetVector.y, -targetVector.x);
         headingVector = actualRotation.times(new Vector2d(0, 1));
 
@@ -225,7 +239,7 @@ public class AlgorithmicCorrection {
         correctionSign = Math.signum(headingVector.times(perpendicularTargetVector)) == 0? 1: -Math.signum(headingVector.times(perpendicularTargetVector));
 
         //input the (1 - scalar) into the interpolation and multiply by the correction sign
-        output = interpolationAlgorithm.process(1 - targetDistance) * correctionSign;
+        output = EULMathEx.doubleClamp(0, 1, interpolationAlgorithm.process(targetDistance) * correctionSign);
     }
 
     public double getOutput(){
@@ -235,6 +249,8 @@ public class AlgorithmicCorrection {
     public void log(Telemetry telemetry){
         //logs the general data of correction, stored heading and target, shortest path scalar, correction sign... etc.
         telemetry.addData(getClass().getSimpleName(), " log BEGIN");
+        telemetry.addData("Joystick Angle: ", Math.atan2(lastVector.y, lastVector.x));
+        telemetry.addData("Target Angle: ", targetAngle);
         telemetry.addData("Correction Output: ", output);
         telemetry.addData("Heading Vector: ", headingVector);
         telemetry.addData("Target Vector: ", targetVector);

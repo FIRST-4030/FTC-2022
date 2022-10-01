@@ -108,6 +108,7 @@ public class PureDrive extends LoopUtil {
         telemetry.addData("Drive Speed: ", outputSpeed);
         telemetry.addData("Place: ", decimalPlace);
         telemetry.addData("", drive.getVirtualRobot().toString());
+        telemetry.addData("Joystick Angle: ", Math.atan2(gamepadHandler.value("D1:RS_X"), -gamepadHandler.value("D1:RS_Y")));
         drive.logMotorPos(telemetry);
         telemetry.addData(className, "log END"); //log footer for this OpMode
     }

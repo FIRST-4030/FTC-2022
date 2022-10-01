@@ -45,7 +45,7 @@ public class DriveTest extends LoopUtil {
         drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
 
         joystick = new Vector3d();
-        right_stick = new Vector2d();
+        right_stick = new Vector2d(0, 1);
 
         pGain = 1/(Math.PI * 3);
         iGain = 0;
@@ -65,7 +65,7 @@ public class DriveTest extends LoopUtil {
         RCR2 = new RevColorRange(hardwareMap, telemetry, "rcr");
         CV2 = new ColorView(RCR2.color(), RCR2.distance());
 
-        correction = new AlgorithmicCorrection(new AlgorithmicCorrection.Polynomial(25));
+        correction = new AlgorithmicCorrection(new AlgorithmicCorrection.Polynomial(20));
     }
 
     @Override
@@ -103,6 +103,7 @@ public class DriveTest extends LoopUtil {
         } else if (angleIndex >= 4){
             angleIndex = 0;
         }
+
         /*
         switch(angleIndex){
             case 0:
@@ -134,10 +135,25 @@ public class DriveTest extends LoopUtil {
 
 
 
-        correction.update(angles[angleIndex], drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, false);
 
-        joystick.x = gamepad1.left_stick_x;
-        joystick.y = -gamepad1.left_stick_y;
+        joystick.x = gamepad1.left_stick_x * -1;
+        joystick.y = -gamepad1.left_stick_y * -1;
+
+        telemetry.addData("Joystick X: ", joystick.x);
+        telemetry.addData("Joystick Y: ", joystick.y);
+
+
+
+        right_stick.x = -gamepad1.right_stick_x;
+        right_stick.y = gamepad1.right_stick_y;
+
+
+        // atan2 is x-axis 0
+        //right_stick.x = gamepad1.right_stick_x;
+        //right_stick.y = gamepad1.right_stick_y;
+
+        correction.update( drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, right_stick, false);
+        //correction.update( drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, angles[angleIndex], false);
 
         //joystick.z = gamepad1.right_stick_x; //manual steering
 
