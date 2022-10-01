@@ -206,11 +206,14 @@ public class AlgorithmicCorrection {
     }
 
     public void update(double actualAngle, Vector2d joystick, boolean normalize){
-        //find the rotation matrices for the angles passed in
+        //test joystick for length threshold
         if (joystick.length() >= 0.5) {
             lastVector = joystick;
-        }else{
-            lastVector = lastVector;
+            if (lastVector.length() != 1 && lastVector.length() != 0) { //guard against the zero division errors and if length is already one, we don't waste cycles
+                lastVector.normalize();
+            } else {
+                lastVector = new Vector2d(0, -1);
+            }
         }
 
         //targetAngle = Math.atan2(lastVector.y, lastVector.x);
@@ -218,7 +221,7 @@ public class AlgorithmicCorrection {
         actualRotation = Matrix2d.makeRotation(actualAngle);
 
         //multiply prerequisite vectors to be used later on
-        targetVector = lastVector.normalized();
+        targetVector = lastVector;
         perpendicularTargetVector = new Vector2d(targetVector.y, -targetVector.x);
         headingVector = actualRotation.times(new Vector2d(0, 1));
 
