@@ -120,7 +120,7 @@ public class CustomMecanumDrive extends CustomDrive{
                 virtualRobot.virtualJoystick.z = 0;
             }
         } else {
-            state.update();
+            state.update(virtualRobot);
         }
 
         update(virtualRobot.virtualJoystick, fieldCentricMode, dt);

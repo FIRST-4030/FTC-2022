@@ -71,8 +71,9 @@ public class MecanumDriveState {
         this.conditional = conditional;
     }
 
-    public void update(){
+    public void update(VirtualRobot vr){
         state.run();
+        conditional.update(vr);
     }
 
     public boolean isDone(){

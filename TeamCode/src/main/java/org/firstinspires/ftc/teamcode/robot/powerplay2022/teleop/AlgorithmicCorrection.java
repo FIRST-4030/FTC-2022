@@ -202,17 +202,17 @@ public class AlgorithmicCorrection {
         correctionSign = Math.signum(headingVector.times(perpendicularTargetVector)) == 0? 1: -Math.signum(headingVector.times(perpendicularTargetVector));
 
         //input the (1 - scalar) into the interpolation and multiply by the correction sign
-        output = interpolationAlgorithm.process(1 - targetDistance) * correctionSign;
+        output = interpolationAlgorithm.process(1- targetDistance) * correctionSign;
     }
 
     public void update(double actualAngle, Vector2d joystick, boolean normalize){
         //test joystick for length threshold
         if (joystick.length() >= 0.5) {
             lastVector = joystick;
-            if (lastVector.length() != 1 && lastVector.length() != 0) { //guard against the zero division errors and if length is already one, we don't waste cycles
+            if (lastVector.length() != 0) { //guard against the zero division errors and if length is already one, we don't waste cycles
                 lastVector.normalize();
             } else {
-                lastVector = new Vector2d(0, -1);
+                lastVector = targetVector;
             }
         }
 
@@ -221,7 +221,11 @@ public class AlgorithmicCorrection {
         actualRotation = Matrix2d.makeRotation(actualAngle);
 
         //multiply prerequisite vectors to be used later on
-        targetVector = lastVector;
+        if (lastVector.length() != 0) {
+            targetVector = lastVector;
+        }else{
+            targetVector = headingVector.unaryMinus();
+        }
         perpendicularTargetVector = new Vector2d(targetVector.y, -targetVector.x);
         headingVector = actualRotation.times(new Vector2d(0, 1));
 
@@ -242,7 +246,7 @@ public class AlgorithmicCorrection {
         correctionSign = Math.signum(headingVector.times(perpendicularTargetVector)) == 0? 1: -Math.signum(headingVector.times(perpendicularTargetVector));
 
         //input the (1 - scalar) into the interpolation and multiply by the correction sign
-        output = EULMathEx.doubleClamp(0, 1, interpolationAlgorithm.process(targetDistance) * correctionSign);
+        output = interpolationAlgorithm.process(targetDistance) * correctionSign;
     }
 
     public double getOutput(){

@@ -159,7 +159,7 @@ public class DriveTest extends LoopUtil {
 
        // joystick.z = -1*Apid.correctionPower; //correction steering (PID)
 
-        joystick.z = correction.getOutput() * 0.8; //an algorithm directly controls the rotation instead of adding to it
+        joystick.z = correction.getOutput(); //an algorithm directly controls the rotation instead of adding to it
 
 
 
