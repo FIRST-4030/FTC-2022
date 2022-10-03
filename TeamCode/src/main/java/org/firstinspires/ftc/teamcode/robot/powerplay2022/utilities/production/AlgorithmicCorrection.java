@@ -1,14 +1,17 @@
-package org.firstinspires.ftc.teamcode.robot.powerplay2022.teleop;
+package org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.EULMathEx;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 
 public class AlgorithmicCorrection {
 
     public interface InterpolationAlgorithm{
         double process(double scalar);
+        double derivative(double scalar);
+        boolean hasDerivative();
     }
 
     public static class RELU implements InterpolationAlgorithm{
@@ -17,6 +20,16 @@ public class AlgorithmicCorrection {
         @Override
         public double process(double scalar) {
             return -scalar + 1; //-x + 1
+        }
+
+        @Override
+        public double derivative(double scalar) {
+            return -1;
+        }
+
+        @Override
+        public boolean hasDerivative() {
+            return true;
         }
     }
 
@@ -34,6 +47,16 @@ public class AlgorithmicCorrection {
         public double process(double scalar) {
             return Math.max(0, scalar * slope + yIntercept); //-mx + yIntercept
         }
+
+        @Override
+        public double derivative(double scalar) {
+            return slope;
+        }
+
+        @Override
+        public boolean hasDerivative() {
+            return true;
+        }
     }
 
     public static class Cosine implements InterpolationAlgorithm{
@@ -43,6 +66,16 @@ public class AlgorithmicCorrection {
         public double process(double scalar) {
             return Math.cos(scalar * Math.PI / 2); //cos(xπ/2)
         }
+
+        @Override
+        public double derivative(double scalar) {
+            return -Math.sin(scalar * Math.PI / 2);
+        }
+
+        @Override
+        public boolean hasDerivative() {
+            return true;
+        }
     }
 
     public static class SigmoidPiecewise implements InterpolationAlgorithm{
@@ -51,7 +84,17 @@ public class AlgorithmicCorrection {
 
         @Override
         public double process(double scalar) {
-            return EULMathEx.doubleClamp(0, 1, (((-1.03)/(1+(Math.pow(Math.E, -1*(11*scalar - 5.5))))) + 1.01)); //-x^2 + 1
+            return EULMathEx.doubleClamp(0, 1, ( ( (-1.03)/(1+( Math.exp( -1*(11*scalar - 5.5) ) ) ) ) + 1.01)); //-x^2 + 1
+        }
+
+        @Override
+        public double derivative(double scalar) {
+            return 0;
+        }
+
+        @Override
+        public boolean hasDerivative() {
+            return false;
         }
     }
 
@@ -63,19 +106,35 @@ public class AlgorithmicCorrection {
         public double process(double scalar) {
             return (scalar - 1) * (scalar - 1); //(1-x)^2 + 1
         }
+
+        @Override
+        public double derivative(double scalar) {
+            return 2 * scalar;
+        }
+
+        @Override
+        public boolean hasDerivative() {
+            return true;
+        }
     }
 
     public static class Sqrt implements InterpolationAlgorithm{
 
-        private double outputMultiplier;
-
-        public Sqrt(double outputMultiplier){
-            this.outputMultiplier = outputMultiplier;
-        }
+        public Sqrt(){}
 
         @Override
         public double process(double scalar) {
-            return outputMultiplier * Math.sqrt(scalar + 1); //sqrt(-x + 1)
+            return Math.sqrt(scalar + 1); //sqrt(-x + 1)
+        }
+
+        @Override
+        public double derivative(double scalar) {
+            return 0.5 * (1 / Math.sqrt(scalar));
+        }
+
+        @Override
+        public boolean hasDerivative() {
+            return true;
         }
     }
 
@@ -87,6 +146,16 @@ public class AlgorithmicCorrection {
         public double process(double scalar) {
             return -(scalar * scalar) + 1; //-x^2 + 1
         }
+
+        @Override
+        public double derivative(double scalar) {
+            return -2 * scalar;
+        }
+
+        @Override
+        public boolean hasDerivative() {
+            return true;
+        }
     }
 
     public static class Cubic implements InterpolationAlgorithm{
@@ -95,6 +164,16 @@ public class AlgorithmicCorrection {
         @Override
         public double process(double scalar) {
             return -(scalar * scalar * scalar) + 1; //-x^3 + 1
+        }
+
+        @Override
+        public double derivative(double scalar) {
+            return -3 * (scalar * scalar);
+        }
+
+        @Override
+        public boolean hasDerivative() {
+            return true;
         }
     }
 
@@ -105,6 +184,16 @@ public class AlgorithmicCorrection {
         public double process(double scalar) {
             return -(scalar * scalar * scalar * scalar) + 1; //-x^4 + 1
         }
+
+        @Override
+        public double derivative(double scalar) {
+            return -4 * (scalar * scalar * scalar);
+        }
+
+        @Override
+        public boolean hasDerivative() {
+            return true;
+        }
     }
 
     public static class Quintic implements InterpolationAlgorithm{
@@ -114,6 +203,16 @@ public class AlgorithmicCorrection {
         @Override
         public double process(double scalar) {
             return -(scalar * scalar * scalar * scalar * scalar) + 1; // -x^5 + 1
+        }
+
+        @Override
+        public double derivative(double scalar) {
+            return -5 * (scalar * scalar * scalar * scalar);
+        }
+
+        @Override
+        public boolean hasDerivative() {
+            return true;
         }
     }
 
@@ -131,6 +230,20 @@ public class AlgorithmicCorrection {
             }
             //return 1-x; //-x^n + 1
             return (-x + 1);
+        }
+
+        @Override
+        public double derivative(double scalar) {
+            double x = 1;
+            for (int i = 0; i < degree - 1; i++) {
+                x *= scalar;
+            }
+            return -degree * x;
+        }
+
+        @Override
+        public boolean hasDerivative() {
+            return true;
         }
     }
 

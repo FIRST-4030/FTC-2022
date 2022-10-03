@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.robot.powerplay2022.teleop;
+package org.firstinspires.ftc.teamcode.robot.powerplay2022.teleop.production;
 
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.MecanumAuto;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production.MecanumAuto;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
 public class MasterOp extends LoopUtil {

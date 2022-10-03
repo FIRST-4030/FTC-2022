@@ -2,20 +2,16 @@ package org.firstinspires.ftc.teamcode.robot.rrImpl.opmodes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.sun.tools.javac.util.Pair;
 
-import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.ColorView;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.MecanumMovementFactory;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.MecanumTrajectory;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.ColorView;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.depreciated.MecanumMovementFactory;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.depreciated.MecanumTrajectory;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 

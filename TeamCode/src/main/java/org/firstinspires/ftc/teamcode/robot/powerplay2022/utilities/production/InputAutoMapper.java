@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.powerplay2022.teleop;
+package org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -54,7 +54,7 @@ public class InputAutoMapper {
         return this;
     }
 
-    public HashMap getPadKeyLegend(){
+    public HashMap<PAD_KEY, String> getPadKeyLegend(){
         return padKeyLegend;
     }
 
@@ -81,8 +81,8 @@ public class InputAutoMapper {
      * <br>guide -> "GUIDE"
      * <br>start -> "START"
      * <br>back -> "BACK"
-     * @param opMode
-     * @return
+     * @param opMode - OpMode where the object is called
+     * @return {@code InputHandler}
      */
     public InputHandler autoMap(OpMode opMode){
         InputHandler output = new InputHandler(opMode);

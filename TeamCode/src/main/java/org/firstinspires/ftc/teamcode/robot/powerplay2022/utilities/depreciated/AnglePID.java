@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.powerplay2022;
+package org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.depreciated;
 
 public class AnglePID {
     public double currentTime, previousTime, currentError, previousError, correctionPower;

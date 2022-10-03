@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.powerplay2022;
+package org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.depreciated;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
