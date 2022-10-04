@@ -315,7 +315,7 @@ public class AlgorithmicCorrection {
         correctionSign = Math.signum(headingVector.times(perpendicularTargetVector)) == 0? 1: -Math.signum(headingVector.times(perpendicularTargetVector));
 
         //input the (1 - scalar) into the interpolation and multiply by the correction sign
-        output = interpolationAlgorithm.process(1- targetDistance) * correctionSign;
+        output = interpolationAlgorithm.process(targetDistance) * correctionSign;
     }
 
     public void update(double actualAngle, Vector2d joystick, boolean normalize){

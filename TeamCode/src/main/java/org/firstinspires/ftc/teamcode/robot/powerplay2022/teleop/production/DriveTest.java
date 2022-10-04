@@ -90,7 +90,7 @@ public class DriveTest extends LoopUtil {
         lastStateRB = currentStateRB;
         lastStateLB = currentStateLB;
 
-        currentStateLB =gamepad1.left_bumper;
+        currentStateLB = gamepad1.left_bumper;
         if(currentStateLB && !lastStateLB){
             angleIndex++;
         }
