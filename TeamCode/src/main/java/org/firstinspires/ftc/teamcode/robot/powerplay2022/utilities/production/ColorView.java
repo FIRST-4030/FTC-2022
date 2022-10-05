@@ -32,6 +32,22 @@ public class ColorView {
         return output;
     }
 
+    public CMYcolors getColorBetter(float range) {
+        CMYcolors output = CMYcolors.NOT_DETECTED;
+        float hue = convertRGBToHSV(colorInput)[0];
+        float dY= Math.abs(60-hue), dC = Math.abs(180-hue), dM = Math.abs(300-hue);
+        if(dY < dC && dY < dM && dY < range){
+            output = CMYcolors.YELLOW;
+        }
+        if(dC < dY && dC < dM && dC < range){
+            output = CMYcolors.CYAN;
+        }
+        if(dM < dC && dM < dY && dM < range){
+            output = CMYcolors.MAGENTA;
+        }
+        return output;
+    }
+
     public void update(NormalizedRGBA CI, double DIST){
         colorInput = CI;
         distance = DIST;
@@ -69,6 +85,6 @@ public class ColorView {
             h /= 6;
         }
 
-        return new float[]{h, s, v, a};
+        return new float[]{h * 360, s, v, a};
     }
 }

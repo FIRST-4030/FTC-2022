@@ -16,8 +16,16 @@ public class MasterOp extends LoopUtil {
     public void opInit() {
         tele = new DriveTest();
         auto = new MecanumAuto();
+
         tele.hardwareMap = this.hardwareMap;
         auto.hardwareMap = this.hardwareMap;
+        tele.gamepad1 = this.gamepad1;
+        auto.gamepad1 = this.gamepad1;
+        tele.gamepad2 = this.gamepad2;
+        auto.gamepad2 = this.gamepad2;
+        tele.telemetry = this.telemetry;
+        auto.telemetry = this.telemetry;
+
         tele.opInit();
         auto.opInit();
         totalTime = 0;
@@ -35,13 +43,10 @@ public class MasterOp extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
-        tele.gamepad1 = gamepad1;
-        auto.gamepad1 = gamepad1;
-        tele.gamepad2 = gamepad2;
-        auto.gamepad2 = gamepad2;
+
 
         totalTime+=deltaTime;
-        if(totalTime < 30 * EULConstants.SEC2MS){
+        if(totalTime < 10 * EULConstants.SEC2MS){
             auto.opUpdate(deltaTime);
         }else{
             tele.opFixedUpdate(deltaTime);

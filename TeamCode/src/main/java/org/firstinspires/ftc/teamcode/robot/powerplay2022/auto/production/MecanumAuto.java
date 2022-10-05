@@ -6,11 +6,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.AlgorithmicCorrection;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.ColorView;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.CustomMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpState;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpStateList;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
+import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 
 @Autonomous(name = "MecanumAuto")
 public class MecanumAuto extends LoopUtil {
@@ -21,12 +24,21 @@ public class MecanumAuto extends LoopUtil {
     OpStateList stateList;
     double storedDeltaTime;
     double elapsedTime;
+    RevColorRange RCR2;
+    ColorView.CMYcolors SeenColor;
+    ColorView CV2;
+    //
+    double ColorT1;
+    boolean checked;
 
     @Override
     public void opInit() {
         //Misc
         elapsedTime = 0;
         storedDeltaTime = 0;
+        RCR2 = new RevColorRange(hardwareMap, telemetry, "rcr");
+        CV2 = new ColorView(RCR2.color(), RCR2.distance());
+        checked = false;
         //Drive controls movement
         drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
         drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
@@ -54,10 +66,10 @@ public class MecanumAuto extends LoopUtil {
         stateList.addStates(
                 new OpState(
                         () -> {
-                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, 0, true);
+                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, Math.PI, true);
                             motion.z = correction.getOutput();
                             motion.x = 0;
-                            motion.y = -0.5;
+                            motion.y = -0.8;
                             drive.update(motion, true, storedDeltaTime);
                         }
                 ),
@@ -87,14 +99,26 @@ public class MecanumAuto extends LoopUtil {
     public void opUpdate(double deltaTime) {
         storedDeltaTime = deltaTime;
         elapsedTime += deltaTime;
-        if( elapsedTime <= 2000 ){
+        CV2.update(RCR2.color(), RCR2.distance());
+        if (elapsedTime < 1.5*EULConstants.SEC2MS){
             stateList.setIndex(0);
         }else{
             stateList.setIndex(1);
         }
+        if (RCR2.distance() < 60){
+            if (!checked){ checked = true; ColorT1 = elapsedTime; }
+            if (elapsedTime - ColorT1 < 250) {
+                SeenColor = CV2.getColorBetter(100);
+            }
+        }
         stateList.getCurrentState().runAll();
-
-
+        telemetry.addData("Time: ", elapsedTime * EULConstants.MS2SEC);
+        telemetry.addData("State Index: ", stateList.getIndex());
+        telemetry.addData("Saved Color: ", SeenColor);
+        telemetry.addData("Dist: ", RCR2.distance());
+        telemetry.addData("ColorBetter: ", CV2.getColorBetter(80));
+        telemetry.addData("Color: ", CV2.getColor());
+        telemetry.addData("Color: ", CV2.convertRGBToHSV(CV2.colorInput)[0]);
     }
 
     @Override

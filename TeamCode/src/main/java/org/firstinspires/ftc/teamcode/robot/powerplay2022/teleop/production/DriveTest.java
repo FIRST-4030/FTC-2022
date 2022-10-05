@@ -177,7 +177,9 @@ public class DriveTest extends LoopUtil {
         telemetry.addData("I: ", Apid.i);
         telemetry.addData("D: ", Apid.d);
         telemetry.addData("Correction: ", Apid.correctionPower);
+        telemetry.addData("ColorBetter: ", CV2.getColorBetter(80));
         telemetry.addData("Color: ", CV2.getColor());
+        telemetry.addData("Color: ", CV2.convertRGBToHSV(CV2.colorInput)[0]);
         telemetry.addData("Red: ", RCR2.color().red);
         telemetry.addData("Blue: ", RCR2.color().blue);
         telemetry.addData("Green: ", RCR2.color().green);
