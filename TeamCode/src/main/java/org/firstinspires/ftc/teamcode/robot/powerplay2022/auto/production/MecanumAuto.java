@@ -76,7 +76,7 @@ public class MecanumAuto extends LoopUtil {
                 new OpState(
                         Idle,
                         () -> {
-                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, Math.PI, true);
+                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2, true);
                             motion.z = correction.getOutput();
                             drive.update(motion, true, storedDeltaTime);
                         }
@@ -100,7 +100,7 @@ public class MecanumAuto extends LoopUtil {
         storedDeltaTime = deltaTime;
         elapsedTime += deltaTime;
         CV2.update(RCR2.color(), RCR2.distance());
-        if (elapsedTime < 1.5*EULConstants.SEC2MS){
+        if (elapsedTime < 1.1*EULConstants.SEC2MS){
             stateList.setIndex(0);
         }else{
             stateList.setIndex(1);
