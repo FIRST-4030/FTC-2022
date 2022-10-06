@@ -36,7 +36,8 @@ public class PureDrive extends LoopUtil {
         decimalPlace = 1;
 
         drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
-        drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
+        //drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
+        drive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true);
         drive.setOutputMultiplier(-1);
     }
 
