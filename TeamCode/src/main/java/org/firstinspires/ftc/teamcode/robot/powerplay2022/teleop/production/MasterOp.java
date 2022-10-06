@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production.MecanumAuto;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.CustomMecanumDrive;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
 @Autonomous(name = "MasterOp")
@@ -11,6 +12,7 @@ public class MasterOp extends LoopUtil {
 
     public static LoopUtil auto, tele;
     public double totalTime;
+    public static CustomMecanumDrive mecanumDrive;
 
     @Override
     public void opInit() {
@@ -28,6 +30,19 @@ public class MasterOp extends LoopUtil {
 
         tele.opInit();
         auto.opInit();
+
+        mecanumDrive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
+
+        //Go-Builda motor mapping:
+        mecanumDrive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true);
+
+        //testing mecanum mapping
+        //mecanumDrive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
+
+        //sets the sub opmodes' drive to this master drive
+        DriveTest.drive = mecanumDrive;
+        MecanumAuto.drive = mecanumDrive;
+
         totalTime = 0;
     }
 

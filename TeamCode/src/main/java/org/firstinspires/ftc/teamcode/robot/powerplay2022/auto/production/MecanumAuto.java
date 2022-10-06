@@ -18,18 +18,18 @@ import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 @Autonomous(name = "MecanumAuto")
 public class MecanumAuto extends LoopUtil {
 
-    CustomMecanumDrive drive;
-    AlgorithmicCorrection correction;
-    Vector3d motion;
-    OpStateList stateList;
+    public static CustomMecanumDrive drive;
+    public static AlgorithmicCorrection correction;
+    public static Vector3d motion;
+    public static OpStateList stateList;
     double storedDeltaTime;
     double elapsedTime;
-    RevColorRange RCR2;
-    ColorView.CMYcolors SeenColor;
-    ColorView CV2;
+    public static RevColorRange RCR2;
+    public static ColorView.CMYcolors SeenColor;
+    public static ColorView CV2;
     //
-    double ColorT1;
-    boolean checked;
+    public static double ColorT1;
+    public static boolean checked;
 
     @Override
     public void opInit() {
