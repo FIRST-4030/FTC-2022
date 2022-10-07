@@ -63,4 +63,8 @@ public class ServoAngleConversion {
     public double getOutput(){
         return output;
     }
+
+    public boolean isOutOfRange(){
+        return outOfRange;
+    }
 }
