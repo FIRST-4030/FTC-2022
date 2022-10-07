@@ -51,12 +51,12 @@ public class ServoAngleConversion {
 
 
     public void angle2Scalar(double measurement){
-        output = angleMulti * (measurement / limitedAngle);
+        output = measurement / limitedAngle;
         outOfRange = min > output || max < output;
     }
 
     public void scalar2Angle(double scalar){
-        output = limitedAngle * (scalar / angleMulti);
+        output = limitedAngle * scalar;
         outOfRange = min > output || max < output;
     }
 
