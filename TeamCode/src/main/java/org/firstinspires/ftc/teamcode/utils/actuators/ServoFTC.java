@@ -8,10 +8,10 @@ import org.firstinspires.ftc.teamcode.utils.general.Available;
 
 public class ServoFTC implements Available {
     private Servo servo;
-    private static final float ABS_MIN = 0.0f;
-    private final static float ABS_MAX = 1.0f;
-    private float min = ABS_MIN;
-    private float max = ABS_MAX;
+    private static final double ABS_MIN = 0.0f;
+    private final static double ABS_MAX = 1.0f;
+    private double min = ABS_MIN;
+    private double max = ABS_MAX;
 
     public ServoFTC(HardwareMap map, Telemetry telemetry, ServoConfig config) {
         if (config == null) {
@@ -38,7 +38,7 @@ public class ServoFTC implements Available {
         return servo != null;
     }
 
-    public void setPosition(float position) {
+    public void setPosition(double position) {
         if (position < min) {
             position = min;
         } else if (position > max) {
@@ -47,7 +47,7 @@ public class ServoFTC implements Available {
         setPositionRaw(position);
     }
 
-    public void setPositionRaw(float position) {
+    public void setPositionRaw(double position) {
         if (!isAvailable()) {
             return;
         }
@@ -59,11 +59,11 @@ public class ServoFTC implements Available {
         servo.setPosition(position);
     }
 
-    public float getPosition() {
+    public double getPosition() {
         if (!isAvailable()) {
             return ABS_MIN;
         }
-        return (float) servo.getPosition();
+        return servo.getPosition();
     }
 
     public void min() {
@@ -75,7 +75,7 @@ public class ServoFTC implements Available {
     }
 
     public void toggle() {
-        float mid = (max + min) / 2;
+        double mid = (max + min) / 2;
         if (getPosition() >= mid) {
             min();
         } else {
@@ -83,11 +83,11 @@ public class ServoFTC implements Available {
         }
     }
 
-    public float getMin() {
+    public double getMin() {
         return min;
     }
 
-    public float getMax() {
+    public double getMax() {
         return max;
     }
 }
