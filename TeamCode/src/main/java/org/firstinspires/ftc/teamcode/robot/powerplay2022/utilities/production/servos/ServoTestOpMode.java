@@ -41,6 +41,7 @@ public class ServoTestOpMode extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
+        gamepadHandler.loop();
         if (gamepadHandler.up("D1:LT")){
             enableJoystick = !enableJoystick;
         }
