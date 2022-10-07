@@ -14,6 +14,18 @@ public class ServoAngleConversion {
     private boolean outOfRange;
     private ANGLE_UNIT unit;
 
+    public ServoAngleConversion(double min, double max){
+        this.angleMulti = 2 * Math.PI;
+
+        double[] temp = new double[]{min, max};
+        Arrays.sort(temp);
+        this.min = temp[0] / this.angleMulti;
+        this.max = temp[1] / this.angleMulti;
+        this.unit = ANGLE_UNIT.RADIANS;
+
+        this.limitedAngle = 0.75 * this.angleMulti;
+    }
+
 
     public ServoAngleConversion(double min, double max, ANGLE_UNIT unit){
         switch (unit){
@@ -47,4 +59,6 @@ public class ServoAngleConversion {
         output = limitedAngle * (scalar / angleMulti);
         outOfRange = min > output || max < output;
     }
+
+
 }
