@@ -58,7 +58,7 @@ public class ServoTestOpMode extends LoopUtil {
             A.setPosition(commandedPosition);
         }
 
-
+        telemetry.addData("Commanded Position: ", commandedPosition);
         telemetry.addData("Servo Turn Position: ", A.getPosition());
     }
 
