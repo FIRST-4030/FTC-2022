@@ -102,7 +102,9 @@ public class ServoTestOpMode extends LoopUtil {
             }
         }
 
+        telemetry.addData("Commanded Multiplier: ", commandedPositionMultiplier);
         telemetry.addData("Commanded Position: ", commandedPosition);
+        telemetry.addData("Servo: ", servo);
         telemetry.addData("Servo Turn Position: ", servoA.getPosition());
         telemetry.addData("Servo Turn Position: ", servoB.getPosition());
         telemetry.addData("Servo Turn Position: ", servoC.getPosition());
