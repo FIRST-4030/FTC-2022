@@ -71,11 +71,11 @@ public class ServoTestOpMode extends LoopUtil {
 
         if (gamepadHandler.up("D1:DPAD_LEFT") && !gamepad1.left_bumper){ //increase outputSpeed by decimalPlace
             commandedPositionMultiplier /= 10;
-            commandedPositionMultiplier = EULMathEx.doubleClamp(0, 0.33, commandedPositionMultiplier);
+            commandedPositionMultiplier = EULMathEx.doubleClamp(0, 0.1, commandedPositionMultiplier);
         }
         if (gamepadHandler.up("D1:DPAD_RIGHT") && !gamepad1.left_bumper){ //decrease outputSpeed by decimalPlace
             commandedPositionMultiplier *= 10;
-            commandedPositionMultiplier = EULMathEx.doubleClamp(0, 0.33, commandedPositionMultiplier);
+            commandedPositionMultiplier = EULMathEx.doubleClamp(0, 0.1, commandedPositionMultiplier);
         }
 
         if (gamepadHandler.up("D1:DPAD_LEFT") && gamepad1.left_bumper){
