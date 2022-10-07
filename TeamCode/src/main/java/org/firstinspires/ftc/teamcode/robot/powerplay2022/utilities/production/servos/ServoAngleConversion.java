@@ -4,32 +4,47 @@ import java.util.Arrays;
 
 public class ServoAngleConversion {
 
-    public enum UNIT{
+    public enum ANGLE_UNIT{
         RADIANS,
-        DEGREES
+        DEGREES,
+        TURNS
     }
 
-    private double min, max;
-    private UNIT unit;
+    private double min, max, angleMulti, limitedAngle, output;
+    private boolean outOfRange;
+    private ANGLE_UNIT unit;
 
-    public ServoAngleConversion(double servoMin, double servoMax, UNIT unit){
+
+    public ServoAngleConversion(double min, double max, ANGLE_UNIT unit){
+        switch (unit){
+            case TURNS:
+                this.angleMulti = 1;
+                break;
+            case DEGREES:
+                this.angleMulti = 360;
+                break;
+            case RADIANS:
+                this.angleMulti = 2 * Math.PI;
+                break;
+        }
+
         double[] temp = new double[]{min, max};
         Arrays.sort(temp);
-        this.min = temp[0];
-        if (unit == UNIT.RADIANS) this.min *= ((double)3/2) * Math.PI;
-        else if (unit == UNIT.DEGREES) this.min *= 270;
-
-        if (unit == UNIT.RADIANS) this.max *= ((double)3/2) * Math.PI;
-        else if (unit == UNIT.DEGREES) this.max *= 270;
-
-        this.max = temp[1];
+        this.min = temp[0] / this.angleMulti;
+        this.max = temp[1] / this.angleMulti;
         this.unit = unit;
+
+        this.limitedAngle = 0.75 * this.angleMulti;
     }
 
 
-    public double angle2Scalar(double measurement){
+    public void angle2Scalar(double measurement){
+        output = angleMulti * (measurement / limitedAngle);
+        outOfRange = min > output || max < output;
+    }
 
-
-        return 0.0;
+    public void scalar2Angle(double scalar){
+        output = limitedAngle * (scalar / angleMulti);
+        outOfRange = min > output || max < output;
     }
 }
