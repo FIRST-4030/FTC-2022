@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.utils.momm;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
 import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.Globals;
 
@@ -209,7 +210,7 @@ public abstract class LoopUtil extends OpMode{
                 //checks if the system has skipped the commanded cycles
                 if (fixed_update_wait_time < 1) {
                     //pass in the delta time and current time for the abstract method to use
-                    opFixedUpdate(UPDATE_CAP);
+                    opFixedUpdate(UPDATE_CAP * EULConstants.SEC2MS);
                 } else {
                     //decrement with every skip so it doesn't not execute the fixed_update when the commanded
                     //frame skips count is up
