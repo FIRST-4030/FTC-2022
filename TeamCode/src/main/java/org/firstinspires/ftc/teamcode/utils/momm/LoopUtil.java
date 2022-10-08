@@ -209,7 +209,7 @@ public abstract class LoopUtil extends OpMode{
                 //checks if the system has skipped the commanded cycles
                 if (fixed_update_wait_time < 1) {
                     //pass in the delta time and current time for the abstract method to use
-                    opFixedUpdate(delta_time);
+                    opFixedUpdate(UPDATE_CAP);
                 } else {
                     //decrement with every skip so it doesn't not execute the fixed_update when the commanded
                     //frame skips count is up
