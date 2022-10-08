@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.Globals;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.A
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.CustomMecanumDrive;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
+import org.firstinspires.ftc.teamcode.utils.sensors.distance.RevDistance;
 
 @Config
 @TeleOp(name = "PowerPlayMecanum", group = "Test")
@@ -29,6 +31,7 @@ public class DriveTest extends LoopUtil {
     public static int angleIndex = 0;
     public static boolean lastStateLB = false, lastStateRB = false,currentStateLB = false, currentStateRB = false;
     public static double pGain = 0, iGain = 0, dGain = 0;
+    public static RevDistance D1, D2;
 
 
     //Algorithm-based correction (not PID)
@@ -68,6 +71,9 @@ public class DriveTest extends LoopUtil {
         CV2 = new ColorView(RCR2.color(), RCR2.distance());
 
         correction = new AlgorithmicCorrection(new AlgorithmicCorrection.Polynomial(20));
+
+        D1 = new RevDistance(hardwareMap, telemetry, "range1");
+        D2 = new RevDistance(hardwareMap, telemetry, "range2");
     }
 
     @Override
@@ -184,6 +190,8 @@ public class DriveTest extends LoopUtil {
         telemetry.addData("Blue: ", RCR2.color().blue);
         telemetry.addData("Green: ", RCR2.color().green);
         telemetry.addData("Distance: ", RCR2.distance());
+        telemetry.addData("Distance Sensor 1: ", D1.distance(DistanceUnit.CM));
+        telemetry.addData("Distance Sensor 2: ", D2.distance(DistanceUnit.CM));
 
         correction.log(telemetry);
     }

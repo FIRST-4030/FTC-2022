@@ -67,12 +67,14 @@ public class ArmTest extends LoopUtil {
     @Override
     public void opUpdate(double deltaTime) {
         if (!emergencyStop){
-            servoArmController.calculateViaPropagation(target, cHeading);
-        }
+            //servoArmController.calculateViaPropagation(target, cHeading);
+            servoArmController.calculateByCosines(target, telemetry);
+        }else{ double x = 0/0; }
     }
 
     @Override
     public void opFixedUpdate(double deltaTime) {
+        gamepadHandler.loop();
         if (gamepad1.dpad_up){
             target.y += 1 * deltaTime * EULConstants.MS2SEC;
         } else if (gamepad1.dpad_down){
@@ -86,6 +88,8 @@ public class ArmTest extends LoopUtil {
         }
 
         if (gamepadHandler.up("D1:RT")) emergencyStop = !emergencyStop;
+
+        telemetry.addData("Target: ", target);
     }
 
     @Override
