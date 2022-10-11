@@ -10,7 +10,7 @@ public class VelocityRamping {
     }
 
     public void solve(double distance, double time){
-        double distMax = Math.max((2 * distance) / time, MAX_VELOCITY);
+        double distMax = Math.min((2 * distance) / time, MAX_VELOCITY);
         acceleration = distMax / (time - (distance / distMax));
     }
 }
