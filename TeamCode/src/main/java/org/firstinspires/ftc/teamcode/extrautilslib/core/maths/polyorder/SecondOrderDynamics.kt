@@ -2,7 +2,7 @@
 
 package org.firstinspires.ftc.teamcode.extrautilslib.core.maths.polyorder
 
-import com.icaras84.extrautilslib.core.maths.vectors.times
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.times
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.EULVector
 import kotlin.math.*
 

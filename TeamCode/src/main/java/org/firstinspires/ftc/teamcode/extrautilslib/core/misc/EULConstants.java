@@ -26,4 +26,12 @@ public class EULConstants {
     public static final double INCHES2FEET = 1d/12d;
     public static final double INCHES2METERS = 0.0254;
 
+    //mathematical constants that are useful
+    public static final double PI = Math.PI;
+    public static final double TAU = Math.PI * 2;
+    public static final double GOLDEN_RATIO = (1 + Math.sqrt(5))/2;
+
+    //mathematical conversion
+    public static final double DEG2RAD = PI / 180;
+    public static final double RAD2DEG = 180 / PI;
 }

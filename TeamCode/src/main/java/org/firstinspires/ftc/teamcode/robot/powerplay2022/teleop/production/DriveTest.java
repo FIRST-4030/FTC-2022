@@ -48,7 +48,7 @@ public class DriveTest extends LoopUtil {
         Globals.input(this);
 
         drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
-        drive.mapMotors("FL", !true, "BL", !false, "FR", !true, "BR", !false);
+        drive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true);
 
         joystick = new Vector3d();
         right_stick = new Vector2d(0, 1);
@@ -193,7 +193,8 @@ public class DriveTest extends LoopUtil {
         telemetry.addData("Distance: ", RCR2.distance());
         telemetry.addData("Distance Sensor 1: ", D1.distance(DistanceUnit.CM));
         telemetry.addData("Distance Sensor 2: ", D2.distance(DistanceUnit.CM));
-        telemetry.addData("Angle to Wall: ", Math.toDegrees(Math.atan((D1.distance(DistanceUnit.CM) - D2.distance(DistanceUnit.CM))/18)));
+        telemetry.addData("Angle to Wall: ", Math.atan((D1.distance(DistanceUnit.CM) - D2.distance(DistanceUnit.CM))/18) * EULConstants.RAD2DEG);
+        telemetry.addData("Angle to Wall (Atan2): ", Math.atan2(D2.distance(DistanceUnit.CM) - D1.distance(DistanceUnit.CM), 18) * EULConstants.RAD2DEG);
 
         correction.log(telemetry);
     }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors;
 
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.quaternions.Quaternion;
+
 public class EULVectorUtils {
 
     public static String formatVectorAsCoord(double... components){
@@ -37,6 +39,20 @@ public class EULVectorUtils {
 
     public static <T extends EULVector> EULVector div(T a, double b){
         return a.div(b);
+    }
+
+    public static Vector3d rotate3d(Vector3d input, Quaternion quaternion){//"active" q` * V * q; "passive" is q * V * q`
+        Quaternion qConjugate = quaternion.getConjugate();
+
+        Vector4d output = qConjugate.times(input).times(quaternion).getAsVector4d();
+        return new Vector3d(output.x, output.y, output.z);
+    }
+
+    public static Vector3d rotate3d(Vector3d input, Quaternion quaternion, boolean active){//"active" q` * V * q; "passive" is q * V * q`
+        Quaternion qConjugate = quaternion.getConjugate();
+
+        Vector4d output = active ? qConjugate.times(input).times(quaternion).getAsVector4d() : quaternion.times(input).times(qConjugate).getAsVector4d();
+        return new Vector3d(output.x, output.y, output.z);
     }
 
     public static Vector2d castTo2d(Object o){

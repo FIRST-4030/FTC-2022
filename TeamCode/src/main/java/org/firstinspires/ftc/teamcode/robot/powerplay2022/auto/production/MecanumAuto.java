@@ -41,7 +41,7 @@ public class MecanumAuto extends LoopUtil {
         checked = false;
         //Drive controls movement
         drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
-        drive.mapMotors("FL", !true, "BL", !false, "FR", !true, "BR", !false);
+        drive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true);
 
         //Correction outputs calculated turn speed
         correction = new AlgorithmicCorrection(new AlgorithmicCorrection.Polynomial(20));

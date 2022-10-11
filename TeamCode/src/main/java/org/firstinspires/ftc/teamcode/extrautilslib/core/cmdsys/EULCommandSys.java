@@ -24,7 +24,7 @@ public class EULCommandSys {
         this.cmdSeparator = separator;
     }
 
-    public Pair<String, EULCmd> parseCmd(String input){
+    public Pair parseCmd(String input){
         String trimmedIn = input.trim();
         String prefix;
         String cmd, args;
@@ -65,7 +65,7 @@ public class EULCommandSys {
                     output = new Pair<>(cmd, (new EULCmd(argTypes)).setContent(args));
 
                 } else {
-                    output = new Pair(trimmedIn.substring(argStart), new EULCmd());
+                    output = new Pair<>(trimmedIn.substring(argStart), new EULCmd());
                 }
             }
         }
