@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.Globals;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.depreciated.AnglePID;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.ColorView;
@@ -47,7 +48,7 @@ public class DriveTest extends LoopUtil {
         Globals.input(this);
 
         drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
-        drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
+        drive.mapMotors("FL", !true, "BL", !false, "FR", !true, "BR", !false);
 
         joystick = new Vector3d();
         right_stick = new Vector2d(0, 1);
@@ -192,6 +193,7 @@ public class DriveTest extends LoopUtil {
         telemetry.addData("Distance: ", RCR2.distance());
         telemetry.addData("Distance Sensor 1: ", D1.distance(DistanceUnit.CM));
         telemetry.addData("Distance Sensor 2: ", D2.distance(DistanceUnit.CM));
+        telemetry.addData("Angle to Wall: ", Math.toDegrees(Math.atan((D1.distance(DistanceUnit.CM) - D2.distance(DistanceUnit.CM))/18)));
 
         correction.log(telemetry);
     }

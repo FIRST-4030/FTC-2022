@@ -41,7 +41,7 @@ public class MecanumAuto extends LoopUtil {
         checked = false;
         //Drive controls movement
         drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
-        drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
+        drive.mapMotors("FL", !true, "BL", !false, "FR", !true, "BR", !false);
 
         //Correction outputs calculated turn speed
         correction = new AlgorithmicCorrection(new AlgorithmicCorrection.Polynomial(20));
@@ -80,6 +80,41 @@ public class MecanumAuto extends LoopUtil {
                             motion.z = correction.getOutput();
                             drive.update(motion, true, storedDeltaTime);
                         }
+                ),
+                new OpState(
+                        () -> {
+                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2, true);
+                            motion.z = correction.getOutput();
+                            motion.x = -0.8;
+                            motion.y = 0;
+                            drive.update(motion, true, storedDeltaTime);
+                        }
+                ),
+                new OpState(
+                        () -> {
+                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2, true);
+                            motion.z = correction.getOutput();
+                            motion.x = 0.8;
+                            motion.y = 0;
+                            drive.update(motion, true, storedDeltaTime);
+                        }
+                ),
+                new OpState(
+                        () -> {
+                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, Math.PI, true);
+                            motion.z = correction.getOutput();
+                            motion.x = 0;
+                            motion.y = -1;
+                            drive.update(motion, true, storedDeltaTime);
+                        }
+                ),
+                new OpState(
+                        Idle,
+                        () -> {
+                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, Math.PI, true);
+                            motion.z = correction.getOutput();
+                            drive.update(motion, true, storedDeltaTime);
+                        }
                 )
         );
 
@@ -100,14 +135,30 @@ public class MecanumAuto extends LoopUtil {
         storedDeltaTime = deltaTime;
         elapsedTime += deltaTime;
         CV2.update(RCR2.color(), RCR2.distance());
-        if (elapsedTime < 1.1*EULConstants.SEC2MS){
+        if (elapsedTime < 1*EULConstants.SEC2MS) {
+            stateList.setIndex(4);
+        }else{ stateList.setIndex(5); }
+        /*
+        if (elapsedTime < 1.25*EULConstants.SEC2MS){
             stateList.setIndex(0);
+        }else if (elapsedTime < 1.75*EULConstants.SEC2MS){
+            stateList.setIndex(1);
+        }else if (elapsedTime < 2.35*EULConstants.SEC2MS){
+            stateList.setIndex(2);
+        }else if (elapsedTime < 27.35*EULConstants.SEC2MS){
+            stateList.setIndex(1);
+        }else if (elapsedTime < 28.45*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.YELLOW){
+            stateList.setIndex(3);
+        }else if (elapsedTime < 28*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.MAGENTA) {
+            stateList.setIndex(3);
         }else{
             stateList.setIndex(1);
         }
+        */
+
         if (RCR2.distance() < 60){
             if (!checked){ checked = true; ColorT1 = elapsedTime; }
-            if (elapsedTime - ColorT1 < 250) {
+            if (elapsedTime - ColorT1 < 100) {
                 SeenColor = CV2.getColorBetter(100);
             }
         }
