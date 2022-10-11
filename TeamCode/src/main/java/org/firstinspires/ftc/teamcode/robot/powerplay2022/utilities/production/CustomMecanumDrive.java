@@ -170,9 +170,9 @@ public class CustomMecanumDrive extends CustomDrive{
     }
 
     public void logMotorPos(Telemetry telemetry){
-        telemetry.addData("FL Power: ", Objects.requireNonNull(motorMap.get("FL")).getCurrentPosition());
-        telemetry.addData("FR Power: ", Objects.requireNonNull(motorMap.get("FR")).getCurrentPosition());
-        telemetry.addData("BL Power: ", Objects.requireNonNull(motorMap.get("BL")).getCurrentPosition());
-        telemetry.addData("BR Power: ", Objects.requireNonNull(motorMap.get("BR")).getCurrentPosition());
+        telemetry.addData("FL Encoder Position: ", Objects.requireNonNull(motorMap.get("FL")).getCurrentPosition());
+        telemetry.addData("FR Encoder Position: ", Objects.requireNonNull(motorMap.get("FR")).getCurrentPosition());
+        telemetry.addData("BL Encoder Position: ", Objects.requireNonNull(motorMap.get("BL")).getCurrentPosition());
+        telemetry.addData("BR Encoder Position: ", Objects.requireNonNull(motorMap.get("BR")).getCurrentPosition());
     }
 }
