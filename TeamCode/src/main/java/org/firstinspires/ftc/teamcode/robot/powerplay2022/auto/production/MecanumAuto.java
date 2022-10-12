@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.AlgorithmicCorrection;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.ColorView;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.CustomMecanumDrive;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.VelocityRamping;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.velocityramping.VelocityRamping;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpState;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpStateList;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
