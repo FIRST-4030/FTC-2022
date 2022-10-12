@@ -37,7 +37,7 @@ public class VelocityRampStepper {
     }
 
     private void init(){
-        accelEquations = new ArrayList<>();
+        accelEquations = new ArrayList<>(1);
         estimatedElapsedTime = 0;
         stateElapsedTime = 0;
         currentRamp = 0;
@@ -69,10 +69,10 @@ public class VelocityRampStepper {
 
     public double update(double deltaTime){
         stateElapsedTime += deltaTime;
-        if (stateElapsedTime >= accelEquations.get(currentRamp).xInt){
-            currentRamp++; //increment current ramp index
+        if (stateElapsedTime > accelEquations.get(currentRamp).xInt){
+            currentRamp += 1; //increment current ramp index by 1
             stateElapsedTime = 0; //reset current ramp's time in state
         }
-        return accelEquations.get(currentRamp).solve(stateElapsedTime);
+        return accelEquations.get(currentRamp).solve(stateElapsedTime) / accelGenerator.MAX_VELOCITY;
     }
 }

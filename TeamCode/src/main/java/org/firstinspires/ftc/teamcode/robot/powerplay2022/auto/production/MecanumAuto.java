@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.AlgorithmicCorrection;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.ColorView;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.CustomMecanumDrive;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.velocityramping.VelocityRampStepper;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.velocityramping.VelocityRamping;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpState;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpStateList;
@@ -32,6 +33,7 @@ public class MecanumAuto extends LoopUtil {
     public static double ColorT1;
     public static boolean checked;
     public VelocityRamping VRamp;
+    public VelocityRampStepper stepper;
 
     @Override
     public void opInit() {
@@ -52,6 +54,9 @@ public class MecanumAuto extends LoopUtil {
 
         //Motion controls current wheel movement
         motion = new Vector3d();
+
+        stepper = new VelocityRampStepper(VRamp);
+        stepper.addRamp(1.1, 1.75);
 
         //...
         Runnable Idle = () -> {
@@ -121,23 +126,31 @@ public class MecanumAuto extends LoopUtil {
         storedDeltaTime = deltaTime;
         elapsedTime += deltaTime;
         CV2.update(RCR2.color(), RCR2.distance());
-        if (elapsedTime < 0.6125*EULConstants.SEC2MS) {
-            VRamp.solve(0.5, 1);
-            motion.y = -(Math.min(elapsedTime * VRamp.acceleration, 1.3) / 1.3);
+        if (elapsedTime < 1.75 * EULConstants.SEC2MS){
+            motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC);
+
             stateList.setIndex(0);
-        }else if (elapsedTime < 1.25*EULConstants.SEC2MS) {
-            VRamp.solve(0.5, 1);
-            motion.y = -((Math.min((elapsedTime-1.25) * VRamp.acceleration, 1.3))+0 / 1.3);
+
+        /*
+        if (elapsedTime < (1.75/2)*EULConstants.SEC2MS) {
+            //VRamp.solve(1.1, 1.75);
+            //motion.y = -(Math.min((elapsedTime*EULConstants.MS2SEC) * VRamp.acceleration, 1.3) / 1.3);
             stateList.setIndex(0);
-        }else if (elapsedTime < 1.75*EULConstants.SEC2MS){
+        }else if (elapsedTime < 1.75*EULConstants.SEC2MS) {
+            //VRamp.solve(1.1, 1.75);
+            //motion.y = -((Math.min(((elapsedTime*EULConstants.MS2SEC)-1.75) * -VRamp.acceleration, 1.3))+0 / 1.3);
+            stateList.setIndex(0);
+
+         */
+        }else if (elapsedTime < 2.25*EULConstants.SEC2MS){
             stateList.setIndex(1);
-        }else if (elapsedTime < 2.35*EULConstants.SEC2MS){
+        }else if (elapsedTime < 2.85*EULConstants.SEC2MS){
             stateList.setIndex(2);
-        }else if (elapsedTime < 27.35*EULConstants.SEC2MS){
+        }else if (elapsedTime < 27.85*EULConstants.SEC2MS){
             stateList.setIndex(1);
-        }else if (elapsedTime < 28.45*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.YELLOW){
+        }else if (elapsedTime < 28.95*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.YELLOW){
             stateList.setIndex(3);
-        }else if (elapsedTime < 28*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.MAGENTA) {
+        }else if (elapsedTime < 28.5*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.MAGENTA) {
             stateList.setIndex(3);
         }else {
             stateList.setIndex(1);
@@ -157,6 +170,7 @@ public class MecanumAuto extends LoopUtil {
         telemetry.addData("ColorBetter: ", CV2.getColorBetter(80));
         telemetry.addData("Color: ", CV2.getColor());
         telemetry.addData("Color: ", CV2.convertRGBToHSV(CV2.colorInput)[0]);
+        telemetry.addData("Motion.y", motion.y);
     }
 
     @Override
