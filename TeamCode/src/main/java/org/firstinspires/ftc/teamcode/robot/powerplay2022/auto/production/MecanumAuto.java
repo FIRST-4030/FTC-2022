@@ -56,7 +56,7 @@ public class MecanumAuto extends LoopUtil {
         motion = new Vector3d();
 
         stepper = new VelocityRampStepper(VRamp);
-        stepper.addRamp(1.1, 1.75);
+        stepper.addRamp(1.2, 1.75);
 
         //...
         Runnable Idle = () -> {
