@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 public class OpState {
     public ArrayList<Runnable> asyncRunnable;
+    public double elapsedTime = 0;
 
     public OpState(){
         this.asyncRunnable = new ArrayList<>();
@@ -15,7 +16,8 @@ public class OpState {
         this.asyncRunnable.addAll(Arrays.asList(runnable));
     }
 
-    public void runAll(){
+    public void runAll(double dt){
+        elapsedTime += dt;
         for (Runnable runnable: asyncRunnable) {
             runnable.run();
         }
