@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -128,11 +129,13 @@ public class MecanumAuto extends LoopUtil {
         storedDeltaTime = deltaTime;
         elapsedTime += deltaTime;
         CV2.update(RCR2.color(), RCR2.distance());
+        /*
         if (elapsedTime < 1.75 * EULConstants.SEC2MS){
             motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC)[0];
 
             stateList.setIndex(0);
 
+         */
         /*
         if (elapsedTime < (1.75/2)*EULConstants.SEC2MS) {
             //VRamp.solve(1.1, 1.75);
@@ -144,7 +147,11 @@ public class MecanumAuto extends LoopUtil {
             stateList.setIndex(0);
 
          */
-        }else if (elapsedTime < 2.25*EULConstants.SEC2MS){
+        if (elapsedTime < 1 * EULConstants.SEC2MS){
+            motion.x = 0;
+            motion.y = -1;
+            motion.z = 0;
+        } /*else if (elapsedTime < 2.25*EULConstants.SEC2MS){
             stateList.setIndex(1);
         }else if (elapsedTime < 2.85*EULConstants.SEC2MS){
             stateList.setIndex(2);
@@ -156,7 +163,9 @@ public class MecanumAuto extends LoopUtil {
             stateList.setIndex(3);
         }else {
             stateList.setIndex(1);
-        }
+        }*/
+
+
 
         if (RCR2.distance() < 60){
             if (!checked){ checked = true; ColorT1 = elapsedTime; }
