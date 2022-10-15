@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.A
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.ColorView;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.CustomMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.InputAutoMapper;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.PowerPlayGlobals;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpState;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpStateList;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.velocityramping.VelocityRampStepper;
@@ -44,8 +45,8 @@ public class MecanumAuto extends LoopUtil {
     @Override
     public void opInit() {
         //Velocity Ramps
-        forwardRamp = new VelocityRamping(1.2192);
-        strafeRamp = new VelocityRamping(1.3);
+        forwardRamp = new VelocityRamping(PowerPlayGlobals.MAX_VELOCITY);
+        strafeRamp = new VelocityRamping(PowerPlayGlobals.MAX_VELOCITY);
         //Misc
         elapsedTime = 0;
         storedDeltaTime = 0;
@@ -136,7 +137,7 @@ public class MecanumAuto extends LoopUtil {
         storedDeltaTime = deltaTime;
         elapsedTime += deltaTime;
         CV2.update(RCR2.color(), RCR2.distance());
-/*
+
         if (elapsedTime < 1.75 * EULConstants.SEC2MS) {
             motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC)[0];
 
@@ -144,7 +145,7 @@ public class MecanumAuto extends LoopUtil {
 
         }
 
- */
+
         /*
         if (elapsedTime < (1.75/2)*EULConstants.SEC2MS) {
             //VRamp.solve(1.1, 1.75);
@@ -156,6 +157,7 @@ public class MecanumAuto extends LoopUtil {
             stateList.setIndex(0);
 
          */
+        /*
         if (elapsedTime < 1.5 * EULConstants.SEC2MS){
             motion.x = 0;
             motion.y = -1;
@@ -165,7 +167,7 @@ public class MecanumAuto extends LoopUtil {
             motion.x = 0;
             motion.y = 0;
             motion.z = 0;
-        }/*else if (elapsedTime < 2.25*EULConstants.SEC2MS){
+        }*/else if (elapsedTime < 2.25*EULConstants.SEC2MS){
             stateList.setIndex(1);
         }else if (elapsedTime < 2.85*EULConstants.SEC2MS){
             stateList.setIndex(2);
@@ -177,7 +179,7 @@ public class MecanumAuto extends LoopUtil {
             stateList.setIndex(3);
         }else {
             stateList.setIndex(1);
-        }*/
+        }
 
 
 
