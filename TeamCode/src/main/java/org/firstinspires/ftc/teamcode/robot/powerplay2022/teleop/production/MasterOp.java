@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production.Mecanu
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.CustomMecanumDrive;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
-@TeleOp(name = "MasterOp")
+@TeleOp(name = "MasterOp", group = "A")
 public class MasterOp extends LoopUtil {
 
     public static LoopUtil auto, tele;

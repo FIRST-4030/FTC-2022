@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 
-@Autonomous(name = "MecanumAuto")
+@TeleOp(name = "MecanumAuto")
 public class MecanumAuto extends LoopUtil {
 
     public static CustomMecanumDrive drive;
