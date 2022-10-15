@@ -41,6 +41,7 @@ public class MecanumAuto extends LoopUtil {
 
     public InputHandler inputHandler;
     public int startTick = 0, endTick = 0;
+    public double startTime = 0, endTime = 0;
 
     @Override
     public void opInit() {
@@ -156,7 +157,7 @@ public class MecanumAuto extends LoopUtil {
             stateList.setIndex(0);
 
          */
-        if (elapsedTime < 0.5 * EULConstants.SEC2MS){
+        if (elapsedTime < 1.2 * EULConstants.SEC2MS){
             motion.x = 0;
             motion.y = -1;
             motion.z = 0;
@@ -190,10 +191,12 @@ public class MecanumAuto extends LoopUtil {
 
         if (inputHandler.up("D1:LB")){
             startTick = drive.getMotor(0).getCurrentPosition();
+            startTime = elapsedTime;
         }
 
         if (inputHandler.up("D1:RB")){
             endTick = drive.getMotor(0).getCurrentPosition();
+            endTime = elapsedTime;
         }
 
         stateList.getCurrentState().runAll(deltaTime);
@@ -217,5 +220,8 @@ public class MecanumAuto extends LoopUtil {
         telemetry.addData("Start Tick: ", startTick);
         telemetry.addData("End Tick: ", endTick);
         telemetry.addData("Absolute Delta: ", Math.abs(endTick - startTick));
+        telemetry.addData("Start Time: ", startTime);
+        telemetry.addData("End Time: ", endTime);
+        telemetry.addData("Absolute Delta: ", Math.abs(endTime - startTime));
     }
 }
