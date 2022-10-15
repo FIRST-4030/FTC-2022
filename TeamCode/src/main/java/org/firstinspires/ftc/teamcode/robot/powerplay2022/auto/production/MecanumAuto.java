@@ -157,7 +157,7 @@ public class MecanumAuto extends LoopUtil {
             stateList.setIndex(0);
 
          */
-        if (elapsedTime < 1.2 * EULConstants.SEC2MS){
+        if (elapsedTime < 1.5 * EULConstants.SEC2MS){
             motion.x = 0;
             motion.y = -1;
             motion.z = 0;
@@ -208,6 +208,14 @@ public class MecanumAuto extends LoopUtil {
         telemetry.addData("Color: ", CV2.getColor());
         telemetry.addData("Color: ", CV2.convertRGBToHSV(CV2.colorInput)[0]);
         telemetry.addData("Motion.y", motion.y);
+
+        telemetry.addData("VelocityRecording: ", "");
+        telemetry.addData("Start Tick: ", startTick);
+        telemetry.addData("End Tick: ", endTick);
+        telemetry.addData("Absolute Delta: ", Math.abs(endTick - startTick));
+        telemetry.addData("Start Time: ", startTime);
+        telemetry.addData("End Time: ", endTime);
+        telemetry.addData("Absolute Delta: ", Math.abs(endTime - startTime));
     }
 
     @Override
@@ -217,11 +225,6 @@ public class MecanumAuto extends LoopUtil {
 
     @Override
     public void opStop() {
-        telemetry.addData("Start Tick: ", startTick);
-        telemetry.addData("End Tick: ", endTick);
-        telemetry.addData("Absolute Delta: ", Math.abs(endTick - startTick));
-        telemetry.addData("Start Time: ", startTime);
-        telemetry.addData("End Time: ", endTime);
-        telemetry.addData("Absolute Delta: ", Math.abs(endTime - startTime));
+
     }
 }
