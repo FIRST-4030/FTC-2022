@@ -40,7 +40,7 @@ public class MecanumAuto extends LoopUtil {
     @Override
     public void opInit() {
         //Velocity Ramps
-        forwardRamp = new VelocityRamping(1.3);
+        forwardRamp = new VelocityRamping(1.2192);
         strafeRamp = new VelocityRamping(1.3);
         //Misc
         elapsedTime = 0;
