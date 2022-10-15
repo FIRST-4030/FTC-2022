@@ -88,7 +88,7 @@ public class VirtualServo {
     }
 
     public Vector2d asRelative(Vector2d target){
-        return new Vector2d(target.times(this.right), target.times(this.forward));
+        return new Vector2d(target.minus(this.position).times(this.right), target.minus(this.position).times(this.forward));
     }
 
     public VirtualServo copy(){

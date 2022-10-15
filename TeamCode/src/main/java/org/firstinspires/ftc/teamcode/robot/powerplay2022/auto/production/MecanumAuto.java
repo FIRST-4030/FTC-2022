@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.AlgorithmicCorrection;
@@ -32,13 +33,14 @@ public class MecanumAuto extends LoopUtil {
     //
     public static double ColorT1;
     public static boolean checked;
-    public VelocityRamping VRamp;
+    public VelocityRamping forwardRamp, strafeRamp;
     public VelocityRampStepper stepper;
 
     @Override
     public void opInit() {
         //Velocity Ramps
-        VRamp = new VelocityRamping(1.3);
+        forwardRamp = new VelocityRamping(1.3);
+        strafeRamp = new VelocityRamping(1.3);
         //Misc
         elapsedTime = 0;
         storedDeltaTime = 0;
@@ -55,8 +57,8 @@ public class MecanumAuto extends LoopUtil {
         //Motion controls current wheel movement
         motion = new Vector3d();
 
-        stepper = new VelocityRampStepper(VRamp);
-        stepper.addRamp(1.24, 1.75);
+        stepper = new VelocityRampStepper(forwardRamp, strafeRamp);
+        stepper.addRampForward(1, 1.24, 1.75);
 
         //...
         Runnable Idle = () -> {
@@ -127,7 +129,7 @@ public class MecanumAuto extends LoopUtil {
         elapsedTime += deltaTime;
         CV2.update(RCR2.color(), RCR2.distance());
         if (elapsedTime < 1.75 * EULConstants.SEC2MS){
-            motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC);
+            motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC)[1];
 
             stateList.setIndex(0);
 
