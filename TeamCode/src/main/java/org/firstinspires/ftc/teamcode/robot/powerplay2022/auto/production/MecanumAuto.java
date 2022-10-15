@@ -129,13 +129,13 @@ public class MecanumAuto extends LoopUtil {
         storedDeltaTime = deltaTime;
         elapsedTime += deltaTime;
         CV2.update(RCR2.color(), RCR2.distance());
-        /*
-        if (elapsedTime < 1.75 * EULConstants.SEC2MS){
+
+        if (elapsedTime < 1.75 * EULConstants.SEC2MS) {
             motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC)[0];
 
             stateList.setIndex(0);
 
-         */
+        }
         /*
         if (elapsedTime < (1.75/2)*EULConstants.SEC2MS) {
             //VRamp.solve(1.1, 1.75);
@@ -146,7 +146,7 @@ public class MecanumAuto extends LoopUtil {
             //motion.y = -((Math.min(((elapsedTime*EULConstants.MS2SEC)-1.75) * -VRamp.acceleration, 1.3))+0 / 1.3);
             stateList.setIndex(0);
 
-         */
+         *//*
         if (elapsedTime < 0.5 * EULConstants.SEC2MS){
             motion.x = 0;
             motion.y = -1;
@@ -155,7 +155,7 @@ public class MecanumAuto extends LoopUtil {
             motion.x = 0;
             motion.y = 0;
             motion.z = 0;
-        }/*else if (elapsedTime < 2.25*EULConstants.SEC2MS){
+        }*/else if (elapsedTime < 2.25*EULConstants.SEC2MS){
             stateList.setIndex(1);
         }else if (elapsedTime < 2.85*EULConstants.SEC2MS){
             stateList.setIndex(2);
@@ -167,7 +167,7 @@ public class MecanumAuto extends LoopUtil {
             stateList.setIndex(3);
         }else {
             stateList.setIndex(1);
-        }*/
+        }
 
 
 
