@@ -20,4 +20,8 @@ public class EULMathEx {
         T clampUpper = max.compareTo(value) > 0 ? value : max;
         return min.compareTo(clampUpper) < 0 ? min : clampUpper;
     }
+
+    public static double lawOfCosines(double adjacentLength1, double adjacentLength2, double oppositeLength){
+        return Math.acos((adjacentLength1 * adjacentLength1 + adjacentLength2 * adjacentLength2 - oppositeLength * oppositeLength) / (2 * adjacentLength1 * adjacentLength2));
+    }
 }
