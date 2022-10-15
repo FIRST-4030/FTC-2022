@@ -175,4 +175,26 @@ public class CustomMecanumDrive extends CustomDrive{
         telemetry.addData("BL Encoder Position: ", Objects.requireNonNull(motorMap.get("BL")).getCurrentPosition());
         telemetry.addData("BR Encoder Position: ", Objects.requireNonNull(motorMap.get("BR")).getCurrentPosition());
     }
+
+    public DcMotor getMotor(int number){
+        DcMotor motor;
+        switch (number){
+            case 0:
+                motor = motorMap.get("FL");
+                break;
+            case 1:
+                motor = motorMap.get("BL");
+                break;
+            case 2:
+                motor = motorMap.get("FR");
+                break;
+            case 3:
+                motor = motorMap.get("BR");
+                break;
+            default:
+                motor = null;
+        }
+
+        return motor;
+    }
 }
