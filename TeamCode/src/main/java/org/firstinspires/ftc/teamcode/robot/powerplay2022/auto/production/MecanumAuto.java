@@ -147,7 +147,7 @@ public class MecanumAuto extends LoopUtil {
             stateList.setIndex(0);
 
          */
-        if (elapsedTime < 1 * EULConstants.SEC2MS){
+        if (elapsedTime < 0.5 * EULConstants.SEC2MS){
             motion.x = 0;
             motion.y = -1;
             motion.z = 0;
