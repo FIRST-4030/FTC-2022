@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.teleop.production;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production.MecanumAuto;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.CustomMecanumDrive;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
-@Autonomous(name = "MasterOp")
+@TeleOp(name = "MasterOp")
 public class MasterOp extends LoopUtil {
 
     public static LoopUtil auto, tele;
