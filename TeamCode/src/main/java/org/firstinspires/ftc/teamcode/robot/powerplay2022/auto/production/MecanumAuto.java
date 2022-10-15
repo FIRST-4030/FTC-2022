@@ -1,28 +1,25 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.AlgorithmicCorrection;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.ColorView;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.CustomMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.InputAutoMapper;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.velocityramping.VelocityRampStepper;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.velocityramping.VelocityRamping;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpState;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpStateList;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.velocityramping.VelocityRampStepper;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.velocityramping.VelocityRamping;
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 
-@TeleOp(name = "MecanumAuto")
+@Autonomous(name = "MecanumAuto")
 public class MecanumAuto extends LoopUtil {
 
     public static CustomMecanumDrive drive;
@@ -135,6 +132,7 @@ public class MecanumAuto extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
+        inputHandler.loop();
         storedDeltaTime = deltaTime;
         elapsedTime += deltaTime;
         CV2.update(RCR2.color(), RCR2.distance());
