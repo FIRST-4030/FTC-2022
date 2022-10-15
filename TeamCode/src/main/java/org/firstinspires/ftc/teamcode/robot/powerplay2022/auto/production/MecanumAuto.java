@@ -129,7 +129,7 @@ public class MecanumAuto extends LoopUtil {
         elapsedTime += deltaTime;
         CV2.update(RCR2.color(), RCR2.distance());
         if (elapsedTime < 1.75 * EULConstants.SEC2MS){
-            motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC)[1];
+            motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC)[0];
 
             stateList.setIndex(0);
 
