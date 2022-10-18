@@ -37,4 +37,11 @@ public class EULMathEx {
         if (ratio <= -1) return EULConstants.PI;
         return Math.acos(ratio);
     }
+
+    public static double safeASIN(double ratio){
+        if (ratio >= 1) return EULConstants.PI / 2;
+        if (ratio <= -1) return -EULConstants.PI / 2;
+        return Math.asin(ratio);
+    }
+
 }
