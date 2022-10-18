@@ -15,7 +15,7 @@ public class ThreeJointArm {
     private Telemetry telemetry;
 
     public ThreeJointArm(VirtualServo virtualCore, ServoFTC[] servos, ServoAngleConversion[] conversions, double armLengthA, double armLengthB){
-        //check if params are correct
+        //check if params are correct`
         if (servos.length != 3) throw new IllegalArgumentException("Servo Array is not length 3! Length passed in: " + servos.length);
         if (conversions.length != 3) throw new IllegalArgumentException("Conversion Array is not length 3! Length passed in: " + conversions.length);
 
@@ -43,9 +43,9 @@ public class ThreeJointArm {
     public void bindTelemetry(Telemetry telemetry){
         this.telemetry = telemetry;
     }
-
     public void circleFind(Vector2d target){
         Vector2d restrictedTarget = target.length() <= totalArmLength ? target : target.normalized().times(totalArmLength);
+        Vector2d veryRestrictedTarget =  restrictedTarget.length() >= 2 ? restrictedTarget : target.normalized().times(armLengthA - armLengthB);
         double b = (armLengthA*armLengthA - armLengthB*armLengthB - restrictedTarget.length()*restrictedTarget.length())/(-2*restrictedTarget.length());
         double a = restrictedTarget.length() - b;
         double h = Math.sqrt(armLengthB*armLengthB - b*b);
