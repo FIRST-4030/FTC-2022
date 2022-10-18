@@ -35,6 +35,7 @@ public class VirtualServo {
         this.right = new Vector2d(this.forward.y, -this.forward.x);
         this.armDirection = parentServo.armDirection;
         this.armDirectionNormal = new Vector2d(this.armDirection.y, -this.armDirection.x);
+        this.offset = offset;
         this.armLength = segmentLength;
     }
 

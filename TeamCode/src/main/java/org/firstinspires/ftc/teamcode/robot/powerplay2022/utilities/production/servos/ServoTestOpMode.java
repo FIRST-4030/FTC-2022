@@ -3,7 +3,10 @@ package org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.EULMathEx;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.InputAutoMapper;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics.ThreeJointArm;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics.VirtualServo;
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoConfig;
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoFTC;
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
@@ -11,7 +14,7 @@ import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
 @TeleOp(name = "Arm Servo Testing", group = "Tester")
 public class ServoTestOpMode extends LoopUtil {
-
+    public ThreeJointArm newPropArm;
     public enum SERVO{
         A,
         B,
@@ -20,15 +23,17 @@ public class ServoTestOpMode extends LoopUtil {
 
     public static ServoFTC servoA, servoB, servoC;
     public static ServoConfig configA, configB, configC;
+    public static ServoAngleConversion servoConversionA, servoConversionB, servoConversionC;
 
     public static InputHandler gamepadHandler;
     public static boolean enableJoystick;
     public static double commandedPosition;
     public static double commandedPositionMultiplier;
     public static SERVO servo = SERVO.A;
-
+    public Vector2d betterCommandedPosition;
     @Override
     public void opInit() {
+
         configA = new ServoConfig("A",false, 0, 0.75);
         configB = new ServoConfig("B",false, 0, 1);
         configC = new ServoConfig("C",false, 0, 1);
@@ -37,10 +42,17 @@ public class ServoTestOpMode extends LoopUtil {
         servoB = new ServoFTC(hardwareMap, telemetry, configB);
         servoC = new ServoFTC(hardwareMap, telemetry, configC);
 
+        servoConversionA = new ServoAngleConversion(0, 180, ServoAngleConversion.ANGLE_UNIT.DEGREES);
+        servoConversionB = new ServoAngleConversion(0, 270, ServoAngleConversion.ANGLE_UNIT.DEGREES);
+        servoConversionC = new ServoAngleConversion(0, 270, ServoAngleConversion.ANGLE_UNIT.DEGREES);
+
         gamepadHandler = InputAutoMapper.normal.autoMap(this);
         enableJoystick = false;
         commandedPosition = 0.0;
+        betterCommandedPosition = new Vector2d(0,-1);
         commandedPositionMultiplier = 1;
+
+        newPropArm = new ThreeJointArm(new VirtualServo(15, new Vector2d(0, -1), new Vector2d(0, 0)), new ServoFTC[]{servoA, servoB, servoC}, new ServoAngleConversion[]{servoConversionA, servoConversionB, servoConversionC}, 15, 13);
     }
 
     @Override
@@ -53,30 +65,27 @@ public class ServoTestOpMode extends LoopUtil {
 
     }
 
-    @Override
-    public void opUpdate(double deltaTime) {
+    public void handleInput(){
+
         gamepadHandler.loop();
         if (gamepadHandler.up("D1:LT")){
             enableJoystick = !enableJoystick;
         }
 
-        if (gamepadHandler.up("D1:DPAD_UP")){ //increase outputSpeed by decimalPlace
-            commandedPosition += commandedPositionMultiplier;
-            commandedPosition = EULMathEx.doubleClamp(0, 1, commandedPosition);
+        if (gamepadHandler.up("D1:DPAD_UP")){ //increase outputSpeed by decimalPlace | now wrong comment
+            betterCommandedPosition.y += 0.05;
         }
-        if (gamepadHandler.up("D1:DPAD_DOWN")){ //decrease outputSpeed by decimalPlace
-            commandedPosition -= commandedPositionMultiplier;
-            commandedPosition = EULMathEx.doubleClamp(0, 1, commandedPosition);
+        if (gamepadHandler.up("D1:DPAD_DOWN")){ //decrease outputSpeed by decimalPlace | now wrong comment
+            betterCommandedPosition.y -= 0.05;
         }
 
-        if (gamepadHandler.up("D1:DPAD_LEFT") && !gamepad1.left_bumper){ //increase outputSpeed by decimalPlace
-            commandedPositionMultiplier /= 10;
-            commandedPositionMultiplier = EULMathEx.doubleClamp(0, 0.1, commandedPositionMultiplier);
+        if (gamepadHandler.up("D1:DPAD_LEFT")){ //increase outputSpeed by decimalPlace | now wrong comment
+            betterCommandedPosition.x -= 0.05;
         }
-        if (gamepadHandler.up("D1:DPAD_RIGHT") && !gamepad1.left_bumper){ //decrease outputSpeed by decimalPlace
-            commandedPositionMultiplier *= 10;
-            commandedPositionMultiplier = EULMathEx.doubleClamp(0, 0.1, commandedPositionMultiplier);
+        if (gamepadHandler.up("D1:DPAD_RIGHT")){ //decrease outputSpeed by decimalPlace | now wrong comment
+            betterCommandedPosition.x += 0.05;
         }
+        /*
 
         if (gamepadHandler.up("D1:DPAD_LEFT") && gamepad1.left_bumper){
             switch (servo){
@@ -93,7 +102,15 @@ public class ServoTestOpMode extends LoopUtil {
                 case C: servo = SERVO.A; break;
             }
         }
+        */
 
+
+    }
+
+    @Override
+    public void opUpdate(double deltaTime) {
+        handleInput();
+        /*
         if (enableJoystick){
             switch (servo){
                 case A: servoA.setPosition(commandedPosition); break;
@@ -101,6 +118,8 @@ public class ServoTestOpMode extends LoopUtil {
                 case C: servoC.setPosition(commandedPosition); break;
             }
         }
+        */
+        newPropArm.propagate(betterCommandedPosition, new Vector2d( 1, 0),true, telemetry);
 
         telemetry.addData("Commanded Multiplier: ", commandedPositionMultiplier);
         telemetry.addData("Commanded Position: ", commandedPosition);

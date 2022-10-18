@@ -45,8 +45,8 @@ public class MecanumAuto extends LoopUtil {
     @Override
     public void opInit() {
         //Velocity Ramps
-        forwardRamp = new VelocityRamping(PowerPlayGlobals.MAX_VEL);
-        strafeRamp = new VelocityRamping(PowerPlayGlobals.MAX_VEL);
+        forwardRamp = new VelocityRamping(PowerPlayGlobals.MAX_VELOCITY);
+        strafeRamp = new VelocityRamping(PowerPlayGlobals.MAX_VELOCITY);
         //Misc
         elapsedTime = 0;
         storedDeltaTime = 0;

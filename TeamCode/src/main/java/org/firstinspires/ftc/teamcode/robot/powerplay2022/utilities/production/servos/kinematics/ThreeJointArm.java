@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.EULMathEx;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.ServoAngleConversion;
@@ -38,7 +39,7 @@ public class ThreeJointArm {
         this.virtualServoC = new VirtualServo(this.virtualServoB, new Vector2d(), 0);
     }
 
-    public void propagate(Vector2d target, Vector2d endHeading, boolean bottomSolution){
+    public void propagate(Vector2d target, Vector2d endHeading, boolean bottomSolution, Telemetry telemetry){
         //store the length
         double targetLength = target.length();
         //stores the restricted target and direction to it
@@ -83,6 +84,8 @@ public class ThreeJointArm {
         //rotate and actuate virtual and hardware servo (respectively)
         conversionC.angle2Scalar(3 * Math.PI / 4 - angleBActual);
         virtualServoC.rotateArm(angleCVirtual);
-        servoC.setPosition(conversionC.getOutput());
+        servoC.setPosition(1-conversionC.getOutput());
+
+        telemetry.addData("Target Vector: ", restrictedTarget);
     }
 }
