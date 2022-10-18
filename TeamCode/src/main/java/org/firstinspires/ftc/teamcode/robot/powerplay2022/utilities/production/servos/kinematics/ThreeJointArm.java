@@ -12,6 +12,7 @@ public class ThreeJointArm {
     private ServoFTC servoA, servoB, servoC;
     private ServoAngleConversion conversionA, conversionB, conversionC;
     private final double armLengthA, armLengthB, totalArmLength;
+    private Telemetry telemetry;
 
     public ThreeJointArm(VirtualServo virtualCore, ServoFTC[] servos, ServoAngleConversion[] conversions, double armLengthA, double armLengthB){
         //check if params are correct
@@ -39,7 +40,11 @@ public class ThreeJointArm {
         this.virtualServoC = new VirtualServo(this.virtualServoB, new Vector2d(), 0);
     }
 
-    public void propagate(Vector2d target, Vector2d endHeading, boolean bottomSolution, Telemetry telemetry){
+    public void bindTelemetry(Telemetry telemetry){
+        this.telemetry = telemetry;
+    }
+
+    public void propagate(Vector2d target, Vector2d endHeading, boolean bottomSolution){
         //store the length
         double targetLength = target.length();
         //stores the restricted target and direction to it
@@ -49,6 +54,7 @@ public class ThreeJointArm {
         //stores the end heading
         Vector2d normalizedHeading = endHeading.length() <= 0.0000001 ? new Vector2d(0, -1) : endHeading.normalized();
 
+        /*
         double biasedSign = Math.signum(virtualServoA.armDirectionNormal.times(targetDir)) == 0 ? 1 : Math.signum(virtualServoA.armDirectionNormal.times(targetDir));
         double angleAVirtual = Math.acos(virtualServoA.armDirection.times(targetDir)) * biasedSign; //angle from the arm's virtual base
 
@@ -87,5 +93,34 @@ public class ThreeJointArm {
         servoC.setPosition(1-conversionC.getOutput());
 
         telemetry.addData("Target Vector: ", restrictedTarget);
+
+         */
+
+        double realAngleA = EULMathEx.safeACOS(virtualServoA.right.times(targetDir));
+        double biasedSignA = Math.signum(virtualServoA.armDirectionNormal.times(targetDir)) >= 0 ? 1 : -1;
+        double virtualAngleA = EULMathEx.safeACOS(virtualServoA.armDirection.times(targetDir)) * biasedSignA;
+
+        virtualServoA.rotateArm(virtualAngleA);
+        servoA.setPosition(conversionA.angle2Scalar(realAngleA).getOutput() + (bottomSolution ? -virtualAngleA : virtualAngleA));
+        targetDir = restrictedTarget.minus(virtualServoB.position).normalized();
+
+        double biasedSignB = Math.signum(virtualServoB.armDirectionNormal.times(targetDir)) >= 0 ? 1 : -1;
+        double virtualAngleB = EULMathEx.safeACOS(virtualServoB.armDirection.times(targetDir)) * biasedSignB;
+
+        virtualServoB.rotateArm(virtualAngleB);
+        servoB.setPosition(conversionB.angle2Scalar(virtualAngleB + 3 * Math.PI / 2).getOutput());
+        targetDir = restrictedTarget.minus(virtualServoC.position).normalized();
+
+        double biasedSignC = Math.signum(virtualServoC.armDirectionNormal.times(targetDir)) >= 0 ? 1 : -1;
+        double virtualAngleC = EULMathEx.safeACOS(virtualServoC.armDirection.times(targetDir)) * biasedSignB;
+
+        virtualServoC.rotateArm(virtualAngleB);
+        servoC.setPosition(conversionC.angle2Scalar(virtualAngleB + 3 * Math.PI / 2).getOutput());
+
+        telemetry.addData("Restricted Target: ", restrictedTarget);
+        telemetry.addData("End Heading: ", endHeading);
+        telemetry.addData("Conversion A Output: ", conversionA.getOutput());
+        telemetry.addData("Conversion B Output: ", conversionB.getOutput());
+        telemetry.addData("Conversion C Output: ", conversionC.getOutput());
     }
 }

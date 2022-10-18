@@ -52,7 +52,12 @@ public class ServoTestOpMode extends LoopUtil {
         betterCommandedPosition = new Vector2d(0,-1);
         commandedPositionMultiplier = 1;
 
-        newPropArm = new ThreeJointArm(new VirtualServo(15, new Vector2d(0, -1), new Vector2d(0, 0)), new ServoFTC[]{servoA, servoB, servoC}, new ServoAngleConversion[]{servoConversionA, servoConversionB, servoConversionC}, 15, 13);
+        newPropArm = new ThreeJointArm(
+                new VirtualServo(15, new Vector2d(0, -1), new Vector2d(0, 0)),
+                new ServoFTC[]{servoA, servoB, servoC},
+                new ServoAngleConversion[]{servoConversionA, servoConversionB, servoConversionC},
+                15,
+                13);
     }
 
     @Override
@@ -119,7 +124,7 @@ public class ServoTestOpMode extends LoopUtil {
             }
         }
         */
-        newPropArm.propagate(betterCommandedPosition, new Vector2d( 1, 0),true, telemetry);
+        newPropArm.propagate(betterCommandedPosition, new Vector2d( 1, 0),true);
 
         telemetry.addData("Commanded Multiplier: ", commandedPositionMultiplier);
         telemetry.addData("Commanded Position: ", commandedPosition);

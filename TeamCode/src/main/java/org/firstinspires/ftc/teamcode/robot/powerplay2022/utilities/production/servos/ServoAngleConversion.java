@@ -50,14 +50,16 @@ public class ServoAngleConversion {
     }
 
 
-    public void angle2Scalar(double measurement){
+    public ServoAngleConversion angle2Scalar(double measurement){
         output = measurement / limitedAngle;
         outOfRange = min > output || max < output;
+        return this;
     }
 
-    public void scalar2Angle(double scalar){
+    public ServoAngleConversion scalar2Angle(double scalar){
         output = limitedAngle * scalar;
         outOfRange = min > output || max < output;
+        return this;
     }
 
     public double getOutput(){
