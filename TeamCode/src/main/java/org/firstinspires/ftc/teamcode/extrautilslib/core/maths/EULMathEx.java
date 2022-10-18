@@ -24,7 +24,7 @@ public class EULMathEx {
     }
 
     public static double lawOfCosines(double adjacentLength1, double adjacentLength2, double oppositeLength){
-        return Math.acos((adjacentLength1 * adjacentLength1 + adjacentLength2 * adjacentLength2 - oppositeLength * oppositeLength) / (2 * adjacentLength1 * adjacentLength2));
+        return safeACOS((adjacentLength1 * adjacentLength1 + adjacentLength2 * adjacentLength2 - oppositeLength * oppositeLength) / (2 * adjacentLength1 * adjacentLength2));
     }
 
     /**
