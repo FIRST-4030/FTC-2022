@@ -44,6 +44,16 @@ public class ThreeJointArm {
         this.telemetry = telemetry;
     }
 
+    public void circleFind(Vector2d target){
+        Vector2d restrictedTarget = target.length() <= totalArmLength ? target : target.normalized().times(totalArmLength);
+        double b = (armLengthA*armLengthA - armLengthB*armLengthB - restrictedTarget.length()*restrictedTarget.length())/(-2*restrictedTarget.length());
+        double a = restrictedTarget.length() - b;
+        double h = Math.sqrt(armLengthB*armLengthB - b*b);
+        double A = EULMathEx.safeASIN(restrictedTarget.y/restrictedTarget.length()) + EULMathEx.safeASIN(h/armLengthA);
+        double B = EULMathEx.safeASIN(a/armLengthA) + EULMathEx.safeASIN(b/armLengthB);
+        B = Math.PI - B;
+    }
+
     public void propagate(Vector2d target, Vector2d endHeading, boolean bottomSolution){
         //store the length
         double targetLength = target.length();
