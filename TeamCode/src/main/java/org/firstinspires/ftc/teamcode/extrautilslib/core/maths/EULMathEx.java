@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.extrautilslib.core.maths;
 
+import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
+
 public class EULMathEx {
 
     public enum Axis{
@@ -23,5 +25,16 @@ public class EULMathEx {
 
     public static double lawOfCosines(double adjacentLength1, double adjacentLength2, double oppositeLength){
         return Math.acos((adjacentLength1 * adjacentLength1 + adjacentLength2 * adjacentLength2 - oppositeLength * oppositeLength) / (2 * adjacentLength1 * adjacentLength2));
+    }
+
+    /**
+     * Due to double precision errors, the interval might be out of the [-1,1] interval, so we clamp those
+     * @param ratio
+     * @return arccos(ratio)
+     */
+    public static double safeACOS(double ratio){
+        if (ratio >= 1) return 0;
+        if (ratio <= -1) return EULConstants.PI;
+        return Math.acos(ratio);
     }
 }
