@@ -30,7 +30,7 @@ public class EULMathEx {
     /**
      * Due to double precision errors, the interval might be out of the [-1,1] interval, so we clamp those
      * @param ratio
-     * @return arccos(ratio)
+     * @return acos(ratio)
      */
     public static double safeACOS(double ratio){
         if (ratio >= 1) return 0;
@@ -38,6 +38,11 @@ public class EULMathEx {
         return Math.acos(ratio);
     }
 
+    /**
+     * Due to double precision errors, the interval might be out of the [-1,1] interval, so we clamp those
+     * @param ratio
+     * @return asin(ratio)
+     */
     public static double safeASIN(double ratio){
         if (ratio >= 1) return EULConstants.PI / 2;
         if (ratio <= -1) return -EULConstants.PI / 2;
