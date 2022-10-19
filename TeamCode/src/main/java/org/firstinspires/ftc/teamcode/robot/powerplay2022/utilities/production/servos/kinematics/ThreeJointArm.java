@@ -45,13 +45,22 @@ public class ThreeJointArm {
     }
 
     public void circleFind(Vector2d target){
-        Vector2d restrictedTarget = target.length() <= totalArmLength ? target : target.normalized().times(totalArmLength);
+        Vector2d restrictedTarget = target.length() <= (totalArmLength-0.5) ? target : target.normalized().times(totalArmLength);
         double b = (armLengthA*armLengthA - armLengthB*armLengthB - restrictedTarget.length()*restrictedTarget.length())/(-2*restrictedTarget.length());
+        double angleToTarget = EULMathEx.safeACOS(-1 * restrictedTarget.x/restrictedTarget.length());
         double a = restrictedTarget.length() - b;
         double h = Math.sqrt(armLengthB*armLengthB - b*b);
         double A = EULMathEx.safeASIN(restrictedTarget.y/restrictedTarget.length()) + EULMathEx.safeASIN(h/armLengthA);
         double B = EULMathEx.safeASIN(a/armLengthA) + EULMathEx.safeASIN(b/armLengthB);
-        B = Math.PI - B;
+        B = B-(Math.PI/3);
+        servoA.setPosition(A/(0.75*Math.PI));
+        servoB.setPosition(B/(1.5*Math.PI));
+        //servoB.setPosition(0.25);
+        telemetry.addData("Restricted Target: ", restrictedTarget);
+        telemetry.addData("Conversion A Output: ", conversionA.getOutput());
+        telemetry.addData("Conversion B Output: ", conversionB.getOutput());
+        telemetry.addData("Angle A Output: ", A);
+        telemetry.addData("Angle B Output: ", B);
     }
 
     public void propagate(Vector2d target, Vector2d endHeading, boolean bottomSolution){
