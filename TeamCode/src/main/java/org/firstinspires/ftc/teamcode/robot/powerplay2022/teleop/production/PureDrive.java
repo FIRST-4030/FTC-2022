@@ -35,10 +35,10 @@ public class PureDrive extends LoopUtil {
         outputSpeed = 1;
         decimalPlace = 1;
 
-        drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
+        drive = new CustomMecanumDrive(hardwareMap, 1, 1, 1);
         //drive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);
         drive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true);
-        drive.setOutputMultiplier(-1);
+        drive.setOutputMultiplier(1);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class PureDrive extends LoopUtil {
 
         joystick.x = gamepadHandler.value("D1:LS_X");
         joystick.y = -gamepadHandler.value("D1:LS_Y");
-        joystick.z = gamepadHandler.value("D1:RS_X");
+        joystick.z = -gamepadHandler.value("D1:RS_X");
 
         handleInput();
 
