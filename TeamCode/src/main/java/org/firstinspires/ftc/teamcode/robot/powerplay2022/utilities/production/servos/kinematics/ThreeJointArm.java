@@ -77,6 +77,7 @@ public class ThreeJointArm {
         Vector2d restrictedTarget = targetLength <= totalArmLength ? target : target.normalized().times(totalArmLength);
         Vector2d targetDir = restrictedTarget.normalized();
 
+
         //stores the end heading
         Vector2d normalizedHeading = endHeading.length() <= 0.0000001 ? new Vector2d(0, -1) : endHeading.normalized();
 
@@ -126,7 +127,8 @@ public class ThreeJointArm {
         double dpForwardA = EULMathEx.safeACOS(virtualServoA.forward.times(targetDir)) * -Math.signum(virtualServoA.right.times(targetDir));
         double realAngleA = conversionA.angleToServo(dpForwardA);
         double dpArmA = EULMathEx.safeACOS(virtualServoA.armDirection.times(targetDir)) * -Math.signum(virtualServoA.armDirectionNormal.times(targetDir));
-        virtualServoA.rotateArm(dpArmA);
+        double locA = EULMathEx.lawOfCosines(virtualServoA.armLength, restrictedTarget.length(), virtualServoB.armLength);
+        virtualServoA.rotateArm(dpArmA + (bottomSolution ? - locA : locA));
         targetDir = restrictedTarget.minus(virtualServoB.position).normalized();
 
         double dpForwardB = EULMathEx.safeACOS(virtualServoB.forward.times(targetDir)) * -Math.signum(virtualServoB.right.times(targetDir));
@@ -140,7 +142,7 @@ public class ThreeJointArm {
         double dpArmC = EULMathEx.safeACOS(virtualServoC.armDirection.times(endHeading)) * -Math.signum(virtualServoC.armDirectionNormal.times(endHeading));
         virtualServoB.rotateArm(dpArmC);
 
-        servoA.setPosition(realAngleA);
+        servoA.setPosition(realAngleA + (bottomSolution ? - locA : locA));
         servoB.setPosition(realAngleB);
         servoC.setPosition(realAngleC);
 
