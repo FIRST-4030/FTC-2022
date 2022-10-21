@@ -53,15 +53,20 @@ public class ThreeJointArm {
         double h = Math.sqrt(armLengthB*armLengthB - b*b);
         double A = EULMathEx.safeASIN(restrictedTarget.y/restrictedTarget.length()) + EULMathEx.safeASIN(h/armLengthA);
         double B = EULMathEx.safeASIN(a/armLengthA) + EULMathEx.safeASIN(b/armLengthB);
-        B = B-(Math.PI/3);
-        servoA.setPosition(A/(0.75*Math.PI));
-        servoB.setPosition(B/(1.5*Math.PI));
+        telemetry.addData("Angle A Pi Rad: ", A/Math.PI);
+        telemetry.addData("Angle B Pi Rad: ", B/Math.PI);
+        A=(4*-A)/(3*Math.PI);
+        B=((4*B)/(6*Math.PI) - (1/6));
+        telemetry.addData("Angle B Output Raw: ", B);
+        telemetry.addData("Angle A Output Raw: ", A);
+        telemetry.addData("Angle A Output: ", EULMathEx.doubleClamp(0.001, 0.999, A));
+        telemetry.addData("Angle B Output: ", EULMathEx.doubleClamp(0.001, 0.999, B));
+        servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
+        servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B));
         //servoB.setPosition(0.25);
         telemetry.addData("Restricted Target: ", restrictedTarget);
         //telemetry.addData("Conversion A Output: ", conversionA.getOutput());
         //telemetry.addData("Conversion B Output: ", conversionB.getOutput());
-        telemetry.addData("Angle A Output: ", A);
-        telemetry.addData("Angle B Output: ", B);
     }
 
     public void propagate(Vector2d target, Vector2d endHeading, boolean bottomSolution){
