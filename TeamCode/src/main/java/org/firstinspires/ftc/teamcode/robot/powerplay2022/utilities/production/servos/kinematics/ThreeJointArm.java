@@ -51,6 +51,7 @@ public class ThreeJointArm {
         double angleToTarget = EULMathEx.safeACOS(-1 * restrictedTarget.x/restrictedTarget.length());
         double a = restrictedTarget.length() - b;
         double h = Math.sqrt(armLengthB*armLengthB - b*b);
+        //Why is A this and not: double A = EULMathEx.safeASIN(h/armLengthA);
         double A = EULMathEx.safeASIN(restrictedTarget.y/restrictedTarget.length()) + EULMathEx.safeASIN(h/armLengthA);
         double B = EULMathEx.safeASIN(a/armLengthA) + EULMathEx.safeASIN(b/armLengthB);
         telemetry.addData("Angle A Pi Rad: ", A/Math.PI);
