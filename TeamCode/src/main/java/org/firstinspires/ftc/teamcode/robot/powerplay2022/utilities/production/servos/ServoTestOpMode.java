@@ -2,9 +2,8 @@ package org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.EULMathEx;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.InputAutoMapper;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.misc.InputAutoMapper;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics.AngleConversion;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics.ThreeJointArm;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics.VirtualServo;

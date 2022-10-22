@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production.MecanumAuto;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.CustomMecanumDrive;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.movement.CustomMecanumDrive;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
 @Autonomous(name = "MasterOp", group = "A")
