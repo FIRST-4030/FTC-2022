@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics;
 
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.EULMathEx;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.matrices.Matrix2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 
@@ -96,8 +97,8 @@ public class VirtualServo {
         Matrix2d rot = Matrix2d.makeRotation(angle);
 
         if (rotateNormals && this.parentServo != null){ //check if you need to rotate the normals as this method is recursive
-            Vector2d armPosition = asRelative(armDirection);
-            Vector2d armNorm = asRelative(armDirectionNormal);
+            Vector2d armPosition = asRelative(armDirection.plus(this.position));
+            Vector2d armNorm = asRelative(armDirectionNormal.plus(this.position));
 
             this.forward = parentServo.armDirection;
             this.right = parentServo.armDirectionNormal;
@@ -128,6 +129,10 @@ public class VirtualServo {
 
     public Vector2d asRelative(Vector2d target){
         return new Vector2d(target.minus(this.position).times(this.right), target.minus(this.position).times(this.forward));
+    }
+
+    public double getArmAngle(){
+        return EULMathEx.safeACOS(this.armDirection.times(this.forward)) * -Math.signum(this.armDirection.times(this.right));
     }
 
     public boolean hasParent(){

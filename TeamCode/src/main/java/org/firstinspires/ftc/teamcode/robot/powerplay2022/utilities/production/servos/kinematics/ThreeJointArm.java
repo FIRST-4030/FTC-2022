@@ -126,28 +126,29 @@ public class ThreeJointArm {
         //positive is CCW
         double dpForwardA = EULMathEx.safeACOS(virtualServoA.forward.times(targetDir)) * -Math.signum(virtualServoA.right.times(targetDir));
         double locA = EULMathEx.lawOfCosines(virtualServoA.armLength, restrictedTarget.length(), virtualServoB.armLength);
-        double realAngleA = conversionA.angleToServo(dpForwardA) + (bottomSolution ? - locA : locA);
+        double armAngleA = dpForwardA + (bottomSolution ? -locA : locA);
+        double realAngleA = conversionA.angleToServo(armAngleA);
         //double dpArmA = EULMathEx.safeACOS(virtualServoA.armDirection.times(targetDir)) * -Math.signum(virtualServoA.armDirectionNormal.times(targetDir));
-        virtualServoA.setArmAngle(realAngleA);
+        virtualServoA.setArmAngle(armAngleA);
         targetDir = restrictedTarget.minus(virtualServoB.position).normalized();
 
         double dpForwardB = EULMathEx.safeACOS(virtualServoB.forward.times(targetDir)) * -Math.signum(virtualServoB.right.times(targetDir));
         double realAngleB = conversionB.angleToServo(dpForwardB);
-        double dpArmB = EULMathEx.safeACOS(virtualServoB.armDirection.times(targetDir)) * -Math.signum(virtualServoB.armDirectionNormal.times(targetDir));
-        virtualServoB.rotateArm(dpArmB);
+        //double dpArmB = EULMathEx.safeACOS(virtualServoB.armDirection.times(targetDir)) * -Math.signum(virtualServoB.armDirectionNormal.times(targetDir));
+        virtualServoB.rotateArm(dpForwardB);
         //targetDir = restrictedTarget.minus(virtualServoC.position).normalized();
 
         double dpForwardC = EULMathEx.safeACOS(virtualServoC.forward.times(endHeading)) * -Math.signum(virtualServoC.right.times(endHeading));
         double realAngleC = conversionC.angleToServo(dpForwardC);
-        double dpArmC = EULMathEx.safeACOS(virtualServoC.armDirection.times(endHeading)) * -Math.signum(virtualServoC.armDirectionNormal.times(endHeading));
-        virtualServoB.rotateArm(dpArmC);
+        //double dpArmC = EULMathEx.safeACOS(virtualServoC.armDirection.times(endHeading)) * -Math.signum(virtualServoC.armDirectionNormal.times(endHeading));
+        virtualServoB.setArmAngle(dpForwardC);
 
-        servoA.setPosition(realAngleA + (bottomSolution ? - locA : locA));
+        servoA.setPosition(realAngleA);
         servoB.setPosition(realAngleB);
         servoC.setPosition(realAngleC);
 
-        telemetry.addData("Real Angle A: ", realAngleA * EULConstants.RAD2DEG);
-        telemetry.addData("Real Angle B: ", realAngleB * EULConstants.RAD2DEG);
-        telemetry.addData("Real Angle C: ", realAngleC * EULConstants.RAD2DEG);
+        telemetry.addData("Real Angle A: ", dpForwardA * EULConstants.RAD2DEG);
+        telemetry.addData("Real Angle B: ", dpForwardB * EULConstants.RAD2DEG);
+        telemetry.addData("Real Angle C: ", dpForwardC * EULConstants.RAD2DEG);
     }
 }
