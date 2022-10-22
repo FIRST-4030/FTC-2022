@@ -125,10 +125,10 @@ public class ThreeJointArm {
 
         //positive is CCW
         double dpForwardA = EULMathEx.safeACOS(virtualServoA.forward.times(targetDir)) * -Math.signum(virtualServoA.right.times(targetDir));
-        double realAngleA = conversionA.angleToServo(dpForwardA);
-        double dpArmA = EULMathEx.safeACOS(virtualServoA.armDirection.times(targetDir)) * -Math.signum(virtualServoA.armDirectionNormal.times(targetDir));
         double locA = EULMathEx.lawOfCosines(virtualServoA.armLength, restrictedTarget.length(), virtualServoB.armLength);
-        virtualServoA.rotateArm(dpArmA + (bottomSolution ? - locA : locA));
+        double realAngleA = conversionA.angleToServo(dpForwardA) + (bottomSolution ? - locA : locA);
+        //double dpArmA = EULMathEx.safeACOS(virtualServoA.armDirection.times(targetDir)) * -Math.signum(virtualServoA.armDirectionNormal.times(targetDir));
+        virtualServoA.setArmAngle(realAngleA);
         targetDir = restrictedTarget.minus(virtualServoB.position).normalized();
 
         double dpForwardB = EULMathEx.safeACOS(virtualServoB.forward.times(targetDir)) * -Math.signum(virtualServoB.right.times(targetDir));
@@ -149,9 +149,5 @@ public class ThreeJointArm {
         telemetry.addData("Real Angle A: ", realAngleA * EULConstants.RAD2DEG);
         telemetry.addData("Real Angle B: ", realAngleB * EULConstants.RAD2DEG);
         telemetry.addData("Real Angle C: ", realAngleC * EULConstants.RAD2DEG);
-
-        telemetry.addData("Virtual Angle A: ", dpArmA * EULConstants.RAD2DEG);
-        telemetry.addData("Virtual Angle B: ", dpArmB * EULConstants.RAD2DEG);
-        telemetry.addData("Virtual Angle C: ", dpArmC * EULConstants.RAD2DEG);
     }
 }

@@ -88,8 +88,54 @@ public class VirtualServo {
         }
     }
 
+    public void setArmAngle(double angle){
+        setArmAngle(angle, false);
+    }
+
+    public void setArmAngle(double angle, boolean rotateNormals){
+        Matrix2d rot = Matrix2d.makeRotation(angle);
+
+        if (rotateNormals && this.parentServo != null){ //check if you need to rotate the normals as this method is recursive
+            Vector2d armPosition = asRelative(armDirection);
+            Vector2d armNorm = asRelative(armDirectionNormal);
+
+            this.forward = parentServo.armDirection;
+            this.right = parentServo.armDirectionNormal;
+
+            Matrix2d columnMatrix = new Matrix2d(new double[][]{
+                    {this.right.x, this.forward.x},
+                    {this.right.y, this.forward.y}
+            });
+
+            //propagate change to virtual position
+            this.position = this.parentServo.armDirection.times(this.parentServo.armLength);
+            this.position.plus(parentServo.armDirectionNormal.times(this.offset.x));
+            this.position.plus(parentServo.armDirection.times(this.offset.y));
+
+            this.armDirection = columnMatrix.times(armPosition);
+            this.armDirectionNormal = columnMatrix.times(armNorm);
+        } else if (!rotateNormals){
+            this.armDirection = rot.times(this.forward);
+            this.armDirectionNormal = rot.times(this.right);
+        }
+
+        if (this.childServo.size() != 0) { //check if you can call this method in the existing children
+            for (VirtualServo servo : this.childServo) {
+                servo.setArmAngle(angle, true);
+            }
+        }
+    }
+
     public Vector2d asRelative(Vector2d target){
         return new Vector2d(target.minus(this.position).times(this.right), target.minus(this.position).times(this.forward));
+    }
+
+    public boolean hasParent(){
+        return parentServo != null;
+    }
+
+    public boolean hasChildren(){
+        return childServo != null && childServo.size() > 0;
     }
 
     public VirtualServo copy(){
