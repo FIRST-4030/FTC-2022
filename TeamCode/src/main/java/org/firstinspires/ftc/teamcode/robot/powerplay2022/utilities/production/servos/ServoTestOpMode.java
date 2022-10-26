@@ -28,9 +28,9 @@ public class ServoTestOpMode extends LoopUtil {
     @Override
     public void opInit() {
 
-        configA = new ServoConfig("A",false, 0, 0.5);
-        configB = new ServoConfig("B",false, 0, 1);
-        configC = new ServoConfig("C",false, 0, 1);
+        configA = new ServoConfig("A",false, 0, 0.83);
+        configB = new ServoConfig("B",true, 0, 1);
+        configC = new ServoConfig("C",true, 0, 1);
 
         servoA = new ServoFTC(hardwareMap, telemetry, configA);
         servoB = new ServoFTC(hardwareMap, telemetry, configB);
@@ -43,7 +43,7 @@ public class ServoTestOpMode extends LoopUtil {
         gamepadHandler = InputAutoMapper.normal.autoMap(this);
         enableJoystick = false;
         commandedPosition = 0.0;
-        betterCommandedPosition = new Vector2d(0,-27.5);
+        betterCommandedPosition = new Vector2d(20,4);
         commandedPositionMultiplier = 1;
 
         newPropArm = new ThreeJointArm(
@@ -51,7 +51,7 @@ public class ServoTestOpMode extends LoopUtil {
                 new ServoFTC[]{servoA, servoB, servoC},
                 new AngleConversion[]{servoConversionA, servoConversionB, servoConversionC},
                 15,
-                13);
+                17);
         newPropArm.bindTelemetry(telemetry);
     }
 
@@ -73,24 +73,25 @@ public class ServoTestOpMode extends LoopUtil {
         }
 
         if (gamepadHandler.up("D1:DPAD_UP")){ //increase outputSpeed by decimalPlace | now wrong comment
-            betterCommandedPosition.y += 0.05 * deltaTime;
+            betterCommandedPosition.y += 0.1 * deltaTime;
         }
         if (gamepadHandler.up("D1:DPAD_DOWN")){ //decrease outputSpeed by decimalPlace | now wrong comment
-            betterCommandedPosition.y -= 0.05 * deltaTime;
+            betterCommandedPosition.y -= 0.1 * deltaTime;
         }
 
         if (gamepadHandler.up("D1:DPAD_LEFT")){ //increase outputSpeed by decimalPlace | now wrong comment
-            betterCommandedPosition.x += 0.05 * deltaTime;
+            betterCommandedPosition.x -= 0.1 * deltaTime;
         }
         if (gamepadHandler.up("D1:DPAD_RIGHT")){ //decrease outputSpeed by decimalPlace | now wrong comment
-            betterCommandedPosition.x -= 0.05 * deltaTime;
+            betterCommandedPosition.x += 0.1 * deltaTime;
         }
+        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y).times(0.005)));
     }
 
     @Override
     public void opUpdate(double deltaTime) {
-        newPropArm.propagate(betterCommandedPosition, new Vector2d( 1, 0),true);
-        //newPropArm.circleFind(betterCommandedPosition);
+        //newPropArm.propagate(betterCommandedPosition, new Vector2d( 1, 0),true);
+        newPropArm.circleFind(betterCommandedPosition);
 
         telemetry.addData("Commanded Multiplier: ", commandedPositionMultiplier);
         telemetry.addData("Commanded Position: ", betterCommandedPosition);
