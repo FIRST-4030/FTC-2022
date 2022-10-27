@@ -18,6 +18,7 @@ public class PowerPlayLinearSlideTest extends LoopUtil {
     public DcMotor left, right;
 
     public double linearSlideSpeed = 0.5;
+    public SlideController.LEVEL slideLevel;
     public double lsInput = 0;
 
     @Override
@@ -42,7 +43,8 @@ public class PowerPlayLinearSlideTest extends LoopUtil {
     @Override
     public void opUpdate(double deltaTime) {
         handleInput(deltaTime);
-        controller.update(deltaTime, lsInput);
+        controller.update(deltaTime, slideLevel, linearSlideSpeed);
+        outputTelemetry();
     }
 
     @Override
@@ -57,12 +59,14 @@ public class PowerPlayLinearSlideTest extends LoopUtil {
 
     public void handleInput(double deltaTime){
         inputHandler.loop();
-        if (inputHandler.held("D1:DPAD_UP")){
-            lsInput = linearSlideSpeed * (deltaTime * EULConstants.MS2SEC);
-        }
-
-        if (inputHandler.held("D1:DPAD_DOWN")){
-            lsInput = -linearSlideSpeed * (deltaTime * EULConstants.MS2SEC);
+        if (gamepad1.a){
+            slideLevel = SlideController.LEVEL.REST;
+        } else if (gamepad1.b){
+            slideLevel = SlideController.LEVEL.LOW;
+        } else if (gamepad1.y){
+            slideLevel = SlideController.LEVEL.MIDDLE;
+        } else if (gamepad1.x){
+            slideLevel = SlideController.LEVEL.HIGH;
         }
     }
 

@@ -6,6 +6,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class SlideController {
 
+    public enum LEVEL{
+        REST, LOW, MIDDLE, HIGH
+    }
+
     private DcMotor left, right;
 
     private int leftEncoderPosition = 0;
@@ -20,17 +24,42 @@ public class SlideController {
         left = hardwareMap.dcMotor.get(leftMotorName);
         right = hardwareMap.dcMotor.get(rightMotorName);
 
-        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left.setTargetPosition(0);
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         left.setDirection(invertLeft ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
-        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setTargetPosition(0);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setDirection(invertRight ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
     }
 
-    public void update(double deltaTime, double scalar){
-        left.setPower(scalar);
-        right.setPower(scalar);
+    public void update(double deltaTime, LEVEL level, double slidePower){
 
-        inUse = (leftEncoderPosition == leftLastEncoderPosition) && (rightEncoderPosition == rightLastEncoderPosition);
+        switch (level){
+            case REST:
+                left.setTargetPosition(0);
+                right.setTargetPosition(0);
+                break;
+            case LOW:
+                left.setTargetPosition(540 / 3);
+                right.setTargetPosition(540 / 3);
+                break;
+            case MIDDLE:
+                left.setTargetPosition(540 / 3 * 2);
+                right.setTargetPosition(540 / 3 * 2);
+                break;
+            case HIGH:
+                left.setTargetPosition(540 / 3 * 3);
+                right.setTargetPosition(540 / 3 * 3);
+                break;
+        }
+
+        left.setPower(slidePower);
+        right.setPower(slidePower);
+
+        inUse = (leftEncoderPosition == leftLastEncoderPosition) && (rightEncoderPosition == rightLastEncoderPosition) && level == LEVEL.REST;
 
         leftLastEncoderPosition = leftEncoderPosition;
         rightLastEncoderPosition = rightEncoderPosition;
