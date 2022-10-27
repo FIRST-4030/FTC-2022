@@ -56,6 +56,7 @@ public class PowerPlayLinearSlideTest extends LoopUtil {
     }
 
     public void handleInput(double deltaTime){
+        inputHandler.loop();
         if (inputHandler.held("D1:DPAD_UP")){
             lsInput = linearSlideSpeed * (deltaTime * EULConstants.MS2SEC);
         }
