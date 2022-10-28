@@ -54,6 +54,7 @@ public class ThreeJointArm {
         //Why is A this and not: double A = EULMathEx.safeASIN(h/armLengthA);
         double A = EULMathEx.safeASIN(restrictedTarget.y/restrictedTarget.length()) + EULMathEx.safeASIN(h/armLengthA);
         double B = EULMathEx.safeASIN(a/armLengthA) + EULMathEx.safeASIN(b/armLengthB);
+        double C = (Math.PI*1.75 - A - B)/(Math.PI*1.5);
         telemetry.addData("Angle A Pi Rad: ", A/Math.PI);
         telemetry.addData("Angle B Pi Rad: ", B/Math.PI);
         A=A/(Math.PI);
@@ -71,6 +72,7 @@ public class ThreeJointArm {
         if(((Double)A).equals(null)){A=0.5;}
         servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
         servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B));
+        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C));
         //servoA.setPosition(0.83);
         //servoB.setPosition(0);
         telemetry.addData("Restricted Target: ", restrictedTarget);
