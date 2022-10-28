@@ -72,7 +72,7 @@ public class ThreeJointArm {
         if(((Double)A).equals(null)){A=0.5;}
         servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
         servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B));
-        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C));
+        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C - 1d/3d));
         //servoA.setPosition(0.83);
         //servoB.setPosition(0);
         telemetry.addData("Restricted Target: ", restrictedTarget);

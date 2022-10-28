@@ -158,7 +158,7 @@ public class ActualTeleOp extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
-        servoD.setPosition(0);
+        servoD.setPosition(DOpen ? 0.2 : 0.1);
         armUpdate(deltaTime);
         handleInput(deltaTime);
         slideUpdate(deltaTime);
@@ -263,8 +263,9 @@ public class ActualTeleOp extends LoopUtil {
     public void outputTelemetry(){
         telemetry.addData("Commanded Multiplier: ", commandedPositionMultiplier);
         telemetry.addData("Commanded Position: ", betterCommandedPosition);
-        telemetry.addData("Servo Turn Position: ", servoA.getPosition());
-        telemetry.addData("Servo Turn Position: ", servoB.getPosition());
-        telemetry.addData("Servo Turn Position: ", servoC.getPosition());
+        telemetry.addData("Servo A Turn Position: ", servoA.getPosition());
+        telemetry.addData("Servo B Turn Position: ", servoB.getPosition());
+        telemetry.addData("Servo C Turn Position: ", servoC.getPosition());
+        telemetry.addData("Servo D Turn Position: ", servoD.getPosition());
     }
 }
