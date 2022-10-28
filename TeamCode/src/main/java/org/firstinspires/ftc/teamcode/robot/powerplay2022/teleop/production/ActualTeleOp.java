@@ -122,16 +122,6 @@ public class ActualTeleOp extends LoopUtil {
         joystick = new Vector3d();
         right_stick = new Vector2d(0, 1);
 
-        pGain = 1/(Math.PI * 3);
-        iGain = 0;
-        dGain = 88;
-
-        Apid = new AnglePID(1/Math.PI, 0.000001, 1/4000);
-        Apid = new AnglePID(pGain, iGain, dGain);
-        angles = new double[]{ 0, Math.PI/2,  Math.PI, -Math.PI/2};
-
-        angleIndex = 0;
-
         lastStateRB = false;
         lastStateLB = false;
         currentStateLB = false;
@@ -158,7 +148,7 @@ public class ActualTeleOp extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
-        servoD.setPosition(DOpen ? 0.2 : 0.1);
+        servoD.setPosition(DOpen ? 0.2 : 0.0);
         armUpdate(deltaTime);
         handleInput(deltaTime);
         slideUpdate(deltaTime);
@@ -216,7 +206,9 @@ public class ActualTeleOp extends LoopUtil {
         if (gamepadHandler.up("D2:DPAD_RIGHT")){ //decrease outputSpeed by decimalPlace | now wrong comment
             betterCommandedPosition.x += 0.1 * deltaTime;
         }
-        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y).times(0.005)));
+
+
+        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_x, -gamepad2.left_stick_y).times(0.005)));
     }
 
     public void driveFixedUpdate(double deltaTime){
