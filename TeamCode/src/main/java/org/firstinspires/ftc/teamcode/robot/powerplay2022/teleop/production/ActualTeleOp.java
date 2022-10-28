@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
@@ -57,7 +58,8 @@ public class ActualTeleOp extends LoopUtil {
     public DcMotor left, right;
 
     public double linearSlideSpeed = 0.5;
-    public SlideController.LEVEL slideLevel;
+    public SlideController.LEVEL slideLevel =
+            SlideController.LEVEL.REST;
     public double lsInput = 0;
 
 
@@ -153,7 +155,7 @@ public class ActualTeleOp extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
-        //armUpdate(deltaTime);
+        armUpdate(deltaTime);
         handleInput(deltaTime);
         slideUpdate(deltaTime);
         outputTelemetry();
@@ -241,6 +243,8 @@ public class ActualTeleOp extends LoopUtil {
         correction.update( drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, right_stick, false);
 
         CV2.update(RCR2.color(), RCR2.distance());
+        drive.update(joystick, true, deltaTime);
+        AngularVelocity avel = drive.getImu().getAngularVelocity();
     }
 
     @Override

@@ -18,7 +18,7 @@ public class PowerPlayLinearSlideTest extends LoopUtil {
     public DcMotor left, right;
 
     public double linearSlideSpeed = 0.5;
-    public SlideController.LEVEL slideLevel;
+    public SlideController.LEVEL slideLevel = SlideController.LEVEL.REST;
     public double lsInput = 0;
 
     @Override

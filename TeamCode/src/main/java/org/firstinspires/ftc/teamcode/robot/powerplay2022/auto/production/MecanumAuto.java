@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.m
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.movement.CustomMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.misc.InputAutoMapper;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.misc.PowerPlayGlobals;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.slide.SlideController;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpState;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpStateList;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.movement.velocityramping.VelocityRampStepper;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 
 @Autonomous(name = "MecanumAuto")
 public class MecanumAuto extends LoopUtil {
+    public static SlideController slide;
 
     public static CustomMecanumDrive drive;
     public static AlgorithmicCorrection correction;
@@ -44,6 +46,8 @@ public class MecanumAuto extends LoopUtil {
 
     @Override
     public void opInit() {
+        //Slide
+        slide = new SlideController(hardwareMap, "LSLM", true, "LSRM", false);
         //Velocity Ramps
         forwardRamp = new VelocityRamping(PowerPlayGlobals.MAX_VELOCITY);
         strafeRamp = new VelocityRamping(PowerPlayGlobals.MAX_VELOCITY);
@@ -103,8 +107,15 @@ public class MecanumAuto extends LoopUtil {
                         () -> {
                             correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2, true);
                             motion.z = correction.getOutput();
-                            motion.x = -0.8;
+                            motion.x = -0.7;
                             motion.y = 0;
+                            drive.update(motion, true, storedDeltaTime);
+                        }
+                ),new OpState(
+                        Idle,
+                        () -> {
+                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI * 0.6, true);
+                            motion.z = correction.getOutput();
                             drive.update(motion, true, storedDeltaTime);
                         }
                 ),
@@ -116,12 +127,17 @@ public class MecanumAuto extends LoopUtil {
                             motion.y = 0;
                             drive.update(motion, true, storedDeltaTime);
                         }
-                )
+                )/*Cycle OpStates will follow here*/
         );
 
     }
 
-    //public void
+    //public void cycle(double deltaTime) {
+        //slide.update(deltaTime, SlideController.LEVEL.HIGH, 1);
+        //if(deltaTime < 1){
+
+        //}
+    //}
 
     @Override
     public void opInitLoop() {
@@ -149,22 +165,12 @@ public class MecanumAuto extends LoopUtil {
             stateList.setIndex(2);
         }else if (elapsedTime < 3.35*EULConstants.SEC2MS) { //Idle
             stateList.setIndex(1);
-        }else if (elapsedTime < 3.7*EULConstants.SEC2MS) { //Turn to Pole, 18 deg
-            //stateList.setIndex(TURNTOPOLE);
-        }else if (elapsedTime < 4.2*EULConstants.SEC2MS) { //Idle
-            stateList.setIndex(1);
-        }else if (elapsedTime < 26.5*EULConstants.SEC2MS) { //Cycle
+        }else if (elapsedTime < 27.85*EULConstants.SEC2MS) { //Cycle
             //stateList.setIndex(CYCLE);
-        }else if (elapsedTime < 27*EULConstants.SEC2MS) { //Idle
-            stateList.setIndex(1);
-        }else if (elapsedTime < 27.35*EULConstants.SEC2MS) { //Turn back, 18 deg
-            //stateList.setIndex(TURNTOSTRAIGHT);
-        }else if (elapsedTime < 27.85*EULConstants.SEC2MS){ //Idle
-            stateList.setIndex(1);
         }else if (elapsedTime < 28.95*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.YELLOW){ // Move to Yellow
-            stateList.setIndex(3);
+            stateList.setIndex(4);
         }else if (elapsedTime < 28.5*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.MAGENTA) { // Move to Magenta
-            stateList.setIndex(3);
+            stateList.setIndex(4);
         }else { // Stay in Cyan
             stateList.setIndex(1);
         }
