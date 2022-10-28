@@ -152,11 +152,12 @@ public class ActualTeleOp extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
-        servoD.setPosition(DOpen ? 0.2 : 0.0);
         armUpdate(deltaTime);
         handleInput(deltaTime);
         slideUpdate(deltaTime);
         outputTelemetry();
+        servoD.setPosition(DOpen ? 0.2 : 0.0);
+        servoR.setPosition(R);
     }
 
     @Override
