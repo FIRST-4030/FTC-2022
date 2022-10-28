@@ -31,8 +31,8 @@ public class ActualTeleOp extends LoopUtil {
 
     public ThreeJointArm newPropArm;
 
-    public static ServoFTC servoA, servoB, servoC;
-    public static ServoConfig configA, configB, configC;
+    public static ServoFTC servoA, servoB, servoC, servoD;
+    public static ServoConfig configA, configB, configC, configD;
     public static AngleConversion servoConversionA, servoConversionB, servoConversionC;
 
     public static InputHandler gamepadHandler;
@@ -61,6 +61,7 @@ public class ActualTeleOp extends LoopUtil {
     public SlideController.LEVEL slideLevel =
             SlideController.LEVEL.REST;
     public double lsInput = 0;
+    public boolean DOpen = false;
 
 
 
@@ -79,10 +80,12 @@ public class ActualTeleOp extends LoopUtil {
         configA = new ServoConfig("A",false, 0, 0.83);
         configB = new ServoConfig("B",true, 0, 1);
         configC = new ServoConfig("C",true, 0, 1);
+        configD = new ServoConfig("D",true, 0, 1);
 
         servoA = new ServoFTC(hardwareMap, telemetry, configA);
         servoB = new ServoFTC(hardwareMap, telemetry, configB);
         servoC = new ServoFTC(hardwareMap, telemetry, configC);
+        servoD = new ServoFTC(hardwareMap, telemetry, configD);
 
         servoConversionA = new AngleConversion(new AngleConversion.Centered(), AngleConversion.MODE.RADIANS);
         servoConversionB = new AngleConversion(new AngleConversion.Centered(), AngleConversion.MODE.RADIANS);
@@ -155,6 +158,7 @@ public class ActualTeleOp extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
+        servoD.setPosition(0);
         armUpdate(deltaTime);
         handleInput(deltaTime);
         slideUpdate(deltaTime);
@@ -178,6 +182,10 @@ public class ActualTeleOp extends LoopUtil {
 
     public void handleInput(double deltaTime){
         inputHandler.loop();
+        //D Control
+        if (inputHandler.up("D2:RB")){
+            DOpen = !DOpen;
+        }
         //Slide controls
         if (gamepad2.a){
             slideLevel = SlideController.LEVEL.REST;
