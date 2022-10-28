@@ -154,6 +154,7 @@ public class ActualTeleOp extends LoopUtil {
         //armUpdate(deltaTime);
         handleInput(deltaTime);
         slideUpdate(deltaTime);
+
         outputTelemetry();
     }
 
