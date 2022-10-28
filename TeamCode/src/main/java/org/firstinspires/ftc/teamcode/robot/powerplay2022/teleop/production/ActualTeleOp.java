@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.EULMathEx;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.Globals;
@@ -31,8 +32,8 @@ public class ActualTeleOp extends LoopUtil {
 
     public ThreeJointArm newPropArm;
 
-    public static ServoFTC servoA, servoB, servoC, servoD;
-    public static ServoConfig configA, configB, configC, configD;
+    public static ServoFTC servoA, servoB, servoC, servoD, servoR;
+    public static ServoConfig configA, configB, configC, configD, configR;
     public static AngleConversion servoConversionA, servoConversionB, servoConversionC;
 
     public static InputHandler gamepadHandler;
@@ -62,6 +63,7 @@ public class ActualTeleOp extends LoopUtil {
             SlideController.LEVEL.REST;
     public double lsInput = 0;
     public boolean DOpen = false;
+    public double R = 0.5;
 
 
 
@@ -81,11 +83,13 @@ public class ActualTeleOp extends LoopUtil {
         configB = new ServoConfig("B",true, 0, 1);
         configC = new ServoConfig("C",true, 0, 1);
         configD = new ServoConfig("D",true, 0, 1);
+        configR = new ServoConfig("R",true, 0, 1);
 
         servoA = new ServoFTC(hardwareMap, telemetry, configA);
         servoB = new ServoFTC(hardwareMap, telemetry, configB);
         servoC = new ServoFTC(hardwareMap, telemetry, configC);
         servoD = new ServoFTC(hardwareMap, telemetry, configD);
+        servoR = new ServoFTC(hardwareMap, telemetry, configR);
 
         servoConversionA = new AngleConversion(new AngleConversion.Centered(), AngleConversion.MODE.RADIANS);
         servoConversionB = new AngleConversion(new AngleConversion.Centered(), AngleConversion.MODE.RADIANS);
@@ -208,7 +212,8 @@ public class ActualTeleOp extends LoopUtil {
         }
 
 
-        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_x, -gamepad2.left_stick_y).times(0.005)));
+        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_x, -gamepad2.left_stick_y).times(0.1)));
+        R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.right_stick_x*0.01);
     }
 
     public void driveFixedUpdate(double deltaTime){
