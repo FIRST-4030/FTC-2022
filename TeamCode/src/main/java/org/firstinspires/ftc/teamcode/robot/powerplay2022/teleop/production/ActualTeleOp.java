@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.teleop.production;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 import org.firstinspires.ftc.teamcode.utils.sensors.distance.RevDistance;
 
+@TeleOp(name = "ActualTeleOp", group = "actual")
 public class ActualTeleOp extends LoopUtil {
 
     public ThreeJointArm newPropArm;
@@ -154,7 +156,6 @@ public class ActualTeleOp extends LoopUtil {
         //armUpdate(deltaTime);
         handleInput(deltaTime);
         slideUpdate(deltaTime);
-
         outputTelemetry();
     }
 
