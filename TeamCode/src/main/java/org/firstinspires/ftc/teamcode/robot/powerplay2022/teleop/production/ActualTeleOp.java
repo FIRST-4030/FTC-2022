@@ -27,6 +27,16 @@ import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 import org.firstinspires.ftc.teamcode.utils.sensors.distance.RevDistance;
 
+//Control mapping
+
+/**
+ * DRIVER 1:
+ * Left joystick is the drive (forward, backward, strafe) nad right joystick is turn angle
+ * DRIVER 2:
+ * Left joystick controls the servo arm (y for rise rate (+, -), +x to bring inward, -x outward)
+ * Linear slide control: A is linear slide at its natural resting position; B is to raise the level to low junctions; Y is to raise it to medium junctions; X is to raise it to the high junction
+ * Claw of servo arm closes on Right Bumper
+ */
 @TeleOp(name = "ActualTeleOp", group = "actual")
 public class ActualTeleOp extends LoopUtil {
 
@@ -50,7 +60,7 @@ public class ActualTeleOp extends LoopUtil {
     public static int angleIndex = 0;
     public static boolean lastStateLB = false, lastStateRB = false,currentStateLB = false, currentStateRB = false;
     public static double pGain = 0, iGain = 0, dGain = 0;
-    public static RevDistance D1, D2;
+    ///public static RevDistance D1, D2;
 
 
     public InputHandler inputHandler;
@@ -136,8 +146,8 @@ public class ActualTeleOp extends LoopUtil {
 
         correction = new AlgorithmicCorrection(new AlgorithmicCorrection.Polynomial(20));
 
-        D1 = new RevDistance(hardwareMap, telemetry, "range1");
-        D2 = new RevDistance(hardwareMap, telemetry, "range2");
+        //D1 = new RevDistance(hardwareMap, telemetry, "range1");
+        //D2 = new RevDistance(hardwareMap, telemetry, "range2");
     }
 
     @Override
@@ -213,7 +223,7 @@ public class ActualTeleOp extends LoopUtil {
         }
 
 
-        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_x, -gamepad2.left_stick_y).times(0.1)));
+        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_x, -gamepad2.left_stick_y).times(0.5)));
         R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.right_stick_x*0.01);
     }
 
@@ -237,8 +247,8 @@ public class ActualTeleOp extends LoopUtil {
             angleIndex = 0;
         }
 
-        joystick.x = gamepad1.left_stick_x * -1;
-        joystick.y = -gamepad1.left_stick_y * -1;
+        joystick.x = gamepad1.left_stick_x * -1 * (controller.isInUse() ? 0.2 : 1);
+        joystick.y = -gamepad1.left_stick_y * -1 * (controller.isInUse() ? 0.2 : 1);
 
         telemetry.addData("Joystick X: ", joystick.x);
         telemetry.addData("Joystick Y: ", joystick.y);
@@ -249,6 +259,8 @@ public class ActualTeleOp extends LoopUtil {
         correction.update( drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, right_stick, false);
 
         CV2.update(RCR2.color(), RCR2.distance());
+
+        joystick.z = correction.getOutput() * (controller.isInUse() ? 0.2 : 1);
         drive.update(joystick, true, deltaTime);
         AngularVelocity avel = drive.getImu().getAngularVelocity();
     }
@@ -265,5 +277,6 @@ public class ActualTeleOp extends LoopUtil {
         telemetry.addData("Servo B Turn Position: ", servoB.getPosition());
         telemetry.addData("Servo C Turn Position: ", servoC.getPosition());
         telemetry.addData("Servo D Turn Position: ", servoD.getPosition());
+        telemetry.addData("Slide is in use?: ", controller.isInUse());
     }
 }

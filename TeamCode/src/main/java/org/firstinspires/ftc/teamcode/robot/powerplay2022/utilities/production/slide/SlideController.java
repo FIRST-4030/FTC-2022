@@ -59,7 +59,7 @@ public class SlideController {
         left.setPower(slidePower);
         right.setPower(slidePower);
 
-        inUse = (leftEncoderPosition == leftLastEncoderPosition) && (rightEncoderPosition == rightLastEncoderPosition) && level == LEVEL.REST;
+        inUse = !(level == LEVEL.REST);
 
         leftLastEncoderPosition = leftEncoderPosition;
         rightLastEncoderPosition = rightEncoderPosition;
