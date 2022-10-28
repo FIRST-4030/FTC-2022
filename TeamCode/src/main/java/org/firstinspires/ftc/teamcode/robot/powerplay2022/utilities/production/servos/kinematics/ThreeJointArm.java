@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoFTC;
 
+//This class is a system to control an arm with three joints with IK as the approach
 public class ThreeJointArm {
 
     private VirtualServo virtualServoA, virtualServoB, virtualServoC;
