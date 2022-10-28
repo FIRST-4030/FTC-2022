@@ -16,7 +16,7 @@ public class MasterOp extends LoopUtil {
 
     @Override
     public void opInit() {
-        tele = new DriveTest();
+        tele = new ActualTeleOp();
         auto = new MecanumAuto();
 
         tele.hardwareMap = this.hardwareMap;
