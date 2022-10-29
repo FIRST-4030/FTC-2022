@@ -98,7 +98,7 @@ public class MecanumAuto extends LoopUtil {
         servoConversionB = new AngleConversion(new AngleConversion.Centered(), AngleConversion.MODE.RADIANS);
         servoConversionC = new AngleConversion(new AngleConversion.Centered(), AngleConversion.MODE.RADIANS);
 
-        betterCommandedPosition = new Vector2d(20,4);
+        betterCommandedPosition = new Vector2d(0,25);
         commandedPositionMultiplier = 1;
 
         newPropArm = new ThreeJointArm(
@@ -133,7 +133,7 @@ public class MecanumAuto extends LoopUtil {
         motion = new Vector3d();
 
         stepper = new VelocityRampStepper(forwardRamp, strafeRamp);
-        stepper.addRampForward(1, 1.24, 1.75);
+        stepper.addRampForward(1, 1.15, 1.75);
 
         //...
         Runnable Idle = () -> {
@@ -170,15 +170,8 @@ public class MecanumAuto extends LoopUtil {
                         () -> {
                             correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2, true);
                             motion.z = correction.getOutput();
-                            motion.x = -0.7;
+                            motion.x = -0.6;
                             motion.y = 0;
-                            drive.update(motion, true, storedDeltaTime);
-                        }
-                ),new OpState(
-                        Idle,
-                        () -> {
-                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI * 0.6, true);
-                            motion.z = correction.getOutput();
                             drive.update(motion, true, storedDeltaTime);
                         }
                 ),
@@ -186,7 +179,7 @@ public class MecanumAuto extends LoopUtil {
                         () -> {
                             correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2, true);
                             motion.z = correction.getOutput();
-                            motion.x = 0.8;
+                            motion.x = 0.6;
                             motion.y = 0;
                             drive.update(motion, true, storedDeltaTime);
                         }
@@ -260,11 +253,12 @@ public class MecanumAuto extends LoopUtil {
         }else if (elapsedTime < 3.35*EULConstants.SEC2MS) { //Idle
             stateList.setIndex(1);
         }else if (elapsedTime < 27.85*EULConstants.SEC2MS) { //Cycle
-            cycle(deltaTime);
+            //cycle(deltaTime);
+            stateList.setIndex(1);
         }else if (elapsedTime < 28.95*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.YELLOW){ // Move to Yellow
-            stateList.setIndex(4);
+            stateList.setIndex(3);
         }else if (elapsedTime < 28.5*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.MAGENTA) { // Move to Magenta
-            stateList.setIndex(4);
+            stateList.setIndex(3);
         }else { // Stay in Cyan
             stateList.setIndex(1);
         }
@@ -273,7 +267,7 @@ public class MecanumAuto extends LoopUtil {
 
         if (RCR2.distance() < 60){
             if (!checked){ checked = true; ColorT1 = elapsedTime; }
-            if (elapsedTime - ColorT1 < 100) {
+            if (elapsedTime - ColorT1 < 80) {
                 SeenColor = CV2.getColorBetter(100);
             }
         }

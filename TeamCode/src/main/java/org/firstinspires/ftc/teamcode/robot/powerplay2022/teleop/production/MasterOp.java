@@ -61,10 +61,11 @@ public class MasterOp extends LoopUtil {
 
 
         totalTime+=deltaTime;
-        if(totalTime < 10 * EULConstants.SEC2MS){
+        if(totalTime < 30 * EULConstants.SEC2MS){
             auto.opUpdate(deltaTime);
         }else{
             tele.opFixedUpdate(deltaTime);
+            tele.opUpdate(deltaTime);
         }
     }
 
