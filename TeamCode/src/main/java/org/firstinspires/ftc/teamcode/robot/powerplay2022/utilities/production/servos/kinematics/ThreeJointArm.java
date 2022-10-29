@@ -6,6 +6,8 @@ import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoFTC;
 
+import java.util.Objects;
+
 //This class is a system to control an arm with three joints with IK as the approach
 public class ThreeJointArm {
 
@@ -70,9 +72,13 @@ public class ThreeJointArm {
             B=EULMathEx.doubleClamp(0.001, 0.999, B);
         }
         if(((Double)A).equals(null)){A=0.5;}
-        servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
-        servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B));
-        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C - 1d/3d));
+        try {
+            servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
+            servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B));
+            servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C - 1d / 3d));
+        } catch (Exception e){
+            telemetry.addData("Exception FOUND!: ", Objects.requireNonNull(e.getCause()).toString());
+        }
         //servoA.setPosition(0.83);
         //servoB.setPosition(0);
         telemetry.addData("Restricted Target: ", restrictedTarget);
