@@ -102,8 +102,8 @@ public class CustomServoDriver {
         //double sectionLengths = delta / checkpoints;
 
         output.push(angleToScalar(startAngle));
-        for (int i = 0; i < (checkpoints - 1); i++) {
-            output.push(eq.solve(1d / checkpoints * i));
+        for (int i = 1; i <= (checkpoints); i++) {
+            output.push(eq.solve(1d / (checkpoints+1) * i));
         }
         output.push(angleToScalar(endAngle));
 
@@ -113,11 +113,28 @@ public class CustomServoDriver {
     public static double followServoPath(double currentPos, Stack<Double> positions){
         double output = currentPos;
         if (!positions.empty()){
-            if (positions.peek() < currentPos) positions.pop();
+            if (positions.peek() <= currentPos) positions.pop();
             output = positions.peek();
         }
 
         return roundPosition(output);
+    }
+
+    public static double followServoPath(double currentPos, double target, Stack<Double> positions){
+        double output = currentPos;
+        Stack<Double> usedPositions = positions;
+        boolean ahead = target < currentPos;
+        if(ahead) usedPositions = EULArrays.stackFlip(usedPositions);
+        if(!usedPositions.isEmpty()) {
+            while ((usedPositions.peek() <= currentPos && !ahead) || (usedPositions.peek() >= currentPos && ahead)) {
+                usedPositions.pop();
+            }
+            if((target <= usedPositions.peek() && !ahead) || (target >= usedPositions.peek() && ahead)){
+                output = target;
+            }else{ output = usedPositions.peek(); }
+        }
+
+        return output;
     }
 
     public static void copyPositions(Stack<Double> target, Stack<Double> destination){

@@ -25,7 +25,7 @@ public class ServoDriverTester extends LoopUtil {
 
         servo = new ServoFTC(hardwareMap, telemetry, config);
         slideController = new SlideController(hardwareMap, "LSLM", true, "LSRM", false);
-        servoPath = CustomServoDriver.SERVO360.generateServoPath(0, 181, CustomServoDriver.METHOD.LERP);
+        servoPath = CustomServoDriver.SERVO360.generateServoPath(0, Math.PI * (181/180), CustomServoDriver.METHOD.LERP);
     }
 
     @Override
