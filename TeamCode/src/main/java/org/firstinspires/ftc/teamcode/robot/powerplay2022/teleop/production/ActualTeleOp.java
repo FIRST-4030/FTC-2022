@@ -73,6 +73,7 @@ public class ActualTeleOp extends LoopUtil {
             SlideController.LEVEL.REST;
     public double lsInput = 0;
     public boolean DOpen = false;
+    double DPos = DOpen ? 0.55 : 0.07;
     public double R = 0.5;
 
 
@@ -89,11 +90,11 @@ public class ActualTeleOp extends LoopUtil {
     public void opInit() {
 
         //Arm init
-        configA = new ServoConfig("A",false, 0, 0.83);
-        configB = new ServoConfig("B",true, 0, 1);
-        configC = new ServoConfig("C",true, 0, 1);
-        configD = new ServoConfig("D",true, 0, 1);
-        configR = new ServoConfig("R",true, 0, 1);
+        configA = new ServoConfig("A",false, 0.0001, 0.83);
+        configB = new ServoConfig("B",true, 0.0001, 0.9999);
+        configC = new ServoConfig("C",true, 0.0001, 0.9999);
+        configD = new ServoConfig("D",true, 0.0001, 0.9999);
+        configR = new ServoConfig("R",true, 0.0001, 0.9999);
 
         servoA = new ServoFTC(hardwareMap, telemetry, configA);
         servoB = new ServoFTC(hardwareMap, telemetry, configB);
@@ -166,7 +167,10 @@ public class ActualTeleOp extends LoopUtil {
         handleInput(deltaTime);
         slideUpdate(deltaTime);
         outputTelemetry();
-        servoD.setPosition(DOpen ? 0.2 : 0.0);
+        DPos = DOpen ? 0.6 : 0.07;
+        if(Double.isNaN(DPos)){DPos=0.6;}
+        if(Double.isNaN(R)){R=0.5;}
+        servoD.setPosition(DOpen ? 0.55 : 0.07);
         servoR.setPosition(R);
     }
 
@@ -224,7 +228,7 @@ public class ActualTeleOp extends LoopUtil {
 
 
         betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_x, -gamepad2.left_stick_y).times(0.5)));
-        R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.right_stick_x*0.01);
+        R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.right_stick_x*0.04);
     }
 
     public void driveFixedUpdate(double deltaTime){

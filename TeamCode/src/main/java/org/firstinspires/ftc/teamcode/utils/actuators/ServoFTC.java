@@ -73,8 +73,8 @@ public class ServoFTC implements Available {
     }
 
     private Servo servo;
-    private static final double ABS_MIN = 0.0f;
-    private final static double ABS_MAX = 1.0f;
+    private static final double ABS_MIN = 0.0001d;
+    private final static double ABS_MAX = 0.9999d;
     private double min = ABS_MIN;
     private double max = ABS_MAX;
     private Stack<Double> sta;

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics;
 
+import static java.lang.Double.NaN;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.EULMathEx;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
@@ -65,20 +67,19 @@ public class ThreeJointArm {
         telemetry.addData("Angle A Output Raw: ", A);
         telemetry.addData("Angle A Output: ", EULMathEx.doubleClamp(0.001, 0.999, A));
         telemetry.addData("Angle B Output: ", EULMathEx.doubleClamp(0.001, 0.999, B));
+        telemetry.addData("Angle C Output: ", EULMathEx.doubleClamp(0.001, 0.999, C - 1d / 3d));
         if(A>=1){
             A=0.99;
         }
         if(B>=0.99){
             B=EULMathEx.doubleClamp(0.001, 0.999, B);
         }
-        if(((Double)A).equals(null)){A=0.5;}
-        try {
-            servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
-            servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B));
-            servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C - 1d / 3d));
-        } catch (Exception e){
-            telemetry.addData("Exception FOUND!: ", Objects.requireNonNull(e.getCause()).toString());
-        }
+        if(Double.isNaN(A)){A=0.5;}
+        if(Double.isNaN(B)){B=1;}
+        if(Double.isNaN(C)){C=1;}
+        servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
+        servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B));
+        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C - 1d / 3d));
         //servoA.setPosition(0.83);
         //servoB.setPosition(0);
         telemetry.addData("Restricted Target: ", restrictedTarget);
