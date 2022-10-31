@@ -191,7 +191,7 @@ public class MecanumAuto extends LoopUtil {
     public void cycle(double deltaTime) { //Cycle 4 cones, 24.5 seconds
         elapsedTimeCycle += deltaTime;
         elapsedTimeCycleAcum += deltaTime;
-        while(elapsedTimeCycleAcum < (24.5 - (5.5 + 1))) { //(Total Time - (Cycle Time + Buffer))
+        while(elapsedTimeCycleAcum < ((24.5 - (5.5 + 1)) * EULConstants.SEC2MS)) { //(Total Time - (Cycle Time + Buffer))
             if (elapsedTimeCycle < 3.5 * EULConstants.SEC2MS) {
                 slideLevelAuto = SlideController.LEVEL.HIGH;
                 servoR.setPosition(1);
@@ -253,8 +253,8 @@ public class MecanumAuto extends LoopUtil {
         }else if (elapsedTime < 3.35*EULConstants.SEC2MS) { //Idle
             stateList.setIndex(1);
         }else if (elapsedTime < 27.85*EULConstants.SEC2MS) { //Cycle
-            //cycle(deltaTime);
-            stateList.setIndex(1);
+            cycle(deltaTime);
+            //stateList.setIndex(1);
         }else if (elapsedTime < 28.95*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.YELLOW){ // Move to Yellow
             stateList.setIndex(3);
         }else if (elapsedTime < 28.5*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.MAGENTA) { // Move to Magenta
