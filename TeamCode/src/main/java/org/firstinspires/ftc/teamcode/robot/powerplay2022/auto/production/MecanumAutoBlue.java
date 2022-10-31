@@ -28,8 +28,8 @@ import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 
-@Autonomous(name = "MecanumAutoRight")
-public class MecanumAuto extends LoopUtil {
+@Autonomous(name = "MecanumAutoLeft")
+public class MecanumAutoBlue extends LoopUtil {
     //Controls Declaration for Arm and Slide
     public ThreeJointArm newPropArm;
 
@@ -170,7 +170,7 @@ public class MecanumAuto extends LoopUtil {
                         () -> {
                             correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2, true);
                             motion.z = correction.getOutput();
-                            motion.x = -0.6;
+                            motion.x = 0.6;
                             motion.y = 0;
                             drive.update(motion, true, storedDeltaTime);
                         }
@@ -179,7 +179,7 @@ public class MecanumAuto extends LoopUtil {
                         () -> {
                             correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2, true);
                             motion.z = correction.getOutput();
-                            motion.x = 0.6;
+                            motion.x = -0.6;
                             motion.y = 0;
                             drive.update(motion, true, storedDeltaTime);
                         }
@@ -194,7 +194,7 @@ public class MecanumAuto extends LoopUtil {
         while(elapsedTimeCycleAcum < ((24.5 - (5.5 + 1)) * EULConstants.SEC2MS)) { //(Total Time - (Cycle Time + Buffer))
             if (elapsedTimeCycle < 3.5 * EULConstants.SEC2MS) {
                 slideLevelAuto = SlideController.LEVEL.HIGH;
-                servoR.setPosition(1);
+                servoR.setPosition(0);
                 betterCommandedPosition.x = 20;
                 betterCommandedPosition.y = -10;
                 servoD.setPosition(0.2);
@@ -311,3 +311,4 @@ public class MecanumAuto extends LoopUtil {
 
     }
 }
+

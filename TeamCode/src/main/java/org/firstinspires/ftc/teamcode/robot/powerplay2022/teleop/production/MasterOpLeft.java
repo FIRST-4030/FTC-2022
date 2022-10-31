@@ -4,11 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production.MecanumAuto;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production.MecanumAutoBlue;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.movement.CustomMecanumDrive;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
-@Autonomous(name = "MasterOpRight", group = "A")
-public class MasterOp extends LoopUtil {
+@Autonomous(name = "MasterOpLeft", group = "A")
+public class MasterOpLeft extends LoopUtil {
 
     public static LoopUtil auto, tele;
     public double totalTime;
@@ -17,7 +18,7 @@ public class MasterOp extends LoopUtil {
     @Override
     public void opInit() {
         tele = new ActualTeleOp();
-        auto = new MecanumAuto();
+        auto = new MecanumAutoBlue();
 
         tele.hardwareMap = this.hardwareMap;
         auto.hardwareMap = this.hardwareMap;
