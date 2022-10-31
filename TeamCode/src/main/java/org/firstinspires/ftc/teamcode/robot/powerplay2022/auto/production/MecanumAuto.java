@@ -265,9 +265,9 @@ public class MecanumAuto extends LoopUtil {
 
 
 
-        if (RCR2.distance() < 60){
+        if (RCR2.distance() < 15){
             if (!checked){ checked = true; ColorT1 = elapsedTime; }
-            if (elapsedTime - ColorT1 < 80) {
+            if (elapsedTime - ColorT1 < 250) {
                 SeenColor = CV2.getColorBetter(100);
             }
         }
