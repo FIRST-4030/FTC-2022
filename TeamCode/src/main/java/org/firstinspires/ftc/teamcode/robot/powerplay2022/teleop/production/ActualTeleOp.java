@@ -139,13 +139,13 @@ public class ActualTeleOp extends LoopUtil {
     Runnable stepperLower = () -> {
         if(RunnableTimer > 1* EULConstants.SEC2MS){
             RunnableTimer = 0;
-            if(slideLevel == SlideController.LEVEL.HIGH){ //If at high
+            if(slideLevel == SlideController.LEVEL.HIGH){
                 slideLevel = SlideController.LEVEL.MIDDLE;
             }
-            if(slideLevel == SlideController.LEVEL.MIDDLE){ //If at mid
+            if(slideLevel == SlideController.LEVEL.MIDDLE){
                 slideLevel = SlideController.LEVEL.LOW;
             }
-            if(slideLevel == SlideController.LEVEL.LOW){ //If at low
+            if(slideLevel == SlideController.LEVEL.LOW){
                 slideLevel = SlideController.LEVEL.REST;
                 StepperLowerRunning = false;
             }
@@ -292,19 +292,26 @@ public class ActualTeleOp extends LoopUtil {
             PickUpRunning = true;
             RunnableTimer = 0;
         }
+        if (gamepadHandler.up("D2:RT")){
+            StepperLowerRunning = true;
+        }
+        if (gamepadHandler.up("D2:LT")){
+            setArmToStow.run();
+        }
+
+        if (gamepadHandler.up("D2:DPAD_DOWN")){ //decrease outputSpeed by decimalPlace | now wrong comment
+            setArmToIntake.run();
+            StepperLowerRunning = true;
+        }
 
         if (gamepadHandler.up("D2:DPAD_UP")){ //increase outputSpeed by decimalPlace | now wrong comment
-            betterCommandedPosition.y += 0.1 * deltaTime;
+            midPlace.run();
         }
-        if (gamepadHandler.up("D2:DPAD_DOWN")){ //decrease outputSpeed by decimalPlace | now wrong comment
-            betterCommandedPosition.y -= 0.1 * deltaTime;
-        }
-
         if (gamepadHandler.up("D2:DPAD_LEFT")){ //increase outputSpeed by decimalPlace | now wrong comment
-            betterCommandedPosition.x -= 0.1 * deltaTime;
+            highPlace.run();
         }
         if (gamepadHandler.up("D2:DPAD_RIGHT")){ //decrease outputSpeed by decimalPlace | now wrong comment
-            betterCommandedPosition.x += 0.1 * deltaTime;
+            lowPlace.run();
         }
 
 
