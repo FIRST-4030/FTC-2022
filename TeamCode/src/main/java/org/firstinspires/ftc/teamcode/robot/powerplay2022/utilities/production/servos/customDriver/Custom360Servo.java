@@ -16,7 +16,7 @@ public class Custom360Servo {
     private VirtualGearbox gearing;
     private ServoCheckpoints currentCheckpoints;
     private double currentAngle;
-    private static Vector<Custom360Servo> servos;
+    private static Vector<Custom360Servo> servos = new Vector<>();
 
     public Custom360Servo(HardwareMap hardwareMap, Telemetry telemetry, ServoConfig config, int gearIn, int gearOut){
         this.gearing = new VirtualGearbox(gearIn, gearOut);
