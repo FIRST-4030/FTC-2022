@@ -84,6 +84,7 @@ public class ActualTeleOp extends LoopUtil {
 
     public double RunnableTimer = 0;
     public boolean PickUpRunning = false;
+    public boolean StepperLowerRunning = false;
 
 
 
@@ -93,79 +94,71 @@ public class ActualTeleOp extends LoopUtil {
     RevColorRange RCR2;
     ColorView CV2;
 
+    Runnable setArmToPlace = () -> {
+        betterCommandedPosition.x = 26;
+        betterCommandedPosition.y = 5;
+        R = 0.5;
+        DOpen = false;
+    };
+    Runnable setArmToStow = () -> {
+        betterCommandedPosition.x = 10;
+        betterCommandedPosition.y = 10;
+        R = 0.5;
+        DOpen = false;
+    };
+    Runnable setArmToIntake = () -> {
+        betterCommandedPosition.x = 26;
+        betterCommandedPosition.y = 5;
+        R = 0.5;
+        DOpen = true;
+    };
+    Runnable highPlace = () -> {
+        slideLevel = SlideController.LEVEL.HIGH;
+        setArmToPlace.run();
+    };
+    Runnable midPlace = () -> {
+        slideLevel = SlideController.LEVEL.MIDDLE;
+        setArmToPlace.run();
+    };
+    Runnable lowPlace = () -> {
+        slideLevel = SlideController.LEVEL.LOW;
+        setArmToPlace.run();
+    };
+    Runnable pickUp = () -> {
+        if(RunnableTimer < 1* EULConstants.SEC2MS){
+            betterCommandedPosition.y = -5;
+            DOpen = true;
+        }else if(RunnableTimer < 1.25* EULConstants.SEC2MS){
+            DOpen = false;
+        }else if(RunnableTimer < 1.5* EULConstants.SEC2MS){
+            betterCommandedPosition.y = 5;
+        }else{
+            PickUpRunning = false;
+        }
+    };
+    Runnable stepperLower = () -> {
+        if(RunnableTimer > 1* EULConstants.SEC2MS){
+            RunnableTimer = 0;
+            if(slideLevel == SlideController.LEVEL.HIGH){ //If at high
+                slideLevel = SlideController.LEVEL.MIDDLE;
+            }
+            if(slideLevel == SlideController.LEVEL.MIDDLE){ //If at mid
+                slideLevel = SlideController.LEVEL.LOW;
+            }
+            if(slideLevel == SlideController.LEVEL.LOW){ //If at low
+                slideLevel = SlideController.LEVEL.REST;
+                StepperLowerRunning = false;
+            }
+        }
+    };
+
 
 
     @Override
     public void opInit() {
 
         //Pre-Defined Arm/Slide Movements and Positions
-        stateList = new OpStateList();
 
-        stateList.addStates(
-                new OpState( //Slide extended to high, arm straight back, grip closed
-                        () -> {
-                            betterCommandedPosition.x = 26;
-                            betterCommandedPosition.y = 5;
-                            R = 0.5;
-                            slideLevel = SlideController.LEVEL.HIGH;
-                            DOpen = false;
-                        }
-                ),
-                new OpState( //Slide extended to middle, arm straight back, grip closed
-                        () -> {
-                            betterCommandedPosition.x = 26;
-                            betterCommandedPosition.y = 5;
-                            R = 0.5;
-                            slideLevel = SlideController.LEVEL.MIDDLE;
-                            DOpen = false;
-                        }
-                ),
-                new OpState( //Slide extended to low, arm straight back, grip closed
-                        () -> {
-                            betterCommandedPosition.x = 26;
-                            betterCommandedPosition.y = 5;
-                            R = 0.5;
-                            slideLevel = SlideController.LEVEL.LOW;
-                            DOpen = false;
-                        }
-                ),
-                new OpState( //Reset to resting
-                        () -> {
-                            betterCommandedPosition.x = 26;
-                            betterCommandedPosition.y = 5;
-                            R = 0.5;
-                            slideLevel = SlideController.LEVEL.REST;
-                            DOpen = true;
-                        }
-                ),
-                new OpState( //Set system to stow position
-                        () -> {
-                            betterCommandedPosition.x = 10;
-                            betterCommandedPosition.y = 10;
-                            R = 0.5;
-                            DOpen = false;
-                        }
-                ), //Next two OpStates are movements, not states
-                new OpState( //Cone intake movements
-                        () -> {
-                            if(RunnableTimer < 1* EULConstants.SEC2MS){
-                                betterCommandedPosition.y = -5;
-                                DOpen = true;
-                            }else if(RunnableTimer < 1.25* EULConstants.SEC2MS){
-                                DOpen = false;
-                            }else if(RunnableTimer < 1.5* EULConstants.SEC2MS){
-                                betterCommandedPosition.y = 5;
-                            }else{
-                                PickUpRunning = false;
-                            }
-                        }
-                ),
-                new OpState( //Step lowering slide
-                        () -> {
-
-                        }
-                )
-        );
 
         //Arm init
         configA = new ServoConfig("A",false, 0.0001, 0.83);
@@ -264,8 +257,10 @@ public class ActualTeleOp extends LoopUtil {
         //newPropArm.propagate(betterCommandedPosition, new Vector2d( 1, 0),true);
         newPropArm.circleFind(betterCommandedPosition);
         if(PickUpRunning){
-            stateList.setIndex(5);
-            stateList.getCurrentState().runAll(deltaTime);
+            pickUp.run();
+        }
+        if(StepperLowerRunning){
+            stepperLower.run();
         }
 
     }

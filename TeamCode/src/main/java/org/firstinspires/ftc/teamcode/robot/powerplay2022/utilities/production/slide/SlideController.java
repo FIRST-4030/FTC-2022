@@ -12,8 +12,8 @@ public class SlideController {
 
     private DcMotor left, right;
 
-    private int leftEncoderPosition = 0;
-    private int rightEncoderPosition = 0;
+    public int leftEncoderPosition = 0;
+    public int rightEncoderPosition = 0;
 
     private int leftLastEncoderPosition = 0;
     private int rightLastEncoderPosition = 0;
