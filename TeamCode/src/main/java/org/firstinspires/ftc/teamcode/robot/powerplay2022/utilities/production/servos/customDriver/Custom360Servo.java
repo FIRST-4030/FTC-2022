@@ -16,7 +16,7 @@ public class Custom360Servo {
     private VirtualGearbox gearing;
     private ServoCheckpoints currentCheckpoints;
     private double currentAngle;
-
+    private static Vector<Custom360Servo> servos;
 
     public Custom360Servo(HardwareMap hardwareMap, Telemetry telemetry, ServoConfig config, int gearIn, int gearOut){
         this.gearing = new VirtualGearbox(gearIn, gearOut);
@@ -38,12 +38,27 @@ public class Custom360Servo {
             servo = null;
             telemetry.log().add(this.getClass().getSimpleName() + "No such device: " + config.name);
         }
+
+        servos.add(this);
+    }
+
+    public void dispose(){
+        while(!currentCheckpoints.isDone) {
+            setAngle(0);
+        }
+    }
+
+    public static void disposeAll(){
+        for (Custom360Servo servo: servos) {
+            servo.dispose();
+        }
     }
 
     public void setAngle(double angle){
         if (!(currentCheckpoints == null)){
+            currentAngle = currentCheckpoints.getCheckpoint();
             ServoCheckpoints checkpoints = new ServoCheckpoints();
-            if (!(checkpoints.makePath(currentAngle, angle).naiveCheck(currentCheckpoints))){
+            if (!(checkpoints.makePath(currentAngle, angle * gearing.getInverseRatio()).naiveCheck(currentCheckpoints))){
                 currentCheckpoints = checkpoints;
             } else if(!currentCheckpoints.isDone){
                 currentCheckpoints.followPoints(servo.getPosition());
@@ -53,7 +68,7 @@ public class Custom360Servo {
 }
 
 class ServoCheckpoints{
-    public double beginAngle, endAngle;
+    public double beginAngle, endAngle, delta;
     private float stableAAngle, stableBAngle;
     public int currentIdx;
     public Vector<Double> positions;
@@ -102,7 +117,7 @@ class ServoCheckpoints{
     }
 
     public ServoCheckpoints makePath(double currentAngle, double targetAngle){
-        double delta = targetAngle - currentAngle;
+        delta = targetAngle - currentAngle;
         double rotations = Math.floor(delta / (EULConstants.TAU * 0.45)) - 1;
         double savedPosition = (currentAngle / EULConstants.TAU) % 1;
         fillAngles(targetAngle);
@@ -131,5 +146,9 @@ class ServoCheckpoints{
 
     public boolean naiveCheck(ServoCheckpoints checkpoints){
         return (checkpoints.stableBAngle == this.stableBAngle);
+    }
+
+    public double getCheckpoint(){
+        return this.beginAngle + this.delta * getCurrentIdx();
     }
 }
