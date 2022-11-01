@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.EULMathEx;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.Globals;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.depreciated.movement.AnglePID;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.misc.ColorView;
@@ -33,9 +34,10 @@ import org.firstinspires.ftc.teamcode.utils.sensors.distance.RevDistance;
 
 /**
  * DRIVER 1:
- * Left joystick is the drive (forward, backward, strafe) nad right joystick is turn angle
+ * Left joystick is the drive (forward, backward, strafe) and right joystick is turn angle
  * DRIVER 2:
- * Left joystick controls the servo arm (y for rise rate (+, -), +x to bring inward, -x outward)
+ * Left joystick controls the servo arm (y for inward and outward, x for turning)
+ * Right joystick y controls the vertical portion of the servo arm
  * Linear slide control: A is linear slide at its natural resting position; B is to raise the level to low junctions; Y is to raise it to medium junctions; X is to raise it to the high junction
  * Claw of servo arm closes on Right Bumper
  */
@@ -80,6 +82,9 @@ public class ActualTeleOp extends LoopUtil {
     double DPos = DOpen ? 0.55 : 0.07;
     public double R = 0.5;
 
+    public double RunnableTimer = 0;
+    public boolean PickUpRunning = false;
+
 
 
     //Algorithm-based correction (not PID)
@@ -97,40 +102,67 @@ public class ActualTeleOp extends LoopUtil {
         stateList = new OpStateList();
 
         stateList.addStates(
-                new OpState( //Servo extended, arm straight back, grip closed
+                new OpState( //Slide extended to high, arm straight back, grip closed
                         () -> {
-                            betterCommandedPosition.x = 0;
-                            betterCommandedPosition.y = 0;
+                            betterCommandedPosition.x = 26;
+                            betterCommandedPosition.y = 5;
                             R = 0.5;
                             slideLevel = SlideController.LEVEL.HIGH;
                             DOpen = false;
                         }
                 ),
-                new OpState( //Servo extended, arm straight back, grip closed
+                new OpState( //Slide extended to middle, arm straight back, grip closed
                         () -> {
-                            betterCommandedPosition.x = 0;
-                            betterCommandedPosition.y = 0;
+                            betterCommandedPosition.x = 26;
+                            betterCommandedPosition.y = 5;
                             R = 0.5;
                             slideLevel = SlideController.LEVEL.MIDDLE;
                             DOpen = false;
                         }
                 ),
-                new OpState( //Servo extended, arm straight back, grip closed
+                new OpState( //Slide extended to low, arm straight back, grip closed
                         () -> {
-                            betterCommandedPosition.x = 0;
-                            betterCommandedPosition.y = 0;
+                            betterCommandedPosition.x = 26;
+                            betterCommandedPosition.y = 5;
                             R = 0.5;
                             slideLevel = SlideController.LEVEL.LOW;
                             DOpen = false;
                         }
                 ),
-                new OpState( //Servo extended, arm straight back, grip closed
+                new OpState( //Reset to resting
                         () -> {
-                            betterCommandedPosition.x = 0;
-                            betterCommandedPosition.y = 0;
+                            betterCommandedPosition.x = 26;
+                            betterCommandedPosition.y = 5;
                             R = 0.5;
                             slideLevel = SlideController.LEVEL.REST;
                             DOpen = true;
+                        }
+                ),
+                new OpState( //Set system to stow position
+                        () -> {
+                            betterCommandedPosition.x = 10;
+                            betterCommandedPosition.y = 10;
+                            R = 0.5;
+                            DOpen = false;
+                        }
+                ), //Next two OpStates are movements, not states
+                new OpState( //Cone intake movements
+                        () -> {
+                            if(RunnableTimer < 1* EULConstants.SEC2MS){
+                                betterCommandedPosition.y = -5;
+                                DOpen = true;
+                            }else if(RunnableTimer < 1.25* EULConstants.SEC2MS){
+                                DOpen = false;
+                            }else if(RunnableTimer < 1.5* EULConstants.SEC2MS){
+                                betterCommandedPosition.y = 5;
+                            }else{
+                                PickUpRunning = false;
+                            }
+                        }
+                ),
+                new OpState( //Step lowering slide
+                        () -> {
+
                         }
                 )
         );
@@ -210,7 +242,9 @@ public class ActualTeleOp extends LoopUtil {
     @Override
     public void opUpdate(double deltaTime) {
         armUpdate(deltaTime);
-        handleInput(deltaTime);
+        if(!PickUpRunning) {
+            handleInput(deltaTime);
+        }
         slideUpdate(deltaTime);
         outputTelemetry();
         DPos = DOpen ? 0.6 : 0.07;
@@ -218,6 +252,7 @@ public class ActualTeleOp extends LoopUtil {
         if(Double.isNaN(R)){R=0.5;}
         servoD.setPosition(DOpen ? 0.55 : 0.07);
         servoR.setPosition(R);
+        RunnableTimer += deltaTime;
     }
 
     @Override
@@ -228,6 +263,10 @@ public class ActualTeleOp extends LoopUtil {
     public void armUpdate(double deltaTime) {
         //newPropArm.propagate(betterCommandedPosition, new Vector2d( 1, 0),true);
         newPropArm.circleFind(betterCommandedPosition);
+        if(PickUpRunning){
+            stateList.setIndex(5);
+            stateList.getCurrentState().runAll(deltaTime);
+        }
 
     }
 
@@ -254,8 +293,9 @@ public class ActualTeleOp extends LoopUtil {
 
         //arm controls
         gamepadHandler.loop();
-        if (gamepadHandler.up("D2:LT")){
-            enableJoystick = !enableJoystick;
+        if (gamepadHandler.up("D2:LB")){
+            PickUpRunning = true;
+            RunnableTimer = 0;
         }
 
         if (gamepadHandler.up("D2:DPAD_UP")){ //increase outputSpeed by decimalPlace | now wrong comment
