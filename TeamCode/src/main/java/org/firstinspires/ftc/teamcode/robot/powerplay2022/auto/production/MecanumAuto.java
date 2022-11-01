@@ -197,17 +197,17 @@ public class MecanumAuto extends LoopUtil {
                 servoR.setPosition(1);
                 betterCommandedPosition.x = 20;
                 betterCommandedPosition.y = -10;
-                servoD.setPosition(0.2);
+                servoD.setPosition(0.6);
             } else if (elapsedTimeCycle < 3.65 * EULConstants.SEC2MS) {
-                servoD.setPosition(0);
+                servoD.setPosition(0.07);
             } else if (elapsedTimeCycle < 5 * EULConstants.SEC2MS) {
-                servoD.setPosition(0.2);
+                servoD.setPosition(0.6);
                 slideLevelAuto = SlideController.LEVEL.REST;
                 servoR.setPosition(0.5);
                 betterCommandedPosition.x = 12;
                 betterCommandedPosition.y = topConeY;
             } else if (elapsedTimeCycle < 5.5 * EULConstants.SEC2MS) {
-                servoD.setPosition(0.2);
+                servoD.setPosition(0.07);
                 slideLevelAuto = SlideController.LEVEL.REST;
                 servoR.setPosition(0.5);
                 betterCommandedPosition.x = 12;
@@ -217,7 +217,7 @@ public class MecanumAuto extends LoopUtil {
                 topConeY -= 3; //Centimeters between cones in stack
             }
         }
-        servoD.setPosition(0.2);
+        servoD.setPosition(0.6);
         slideLevelAuto = SlideController.LEVEL.REST;
         servoR.setPosition(0.5);
         betterCommandedPosition.x = 15;
@@ -246,6 +246,7 @@ public class MecanumAuto extends LoopUtil {
         if (elapsedTime < 1.75 * EULConstants.SEC2MS) { //Drive Forward
             motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC)[0];
             stateList.setIndex(0);
+            servoD.setPosition(0.6);
         }else if (elapsedTime < 2.25*EULConstants.SEC2MS){ //Halted Turn
             stateList.setIndex(1);
         }else if (elapsedTime < 2.85*EULConstants.SEC2MS){ //
