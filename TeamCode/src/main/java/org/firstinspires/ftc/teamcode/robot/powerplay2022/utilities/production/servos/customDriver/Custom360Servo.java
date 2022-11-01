@@ -105,6 +105,7 @@ class ServoCheckpoints{
         double delta = targetAngle - currentAngle;
         double rotations = Math.floor(delta / (EULConstants.TAU * 0.45)) - 1;
         double savedPosition = (currentAngle / EULConstants.TAU) % 1;
+        fillAngles(targetAngle);
         isDone = false;
         positions.clear();
 
