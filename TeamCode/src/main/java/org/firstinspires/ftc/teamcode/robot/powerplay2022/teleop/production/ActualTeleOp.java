@@ -20,6 +20,8 @@ import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.s
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics.ThreeJointArm;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics.VirtualServo;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.slide.SlideController;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpState;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpStateList;
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoConfig;
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoFTC;
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
@@ -39,6 +41,8 @@ import org.firstinspires.ftc.teamcode.utils.sensors.distance.RevDistance;
  */
 @TeleOp(name = "ActualTeleOp", group = "actual")
 public class ActualTeleOp extends LoopUtil {
+
+    public static OpStateList stateList;
 
     public ThreeJointArm newPropArm;
 
@@ -88,6 +92,48 @@ public class ActualTeleOp extends LoopUtil {
 
     @Override
     public void opInit() {
+
+        //Pre-Defined Arm/Slide Movements and Positions
+        stateList = new OpStateList();
+
+        stateList.addStates(
+                new OpState( //Servo extended, arm straight back, grip closed
+                        () -> {
+                            betterCommandedPosition.x = 0;
+                            betterCommandedPosition.y = 0;
+                            R = 0.5;
+                            slideLevel = SlideController.LEVEL.HIGH;
+                            DOpen = false;
+                        }
+                ),
+                new OpState( //Servo extended, arm straight back, grip closed
+                        () -> {
+                            betterCommandedPosition.x = 0;
+                            betterCommandedPosition.y = 0;
+                            R = 0.5;
+                            slideLevel = SlideController.LEVEL.MIDDLE;
+                            DOpen = false;
+                        }
+                ),
+                new OpState( //Servo extended, arm straight back, grip closed
+                        () -> {
+                            betterCommandedPosition.x = 0;
+                            betterCommandedPosition.y = 0;
+                            R = 0.5;
+                            slideLevel = SlideController.LEVEL.LOW;
+                            DOpen = false;
+                        }
+                ),
+                new OpState( //Servo extended, arm straight back, grip closed
+                        () -> {
+                            betterCommandedPosition.x = 0;
+                            betterCommandedPosition.y = 0;
+                            R = 0.5;
+                            slideLevel = SlideController.LEVEL.REST;
+                            DOpen = true;
+                        }
+                )
+        );
 
         //Arm init
         configA = new ServoConfig("A",false, 0.0001, 0.83);
