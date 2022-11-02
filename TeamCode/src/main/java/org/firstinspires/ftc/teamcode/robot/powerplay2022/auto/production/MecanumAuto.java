@@ -225,6 +225,41 @@ public class MecanumAuto extends LoopUtil {
         betterCommandedPosition.y = 15;
     }
 
+    public void givingUpCycle(double deltaTime) {
+        elapsedTimeCycle += deltaTime;
+        elapsedTimeCycleAcum += deltaTime;
+        while(elapsedTimeCycleAcum < ((24.5 - (2.25 + 1)) * EULConstants.SEC2MS)) { //(Total Time - (Cycle Time + Buffer))
+            if (elapsedTimeCycle < 0.75 * EULConstants.SEC2MS) {
+                motion.x = -0.3;
+                betterCommandedPosition.x = 0;
+                betterCommandedPosition.y = 0;
+                servoR.setPosition(0.5);
+                servoD.setPosition(0.07);
+            } else if (elapsedTimeCycle < 1 * EULConstants.SEC2MS) {
+                servoD.setPosition(0.7);
+            } else if (elapsedTimeCycle < 1.75 * EULConstants.SEC2MS) {
+                motion.x = 0.3;
+                betterCommandedPosition.x = 0;
+                betterCommandedPosition.y = topConeY;
+                servoR.setPosition(0.5);
+            } else if (elapsedTimeCycle < 2.25 * EULConstants.SEC2MS) {
+                servoD.setPosition(0.07);
+                servoR.setPosition(0.5);
+                betterCommandedPosition.x = 0;
+                betterCommandedPosition.y = 5;
+            } else {
+                elapsedTimeCycle = 0;
+                topConeY -= 3; //Centimeters between cones in stack
+                break;
+            }
+        }
+        servoD.setPosition(0.6);
+        slideLevelAuto = SlideController.LEVEL.REST;
+        servoR.setPosition(0.5);
+        betterCommandedPosition.x = 15;
+        betterCommandedPosition.y = 15;
+    }
+
     @Override
     public void opInitLoop() {
 
@@ -255,7 +290,7 @@ public class MecanumAuto extends LoopUtil {
         }else if (elapsedTime < 3.35*EULConstants.SEC2MS) { //Idle
             stateList.setIndex(1);
         }else if (elapsedTime < 27.85*EULConstants.SEC2MS) { //Cycle
-            cycle(deltaTime);
+            givingUpCycle(deltaTime);
         }else if (elapsedTime < 28.95*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.YELLOW){ // Move to Yellow
             stateList.setIndex(3);
         }else if (elapsedTime < 28.5*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.MAGENTA) { // Move to Magenta

@@ -124,6 +124,10 @@ public class ActualTeleOp extends LoopUtil {
         slideLevel = SlideController.LEVEL.LOW;
         setArmToPlace.run();
     };
+    Runnable groundPlace = () -> {
+        slideLevel = SlideController.LEVEL.REST;
+        setArmToPlace.run();
+    };
     Runnable pickUp = () -> {
         if(RunnableTimer < 1* EULConstants.SEC2MS){
             betterCommandedPosition.y = -5;
@@ -234,16 +238,16 @@ public class ActualTeleOp extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
-        armUpdate(deltaTime);
         if(!PickUpRunning) {
             handleInput(deltaTime);
         }
+        armUpdate(deltaTime);
         slideUpdate(deltaTime);
         outputTelemetry();
-        DPos = DOpen ? 0.6 : 0.07;
+        DPos = DOpen ? 0.7 : 0.07;
         if(Double.isNaN(DPos)){DPos=0.6;}
         if(Double.isNaN(R)){R=0.5;}
-        servoD.setPosition(DOpen ? 0.55 : 0.07);
+        servoD.setPosition(DPos);
         servoR.setPosition(1-R);
         RunnableTimer += deltaTime;
     }
@@ -262,7 +266,6 @@ public class ActualTeleOp extends LoopUtil {
         if(StepperLowerRunning){
             stepperLower.run();
         }
-
     }
 
     public void slideUpdate(double deltaTime){
@@ -305,13 +308,13 @@ public class ActualTeleOp extends LoopUtil {
         }
 
         if (gamepadHandler.up("D2:DPAD_UP")){ //increase outputSpeed by decimalPlace | now wrong comment
-            midPlace.run();
+            lowPlace.run();
         }
         if (gamepadHandler.up("D2:DPAD_LEFT")){ //increase outputSpeed by decimalPlace | now wrong comment
-            highPlace.run();
+            midPlace.run();
         }
         if (gamepadHandler.up("D2:DPAD_RIGHT")){ //decrease outputSpeed by decimalPlace | now wrong comment
-            lowPlace.run();
+            groundPlace.run();
         }
 
 
