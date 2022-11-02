@@ -215,6 +215,7 @@ public class MecanumAuto extends LoopUtil {
             } else {
                 elapsedTimeCycle = 0;
                 topConeY -= 3; //Centimeters between cones in stack
+                break;
             }
         }
         servoD.setPosition(0.6);
@@ -255,7 +256,6 @@ public class MecanumAuto extends LoopUtil {
             stateList.setIndex(1);
         }else if (elapsedTime < 27.85*EULConstants.SEC2MS) { //Cycle
             cycle(deltaTime);
-            //stateList.setIndex(1);
         }else if (elapsedTime < 28.95*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.YELLOW){ // Move to Yellow
             stateList.setIndex(3);
         }else if (elapsedTime < 28.5*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.MAGENTA) { // Move to Magenta

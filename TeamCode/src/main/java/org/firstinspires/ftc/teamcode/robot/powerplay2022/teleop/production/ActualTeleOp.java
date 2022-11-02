@@ -244,7 +244,7 @@ public class ActualTeleOp extends LoopUtil {
         if(Double.isNaN(DPos)){DPos=0.6;}
         if(Double.isNaN(R)){R=0.5;}
         servoD.setPosition(DOpen ? 0.55 : 0.07);
-        servoR.setPosition(R);
+        servoR.setPosition(1-R);
         RunnableTimer += deltaTime;
     }
 
