@@ -191,7 +191,7 @@ public class MecanumAuto extends LoopUtil {
     public void cycle(double deltaTime) { //Cycle 4 cones, 24.5 seconds
         elapsedTimeCycle += deltaTime;
         elapsedTimeCycleAcum += deltaTime;
-        while(elapsedTimeCycleAcum < ((24.5 - (5.5 + 1)) * EULConstants.SEC2MS)) { //(Total Time - (Cycle Time + Buffer))
+        if(elapsedTimeCycleAcum < ((24.5 - (5.5 + 1)) * EULConstants.SEC2MS)) { //(Total Time - (Cycle Time + Buffer))
             if (elapsedTimeCycle < 3.5 * EULConstants.SEC2MS) {
                 slideLevelAuto = SlideController.LEVEL.HIGH;
                 servoR.setPosition(1);
@@ -215,14 +215,14 @@ public class MecanumAuto extends LoopUtil {
             } else {
                 elapsedTimeCycle = 0;
                 topConeY -= 3; //Centimeters between cones in stack
-                break;
             }
+        } else {
+            servoD.setPosition(0.6);
+            slideLevelAuto = SlideController.LEVEL.REST;
+            servoR.setPosition(0.5);
+            betterCommandedPosition.x = 15;
+            betterCommandedPosition.y = 15;
         }
-        servoD.setPosition(0.6);
-        slideLevelAuto = SlideController.LEVEL.REST;
-        servoR.setPosition(0.5);
-        betterCommandedPosition.x = 15;
-        betterCommandedPosition.y = 15;
     }
 
     public void givingUpCycle(double deltaTime) {
