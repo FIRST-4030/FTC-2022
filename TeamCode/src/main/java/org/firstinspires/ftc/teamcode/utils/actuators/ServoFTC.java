@@ -126,12 +126,15 @@ public class ServoFTC implements Available {
         } else if (position > max) {
             position = max;
         }
+        setPositionRaw(position);
+        /*
         if(Math.abs(getPosition() - position) < 0.5 || !generation){
             setPositionRaw(position);
         }else{
             gen.run();
             follow(pathGeneration.output, position);
         }
+         */
 
     }
 
