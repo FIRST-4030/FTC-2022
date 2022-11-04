@@ -43,6 +43,11 @@ import org.firstinspires.ftc.teamcode.utils.sensors.distance.RevDistance;
  */
 @TeleOp(name = "ActualTeleOp", group = "actual")
 public class ActualTeleOp extends LoopUtil {
+    //Save Position Variables
+    public double[] savedX = new double[3];
+    public double[] savedY = new double[3];
+    public double[] savedR = new double[3];
+    public int saveStateIndex = 0;
 
     public static OpStateList stateList;
 
@@ -303,18 +308,21 @@ public class ActualTeleOp extends LoopUtil {
         }
 
         if (gamepadHandler.up("D2:DPAD_DOWN")){ //decrease outputSpeed by decimalPlace | now wrong comment
-            setArmToIntake.run();
-            StepperLowerRunning = true;
+            saveStateIndex = Math.abs((saveStateIndex-1) % 3);
         }
 
         if (gamepadHandler.up("D2:DPAD_UP")){ //increase outputSpeed by decimalPlace | now wrong comment
-            lowPlace.run();
+            saveStateIndex = Math.abs((saveStateIndex+1) % 3);
         }
         if (gamepadHandler.up("D2:DPAD_LEFT")){ //increase outputSpeed by decimalPlace | now wrong comment
-            midPlace.run();
+            savedX[saveStateIndex] = betterCommandedPosition.x;
+            savedY[saveStateIndex] = betterCommandedPosition.y;
+            savedR[saveStateIndex] = R;
         }
         if (gamepadHandler.up("D2:DPAD_RIGHT")){ //decrease outputSpeed by decimalPlace | now wrong comment
-            groundPlace.run();
+            betterCommandedPosition.x = savedX[saveStateIndex];
+            betterCommandedPosition.y = savedY[saveStateIndex];
+            R = savedR[saveStateIndex];
         }
 
 
@@ -373,5 +381,6 @@ public class ActualTeleOp extends LoopUtil {
         telemetry.addData("Servo C Turn Position: ", servoC.getPosition());
         telemetry.addData("Servo D Turn Position: ", servoD.getPosition());
         telemetry.addData("Slide is in use?: ", controller.isInUse());
+        telemetry.addData("Current State Index", saveStateIndex);
     }
 }
