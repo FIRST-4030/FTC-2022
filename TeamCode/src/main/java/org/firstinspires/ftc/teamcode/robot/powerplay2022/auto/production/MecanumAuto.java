@@ -63,11 +63,15 @@ public class MecanumAuto extends LoopUtil {
     double topConeY;
 
     public InputHandler inputHandler;
+    public static InputHandler gamepadHandler;
     public int startTick = 0, endTick = 0;
     public double startTime = 0, endTime = 0;
 
+    public boolean startRight = true;
+
     @Override
     public void opInit() {
+        gamepadHandler = InputAutoMapper.normal.autoMap(this);
         //Slide
         slide = new SlideController(hardwareMap, "LSLM", true, "LSRM", false);
         //Velocity Ramps
@@ -161,25 +165,25 @@ public class MecanumAuto extends LoopUtil {
                 new OpState(
                         Idle,
                         () -> {
-                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2, true);
+                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2 * (startRight ? 1 : -1), true);
                             motion.z = correction.getOutput();
                             drive.update(motion, true, storedDeltaTime);
                         }
                 ),
                 new OpState(
                         () -> {
-                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2, true);
+                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2 * (startRight ? 1 : -1), true);
                             motion.z = correction.getOutput();
-                            motion.x = -0.6;
+                            motion.x = -0.6  * (startRight ? 1 : -1);
                             motion.y = 0;
                             drive.update(motion, true, storedDeltaTime);
                         }
                 ),
                 new OpState(
                         () -> {
-                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2, true);
+                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2  * (startRight ? 1 : -1), true);
                             motion.z = correction.getOutput();
-                            motion.x = 0.6;
+                            motion.x = 0.6  * (startRight ? 1 : -1);
                             motion.y = 0;
                             drive.update(motion, true, storedDeltaTime);
                         }
@@ -194,7 +198,7 @@ public class MecanumAuto extends LoopUtil {
         if(elapsedTimeCycleAcum < ((24.5 - (5.5 + 1)) * EULConstants.SEC2MS)) { //(Total Time - (Cycle Time + Buffer))
             if (elapsedTimeCycle < 3.5 * EULConstants.SEC2MS) {
                 slideLevelAuto = SlideController.LEVEL.HIGH;
-                servoR.setPosition(1);
+                servoR.setPosition(1 + (startRight ? 0 : -1));
                 betterCommandedPosition.x = 20;
                 betterCommandedPosition.y = -10;
                 servoD.setPosition(0.6);
@@ -262,7 +266,15 @@ public class MecanumAuto extends LoopUtil {
 
     @Override
     public void opInitLoop() {
+        gamepadHandler.loop();
+        if (gamepadHandler.up("D2:DPAD_LEFT")){ //increase outputSpeed by decimalPlace | now wrong comment
+            startRight = false;
+        }
+        if (gamepadHandler.up("D2:DPAD_RIGHT")){ //decrease outputSpeed by decimalPlace | now wrong comment
+            startRight = true;
+        }
 
+        telemetry.addData("Starting Side: ", (startRight ? "Right" : "Left"));
     }
 
     @Override

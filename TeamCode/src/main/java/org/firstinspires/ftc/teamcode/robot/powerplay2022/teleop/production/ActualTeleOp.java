@@ -79,7 +79,7 @@ public class ActualTeleOp extends LoopUtil {
             SlideController.LEVEL.REST;
     public double lsInput = 0;
     public boolean DOpen = false;
-    double DPos = DOpen ? 0.55 : 0.07;
+    double DPos = DOpen ? 0.07 : 0.7;
     public double R = 0.5;
 
     public double RunnableTimer = 0;
@@ -132,9 +132,9 @@ public class ActualTeleOp extends LoopUtil {
         if(RunnableTimer < 1* EULConstants.SEC2MS){
             betterCommandedPosition.y = -5;
             DOpen = true;
-        }else if(RunnableTimer < 1.25* EULConstants.SEC2MS){
-            DOpen = false;
         }else if(RunnableTimer < 1.5* EULConstants.SEC2MS){
+            DOpen = false;
+        }else if(RunnableTimer < 1.75* EULConstants.SEC2MS){
             betterCommandedPosition.y = 5;
         }else{
             PickUpRunning = false;
@@ -244,7 +244,7 @@ public class ActualTeleOp extends LoopUtil {
         armUpdate(deltaTime);
         slideUpdate(deltaTime);
         outputTelemetry();
-        DPos = DOpen ? 0.7 : 0.07;
+        DPos = DOpen ? 0.07 : 0.7;
         if(Double.isNaN(DPos)){DPos=0.6;}
         if(Double.isNaN(R)){R=0.5;}
         servoD.setPosition(DPos);
@@ -292,8 +292,8 @@ public class ActualTeleOp extends LoopUtil {
         //arm controls
         gamepadHandler.loop();
         if (gamepadHandler.up("D2:LB")){
-            PickUpRunning = true;
             RunnableTimer = 0;
+            PickUpRunning = true;
         }
         if (gamepadHandler.up("D2:RT")){
             StepperLowerRunning = true;
@@ -319,7 +319,7 @@ public class ActualTeleOp extends LoopUtil {
 
 
         betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_y, -gamepad2.right_stick_y).times(0.5)));
-        R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.left_stick_x*0.04);
+        R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.left_stick_x*0.008);
     }
 
     public void driveFixedUpdate(double deltaTime){
