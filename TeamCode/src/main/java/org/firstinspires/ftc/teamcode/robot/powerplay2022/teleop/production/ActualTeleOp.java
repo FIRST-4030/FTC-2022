@@ -263,6 +263,7 @@ public class ActualTeleOp extends LoopUtil {
     }
 
     public void armUpdate(double deltaTime) {
+        if(betterCommandedPosition.x < 0.001){ betterCommandedPosition.x = 0.001; }
         //newPropArm.propagate(betterCommandedPosition, new Vector2d( 1, 0),true);
         newPropArm.circleFind(betterCommandedPosition);
         if(PickUpRunning){
