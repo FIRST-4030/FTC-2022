@@ -47,12 +47,12 @@ public class SlideController {
                 right.setTargetPosition(540 / 3);
                 break;
             case MIDDLE:
-                left.setTargetPosition(540 / 3 * 2);
-                right.setTargetPosition(540 / 3 * 2);
+                left.setTargetPosition(540 / 3 + 50);
+                right.setTargetPosition(540 / 3 + 50);
                 break;
             case HIGH:
-                left.setTargetPosition(540 / 3 * 3);
-                right.setTargetPosition(540 / 3 * 3);
+                left.setTargetPosition(540 / 3 * 2 + 60);
+                right.setTargetPosition(540 / 3 * 2 + 60);
                 break;
         }
 

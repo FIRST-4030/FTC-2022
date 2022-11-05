@@ -44,9 +44,9 @@ import org.firstinspires.ftc.teamcode.utils.sensors.distance.RevDistance;
 @TeleOp(name = "ActualTeleOp", group = "actual")
 public class ActualTeleOp extends LoopUtil {
     //Save Position Variables
-    public double[] savedX = new double[3];
-    public double[] savedY = new double[3];
-    public double[] savedR = new double[3];
+    public double[] savedX = new double[]{10, 10, 10};
+    public double[] savedY = new double[]{10, 10, 10};
+    public double[] savedR = new double[]{0.5, 0.5, 0.5};
     public int saveStateIndex = 0;
 
     public static OpStateList stateList;
@@ -302,7 +302,7 @@ public class ActualTeleOp extends LoopUtil {
             PickUpRunning = true;
         }
         if (gamepadHandler.up("D2:RT")){
-            StepperLowerRunning = true;
+            highPlace.run();
         }
         if (gamepadHandler.up("D2:LT")){
             setArmToStow.run();
@@ -328,7 +328,7 @@ public class ActualTeleOp extends LoopUtil {
 
 
         betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_y, -gamepad2.right_stick_y).times(0.5)));
-        R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.left_stick_x*0.008);
+        R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.left_stick_x*0.02);
     }
 
     public void driveFixedUpdate(double deltaTime){
