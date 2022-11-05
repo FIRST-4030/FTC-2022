@@ -69,6 +69,11 @@ public class MecanumAuto extends LoopUtil {
 
     public boolean startRight = true;
 
+    Runnable Idle = () -> {
+        motion.x = 0;
+        motion.y = 0;
+    };
+
     @Override
     public void opInit() {
         gamepadHandler = InputAutoMapper.normal.autoMap(this);
@@ -139,11 +144,6 @@ public class MecanumAuto extends LoopUtil {
         stepper = new VelocityRampStepper(forwardRamp, strafeRamp);
         stepper.addRampForward(1, 1.15, 1.75);
 
-        //...
-        Runnable Idle = () -> {
-            motion.x = 0;
-            motion.y = 0;
-        };
 
         Runnable driveUpdate = () -> {
 
@@ -183,8 +183,16 @@ public class MecanumAuto extends LoopUtil {
                         () -> {
                             correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2  * (startRight ? 1 : -1), true);
                             motion.z = correction.getOutput();
-                            motion.x = 0.6  * (startRight ? 1 : -1);
+                            motion.x = 0.4  * (startRight ? -1 : 1);
                             motion.y = 0;
+                            drive.update(motion, true, storedDeltaTime);
+                        }
+                ),
+                new OpState(
+                        Idle,
+                        () -> {
+                            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, Math.PI * (startRight ? 1 : -1), true);
+                            motion.z = correction.getOutput();
                             drive.update(motion, true, storedDeltaTime);
                         }
                 )
@@ -195,22 +203,22 @@ public class MecanumAuto extends LoopUtil {
     public void cycle(double deltaTime) { //Cycle 4 cones, 24.5 seconds
         elapsedTimeCycle += deltaTime;
         elapsedTimeCycleAcum += deltaTime;
-        if(elapsedTimeCycleAcum < ((24.5 - (5.5 + 1)) * EULConstants.SEC2MS)) { //(Total Time - (Cycle Time + Buffer))
-            if (elapsedTimeCycle < 3.5 * EULConstants.SEC2MS) {
+        if(elapsedTimeCycleAcum < ((24.5 - (4 + 1)) * EULConstants.SEC2MS)) { //(Total Time - (Cycle Time + Buffer))
+            if (elapsedTimeCycle < 2.5 * EULConstants.SEC2MS) {
                 slideLevelAuto = SlideController.LEVEL.HIGH;
-                servoR.setPosition(1 + (startRight ? 0 : -1));
+                servoR.setPosition(1 + (startRight ? -1 : 0));
                 betterCommandedPosition.x = 20;
-                betterCommandedPosition.y = -10;
+                betterCommandedPosition.y = 5;
                 servoD.setPosition(0.6);
-            } else if (elapsedTimeCycle < 3.65 * EULConstants.SEC2MS) {
+            } else if (elapsedTimeCycle < 2.75 * EULConstants.SEC2MS) {
                 servoD.setPosition(0.07);
-            } else if (elapsedTimeCycle < 5 * EULConstants.SEC2MS) {
+            } else if (elapsedTimeCycle < 3.5 * EULConstants.SEC2MS) {
                 servoD.setPosition(0.6);
                 slideLevelAuto = SlideController.LEVEL.REST;
                 servoR.setPosition(0.5);
                 betterCommandedPosition.x = 12;
                 betterCommandedPosition.y = topConeY;
-            } else if (elapsedTimeCycle < 5.5 * EULConstants.SEC2MS) {
+            } else if (elapsedTimeCycle < 4 * EULConstants.SEC2MS) {
                 servoD.setPosition(0.07);
                 slideLevelAuto = SlideController.LEVEL.REST;
                 servoR.setPosition(0.5);
@@ -227,41 +235,6 @@ public class MecanumAuto extends LoopUtil {
             betterCommandedPosition.x = 15;
             betterCommandedPosition.y = 15;
         }
-    }
-
-    public void givingUpCycle(double deltaTime) {
-        elapsedTimeCycle += deltaTime;
-        elapsedTimeCycleAcum += deltaTime;
-        while(elapsedTimeCycleAcum < ((24.5 - (2.25 + 1)) * EULConstants.SEC2MS)) { //(Total Time - (Cycle Time + Buffer))
-            if (elapsedTimeCycle < 0.75 * EULConstants.SEC2MS) {
-                motion.x = -0.3;
-                betterCommandedPosition.x = 0;
-                betterCommandedPosition.y = 0;
-                servoR.setPosition(0.5);
-                servoD.setPosition(0.07);
-            } else if (elapsedTimeCycle < 1 * EULConstants.SEC2MS) {
-                servoD.setPosition(0.7);
-            } else if (elapsedTimeCycle < 1.75 * EULConstants.SEC2MS) {
-                motion.x = 0.3;
-                betterCommandedPosition.x = 0;
-                betterCommandedPosition.y = topConeY;
-                servoR.setPosition(0.5);
-            } else if (elapsedTimeCycle < 2.25 * EULConstants.SEC2MS) {
-                servoD.setPosition(0.07);
-                servoR.setPosition(0.5);
-                betterCommandedPosition.x = 0;
-                betterCommandedPosition.y = 5;
-            } else {
-                elapsedTimeCycle = 0;
-                topConeY -= 3; //Centimeters between cones in stack
-                break;
-            }
-        }
-        servoD.setPosition(0.6);
-        slideLevelAuto = SlideController.LEVEL.REST;
-        servoR.setPosition(0.5);
-        betterCommandedPosition.x = 15;
-        betterCommandedPosition.y = 15;
     }
 
     @Override
@@ -288,34 +261,46 @@ public class MecanumAuto extends LoopUtil {
         storedDeltaTime = deltaTime;
         elapsedTime += deltaTime;
         CV2.update(RCR2.color(), RCR2.distance());
-        newPropArm.circleFind(betterCommandedPosition);
+        if (elapsedTime > 2*EULConstants.SEC2MS){
+            newPropArm.circleFind(betterCommandedPosition);
+        }
         slide.update(deltaTime, slideLevelAuto, 1);
         //All comments in StateLoop are wrong, correct later
         if (elapsedTime < 1.75 * EULConstants.SEC2MS) { //Drive Forward
+            betterCommandedPosition.x = 5;
+            betterCommandedPosition.y = 20;
             motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC)[0];
             stateList.setIndex(0);
             servoD.setPosition(0.6);
         }else if (elapsedTime < 2.25*EULConstants.SEC2MS){ //Halted Turn
             stateList.setIndex(1);
-        }else if (elapsedTime < 2.85*EULConstants.SEC2MS){ //
+        }else if (elapsedTime < 2.65*EULConstants.SEC2MS){ //
             stateList.setIndex(2);
         }else if (elapsedTime < 3.35*EULConstants.SEC2MS) { //Idle
             stateList.setIndex(1);
         }else if (elapsedTime < 27.85*EULConstants.SEC2MS) { //Cycle
-            cycle(deltaTime);
+            //Idle.run();
+            //cycle(deltaTime);
         }else if (elapsedTime < 28.95*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.YELLOW){ // Move to Yellow
             stateList.setIndex(3);
+            betterCommandedPosition.y = 25;
+            betterCommandedPosition.x = 5;
         }else if (elapsedTime < 28.5*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.MAGENTA) { // Move to Magenta
             stateList.setIndex(3);
+            betterCommandedPosition.y = 25;
+            betterCommandedPosition.x = 5;
         }else { // Stay in Cyan
-            stateList.setIndex(1);
+            betterCommandedPosition.y = 25;
+            betterCommandedPosition.x = 5;
+            stateList.setIndex(4);
+            motion.x = -0.5;
         }
 
 
 
-        if (RCR2.distance() < 15){
+        if (RCR2.distance() < 11){
             if (!checked){ checked = true; ColorT1 = elapsedTime; }
-            if (elapsedTime - ColorT1 < 250) {
+            if (elapsedTime - ColorT1 < 200) {
                 SeenColor = CV2.getColorBetter(100);
             }
         }

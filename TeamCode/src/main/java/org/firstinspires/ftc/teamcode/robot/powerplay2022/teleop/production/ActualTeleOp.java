@@ -135,7 +135,7 @@ public class ActualTeleOp extends LoopUtil {
     };
     Runnable pickUp = () -> {
         if(RunnableTimer < 1* EULConstants.SEC2MS){
-            betterCommandedPosition.y = -5;
+            betterCommandedPosition.y = -8;
             DOpen = true;
         }else if(RunnableTimer < 1.5* EULConstants.SEC2MS){
             DOpen = false;
@@ -307,6 +307,10 @@ public class ActualTeleOp extends LoopUtil {
         if (gamepadHandler.up("D2:LT")){
             setArmToStow.run();
         }
+        if (gamepadHandler.up("D1:LT")){
+            joystick.x = 0;
+            joystick.y = 0;
+        }
 
         if (gamepadHandler.up("D2:DPAD_DOWN")){ //decrease outputSpeed by decimalPlace | now wrong comment
             saveStateIndex = Math.abs((saveStateIndex-1) % 3);
@@ -328,7 +332,7 @@ public class ActualTeleOp extends LoopUtil {
 
 
         betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_y, -gamepad2.right_stick_y).times(0.5)));
-        R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.left_stick_x*0.02);
+        R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.left_stick_x*0.012);
     }
 
     public void driveFixedUpdate(double deltaTime){

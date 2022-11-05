@@ -147,11 +147,11 @@ public class ThreeJointArm {
         if(Double.isNaN(A)){A=0.5;}
         if(Double.isNaN(B)){B=1;}
         if(Double.isNaN(C)){C=1;}
-        servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A+0.1));
-        servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B+0.25));
-        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C-0.275));
-        //servoA.setPosition(0.83);
-        //servoB.setPosition(0);
+        servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
+        servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B+0.15));
+        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C-0.15));
+        //servoA.setPosition(1);
+        //servoB.setPosition(1);
         telemetry.addData("Restricted Target: ", restrictedTarget);
         telemetry.addData("A: ", A*2);
         telemetry.addData("B: ", B*2);
