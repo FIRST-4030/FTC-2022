@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoFTC;
 
 import java.util.Objects;
+import java.util.Vector;
 
 //This class is a system to control an arm with three joints with IK as the approach
 public class ThreeJointArm {
@@ -45,8 +46,77 @@ public class ThreeJointArm {
         this.virtualServoC = new VirtualServo(this.virtualServoB, new Vector2d(), 0);
     }
 
+    public ThreeJointArm(VirtualServo virtualCore, ServoFTC servo, AngleConversion[] conversions, double armLengthA, double armLengthB){
+
+        //assign segment lengths
+        this.armLengthA = armLengthA;
+        this.armLengthB = armLengthB;
+        this.totalArmLength = armLengthA + armLengthB;
+
+        //assign conversions
+        this.conversionA = conversions[0];
+        this.conversionB = conversions[1];
+        this.conversionC = conversions[2];
+
+        //assign hardware servos
+        this.servoC = servo;
+
+        //assign virtual servos
+        this.virtualServoA = virtualCore;
+        this.virtualServoB = new VirtualServo(this.virtualServoA, new Vector2d(), armLengthB);
+        this.virtualServoC = new VirtualServo(this.virtualServoB, new Vector2d(), 0);
+    }
+
     public void bindTelemetry(Telemetry telemetry){
         this.telemetry = telemetry;
+    }
+
+    public void CircleFindSingleServoTest(Vector2d target, char servoLetter){
+        Vector2d restrictedTarget = target.length() <= (totalArmLength-0.5) ? target : target.normalized().times(totalArmLength);
+        double b = (armLengthA*armLengthA - armLengthB*armLengthB - restrictedTarget.length()*restrictedTarget.length())/(-2*restrictedTarget.length());
+        double angleToTarget = EULMathEx.safeACOS(-1 * restrictedTarget.x/restrictedTarget.length());
+        double a = restrictedTarget.length() - b;
+        double h = Math.sqrt(armLengthB*armLengthB - b*b);
+        //Why is A this and not: double A = EULMathEx.safeASIN(h/armLengthA);
+        double A = EULMathEx.safeASIN(restrictedTarget.y/restrictedTarget.length()) + EULMathEx.safeASIN(h/armLengthA);
+        double B = EULMathEx.safeASIN(a/armLengthA) + EULMathEx.safeASIN(b/armLengthB);
+        double C = (Math.PI*1.75 - A - B)/(Math.PI*1.5);
+        telemetry.addData("Angle A Pi Rad: ", A/Math.PI);
+        telemetry.addData("Angle B Pi Rad: ", B/Math.PI);
+        A=A/(Math.PI);
+        B=B/(Math.PI);
+        telemetry.addData("Angle B Output Raw: ", B);
+        telemetry.addData("Angle A Output Raw: ", A);
+        telemetry.addData("Angle A Output: ", EULMathEx.doubleClamp(0.001, 0.999, A));
+        telemetry.addData("Angle B Output: ", EULMathEx.doubleClamp(0.001, 0.999, B));
+        telemetry.addData("Angle C Output: ", EULMathEx.doubleClamp(0.001, 0.999, C - 1d / 3d));
+        if(A>=1){
+            A=0.99;
+        }
+        if(B>=0.99){
+            B=EULMathEx.doubleClamp(0.001, 0.999, B);
+        }
+        if(Double.isNaN(A)){A=0.5;}
+        if(Double.isNaN(B)){B=1;}
+        if(Double.isNaN(C)){C=1;}
+        servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
+        servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B));
+        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C - 1d / 3d));
+        //servoA.setPosition(0.83);
+        //servoB.setPosition(0);
+        switch(servoLetter) {
+            case 'A':
+                servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
+                break;
+            case 'B':
+                servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B));
+                break;
+            case 'C':
+                servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C - 1d / 3d));
+        }
+        telemetry.addData("Restricted Target: ", restrictedTarget);
+        telemetry.addData("A: ", (A*2)+0.27);
+        telemetry.addData("B: ", B*2);
     }
 
     public void circleFindOldRig(Vector2d target){
