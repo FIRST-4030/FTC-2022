@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.EULMathEx;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
@@ -143,6 +144,7 @@ public class MecanumAuto extends LoopUtil {
 
         stepper = new VelocityRampStepper(forwardRamp, strafeRamp);
         stepper.addRampForward(1, 1.25, 1.75);
+        stepper.addRampForward(1, 1.25, 1.75);
 
 
         Runnable driveUpdate = () -> {
@@ -193,6 +195,11 @@ public class MecanumAuto extends LoopUtil {
                         () -> {
                             correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, Math.PI * (startRight ? 1 : -1), true);
                             motion.z = correction.getOutput();
+                            drive.update(motion, true, storedDeltaTime);
+                        }
+                ),
+                new OpState(
+                        () -> {
                             drive.update(motion, true, storedDeltaTime);
                         }
                 )
@@ -265,16 +272,18 @@ public class MecanumAuto extends LoopUtil {
         if (elapsedTime < 1.75 * EULConstants.SEC2MS) { //Drive Forward
             betterCommandedPosition.x = 5;
             betterCommandedPosition.y = 20;
+            motion.y = EULMathEx.doubleClamp(-0.999, 0.999, motion.y);
             motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC)[0];
             stateList.setIndex(0);
             servoD.setPosition(0.6);
         }else if (elapsedTime < 2.5*EULConstants.SEC2MS) { //Idle
             stateList.setIndex(0);
             motion.y = 0;
-        }else if (elapsedTime < 4*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.YELLOW) { //Cycle
-            motion.x = 0.8;
-        }else if (elapsedTime < 4*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.CYAN) { //Cycle
-            motion.x = -0.8;
+        }else if (elapsedTime < 5*EULConstants.SEC2MS && SeenColor == ColorView.CMYcolors.YELLOW) { //Cycle
+            stateList.setIndex(5);
+            motion.x = 0.2 * (startRight ? 1 : -1);
+        }else if (elapsedTime < 5*EULConstants.SEC2MS && SeenColor == ColorView.CMYcolors.CYAN) { //Cycle
+            motion.x = -0.2 * (startRight ? 1 : -1);
         }else { // Stay in Cyan
             motion.y = 0;
             motion.x = 0;
@@ -327,7 +336,7 @@ public class MecanumAuto extends LoopUtil {
         if (RCR2.distance() < 11){
             if (!checked){ checked = true; ColorT1 = elapsedTime; }
             if (elapsedTime - ColorT1 < 200) {
-                SeenColor = CV2.getColorBetter(100);
+                SeenColor = CV2.getColorBetter(150);
             }
         }
 
