@@ -269,9 +269,9 @@ public class ActualTeleOp extends LoopUtil {
         if(PickUpRunning){
             pickUp.run();
         }
-        if(StepperLowerRunning){
-            stepperLower.run();
-        }
+        //if(StepperLowerRunning){
+        //    stepperLower.run();
+        //}
     }
 
     public void slideUpdate(double deltaTime){
@@ -355,8 +355,8 @@ public class ActualTeleOp extends LoopUtil {
             angleIndex = 0;
         }
 
-        joystick.x = gamepad1.left_stick_x * -1 * (controller.isInUse() ? 0.2 : 1);
-        joystick.y = -gamepad1.left_stick_y * -1 * (controller.isInUse() ? 0.2 : 1);
+        joystick.x = gamepad1.left_stick_x * -0.6 * (controller.isInUse() ? 0.2 : 1);
+        joystick.y = -gamepad1.left_stick_y * -0.6 * (controller.isInUse() ? 0.2 : 1);
 
         telemetry.addData("Joystick X: ", joystick.x);
         telemetry.addData("Joystick Y: ", joystick.y);
