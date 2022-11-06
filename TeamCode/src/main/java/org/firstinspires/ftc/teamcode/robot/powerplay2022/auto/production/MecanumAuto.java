@@ -142,7 +142,7 @@ public class MecanumAuto extends LoopUtil {
         motion = new Vector3d();
 
         stepper = new VelocityRampStepper(forwardRamp, strafeRamp);
-        stepper.addRampForward(1, 1.15, 1.75);
+        stepper.addRampForward(1, 1.25, 1.75);
 
 
         Runnable driveUpdate = () -> {
@@ -174,7 +174,7 @@ public class MecanumAuto extends LoopUtil {
                         () -> {
                             correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2 * (startRight ? 1 : -1), true);
                             motion.z = correction.getOutput();
-                            motion.x = -0.6  * (startRight ? 1 : -1);
+                            motion.x = -1  * (startRight ? 1 : -1);
                             motion.y = 0;
                             drive.update(motion, true, storedDeltaTime);
                         }
@@ -183,7 +183,7 @@ public class MecanumAuto extends LoopUtil {
                         () -> {
                             correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, -Math.PI/2  * (startRight ? 1 : -1), true);
                             motion.z = correction.getOutput();
-                            motion.x = 0.4  * (startRight ? -1 : 1);
+                            motion.x = 0.8  * (startRight ? 1 : -1);
                             motion.y = 0;
                             drive.update(motion, true, storedDeltaTime);
                         }

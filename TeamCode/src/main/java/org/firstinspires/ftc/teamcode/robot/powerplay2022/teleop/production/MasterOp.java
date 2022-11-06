@@ -4,15 +4,18 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production.MecanumAuto;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.misc.InputAutoMapper;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.movement.CustomMecanumDrive;
+import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
-@Autonomous(name = "MasterOpRight", group = "A")
+@Autonomous(name = "MasterOp", group = "A")
 public class MasterOp extends LoopUtil {
 
     public static LoopUtil auto, tele;
     public double totalTime;
     public static CustomMecanumDrive mecanumDrive;
+    public static InputHandler gamepadHandler;
 
     @Override
     public void opInit() {
@@ -21,6 +24,7 @@ public class MasterOp extends LoopUtil {
 
         tele.hardwareMap = this.hardwareMap;
         auto.hardwareMap = this.hardwareMap;
+        gamepadHandler = InputAutoMapper.normal.autoMap(this);
         tele.gamepad1 = this.gamepad1;
         auto.gamepad1 = this.gamepad1;
         tele.gamepad2 = this.gamepad2;
@@ -48,12 +52,11 @@ public class MasterOp extends LoopUtil {
 
     @Override
     public void opInitLoop() {
-
+        auto.opInitLoop();
     }
 
     @Override
     public void opStart() {
-
     }
 
     @Override
