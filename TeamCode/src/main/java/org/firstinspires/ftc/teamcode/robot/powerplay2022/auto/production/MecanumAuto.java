@@ -257,10 +257,34 @@ public class MecanumAuto extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
+        if (elapsedTime > 2*EULConstants.SEC2MS){
+            newPropArm.circleFind(betterCommandedPosition);
+        }
+        slide.update(deltaTime, slideLevelAuto, 1);
+        //All comments in StateLoop are wrong, correct later
+        if (elapsedTime < 1.75 * EULConstants.SEC2MS) { //Drive Forward
+            betterCommandedPosition.x = 5;
+            betterCommandedPosition.y = 20;
+            motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC)[0];
+            stateList.setIndex(0);
+            servoD.setPosition(0.6);
+        }else if (elapsedTime < 2.5*EULConstants.SEC2MS) { //Idle
+            stateList.setIndex(0);
+            motion.y = 0;
+        }else if (elapsedTime < 4*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.YELLOW) { //Cycle
+            motion.x = 0.8;
+        }else if (elapsedTime < 4*EULConstants.SEC2MS && SeenColor== ColorView.CMYcolors.CYAN) { //Cycle
+            motion.x = -0.8;
+        }else { // Stay in Cyan
+            motion.y = 0;
+            motion.x = 0;
+        }
+
         inputHandler.loop();
         storedDeltaTime = deltaTime;
         elapsedTime += deltaTime;
         CV2.update(RCR2.color(), RCR2.distance());
+        /*
         if (elapsedTime > 2*EULConstants.SEC2MS){
             newPropArm.circleFind(betterCommandedPosition);
         }
@@ -295,6 +319,8 @@ public class MecanumAuto extends LoopUtil {
             stateList.setIndex(4);
             motion.x = -0.5;
         }
+
+         */
 
 
 
