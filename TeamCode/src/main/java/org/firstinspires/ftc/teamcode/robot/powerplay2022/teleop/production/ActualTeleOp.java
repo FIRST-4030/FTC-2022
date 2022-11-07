@@ -90,6 +90,8 @@ public class ActualTeleOp extends LoopUtil {
     public double RunnableTimer = 0;
     public boolean PickUpRunning = false;
     public boolean StepperLowerRunning = false;
+    public boolean autoStack = false;
+    public double autoStackTimer = 0d;
 
 
 
@@ -160,6 +162,33 @@ public class ActualTeleOp extends LoopUtil {
             }
         }
     };
+    Runnable loadPoint = () -> {
+        betterCommandedPosition.x = savedX[saveStateIndex];
+        betterCommandedPosition.y = savedY[saveStateIndex];
+        R = savedR[saveStateIndex];
+    };
+    Runnable savePoint = () -> {
+        savedX[saveStateIndex] = betterCommandedPosition.x;
+        savedY[saveStateIndex] = betterCommandedPosition.y;
+        savedR[saveStateIndex] = R;
+    };
+    Runnable index = () -> {
+        saveStateIndex = Math.abs((saveStateIndex-1) % 3);
+    };
+    Runnable toggleClaw = () -> {
+        DOpen = !DOpen;
+    };
+
+    public Runnable[] commandList = new Runnable[]{loadPoint, pickUp, setArmToStow, highPlace, index, loadPoint, toggleClaw, setArmToStow, groundPlace, index};
+    public int autoStackIndex = 0;
+
+    public void AutoStack() {
+        if((autoStackIndex == 0 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 1 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 2 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 3 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 4 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 5 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 6 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 7 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 8 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 9 && autoStackTimer > 0*EULConstants.SEC2MS)){
+            autoStackIndex = (autoStackIndex + 1) % 10;
+
+        }
+        commandList[autoStackIndex].run();
+    }
 
 
 
@@ -243,8 +272,12 @@ public class ActualTeleOp extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
-        if(!PickUpRunning) {
+        if(!PickUpRunning && !autoStack) {
             handleInput(deltaTime);
+        }
+        if (gamepadHandler.up("D2:RT")){
+            autoStack = !autoStack;
+            autoStackTimer = 0d;
         }
         armUpdate(deltaTime);
         slideUpdate(deltaTime);
@@ -255,6 +288,7 @@ public class ActualTeleOp extends LoopUtil {
         servoD.setPosition(DPos);
         servoR.setPosition(1-R);
         RunnableTimer += deltaTime;
+        autoStackTimer += deltaTime;
     }
 
     @Override
@@ -302,7 +336,7 @@ public class ActualTeleOp extends LoopUtil {
             PickUpRunning = true;
         }
         if (gamepadHandler.up("D2:RT")){
-            highPlace.run();
+            autoStack = !autoStack;
         }
         if (gamepadHandler.up("D2:LT")){
             setArmToStow.run();
