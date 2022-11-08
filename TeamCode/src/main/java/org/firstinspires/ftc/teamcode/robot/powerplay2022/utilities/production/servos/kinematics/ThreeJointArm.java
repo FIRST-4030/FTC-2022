@@ -148,14 +148,16 @@ public class ThreeJointArm {
         if(Double.isNaN(B)){B=1;}
         if(Double.isNaN(C)){C=(Math.PI*1.75 - A - B)/(Math.PI*1.5);}
         if(Double.isNaN(C)){C=0;}
-        servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
-        servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B+0.2));
+        servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A + 0.244));
+        servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B - 0.07));
         servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C-0.2));
-        //servoA.setPosition(1);
-        //servoB.setPosition(1);
+        //servoA.setPosition(0.744);
+        //servoB.setPosition(0.5 -0.07);
         telemetry.addData("Restricted Target: ", restrictedTarget);
         telemetry.addData("A: ", A*2);
         telemetry.addData("B: ", B*2);
+        telemetry.addData("A Real: ", servoA.getPosition());
+        telemetry.addData("B Real: ", servoB.getPosition());
     }
 
     public void propagate(Vector2d target, Vector2d endHeading, boolean bottomSolution){
