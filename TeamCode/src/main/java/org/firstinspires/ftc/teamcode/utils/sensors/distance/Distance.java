@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.utils.sensors.distance;
 
-import org.firstinspires.ftc.teamcode.utils.general.Available;
+import org.firstinspires.ftc.teamcode.utils.general.misc.Available;
 
 public interface Distance extends Available {
 

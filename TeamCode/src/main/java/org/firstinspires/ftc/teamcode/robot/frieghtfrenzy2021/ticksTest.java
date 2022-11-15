@@ -36,8 +36,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
 import org.firstinspires.ftc.teamcode.utils.momm.MultiOpModeManager;
-import org.firstinspires.ftc.teamcode.utils.general.OrderedEnum;
-import org.firstinspires.ftc.teamcode.utils.general.OrderedEnumHelper;
+import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnum;
+import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnumHelper;
 
 @Config
 @Disabled

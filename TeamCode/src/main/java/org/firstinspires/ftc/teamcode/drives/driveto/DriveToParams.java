@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.drives.driveto;
 
-import org.firstinspires.ftc.teamcode.utils.general.Heading;
+import org.firstinspires.ftc.teamcode.utils.general.misc.Heading;
 
 public class DriveToParams {
     private static final float ROTATION_TARGET_RANGE = Heading.QUARTER_CIRCLE;

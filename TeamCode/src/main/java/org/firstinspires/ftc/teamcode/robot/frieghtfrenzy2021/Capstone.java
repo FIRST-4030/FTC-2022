@@ -34,8 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.utils.general.OrderedEnum;
-import org.firstinspires.ftc.teamcode.utils.general.OrderedEnumHelper;
+import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnum;
+import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnumHelper;
 
 @Config
 //@TeleOp(name = "Capstone", group = "Test")

@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.utils.sensors.pot;
 
-import org.firstinspires.ftc.teamcode.utils.general.Available;
+import org.firstinspires.ftc.teamcode.utils.general.misc.Available;
 
 public interface Potentiometer extends Available {
 

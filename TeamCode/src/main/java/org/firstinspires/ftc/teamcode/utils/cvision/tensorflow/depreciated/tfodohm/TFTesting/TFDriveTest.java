@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vecto
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.vectors.DepreciatedVector3F;
 import org.firstinspires.ftc.teamcode.utils.momm.MultiOpModeManager;
 import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.NewNewDrive;
-import org.firstinspires.ftc.teamcode.utils.general.OrderedEnum;
-import org.firstinspires.ftc.teamcode.utils.general.OrderedEnumHelper;
+import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnum;
+import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnumHelper;
 
 @Config
 @Autonomous(name = "TFDrive", group = "Test")

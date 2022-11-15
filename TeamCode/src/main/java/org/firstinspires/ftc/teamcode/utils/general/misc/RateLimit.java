@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utils.general;
+package org.firstinspires.ftc.teamcode.utils.general.misc;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 

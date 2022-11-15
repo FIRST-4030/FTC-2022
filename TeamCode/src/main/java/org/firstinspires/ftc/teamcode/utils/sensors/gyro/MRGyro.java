@@ -4,7 +4,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.utils.general.Heading;
+import org.firstinspires.ftc.teamcode.utils.general.misc.Heading;
 
 public class MRGyro implements Gyro {
     private ModernRoboticsI2cGyro gyro;

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode.utils.general.Heading;
+import org.firstinspires.ftc.teamcode.utils.general.misc.Heading;
 
 class IMUWaiter implements Runnable {
     private static final int TIMEOUT = 2500;

@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.utils.threadingUtils;
 
-import org.firstinspires.ftc.teamcode.utils.general.CSASV;
+import org.firstinspires.ftc.teamcode.utils.general.misc.CSASV;
 
 public abstract class MRUTask implements Runnable{
 

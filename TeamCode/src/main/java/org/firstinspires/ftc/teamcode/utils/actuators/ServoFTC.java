@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.customDriver.CustomServoDriver;
-import org.firstinspires.ftc.teamcode.utils.general.Available;
-import org.firstinspires.ftc.teamcode.utils.general.RunOnce;
+import org.firstinspires.ftc.teamcode.utils.general.misc.Available;
+import org.firstinspires.ftc.teamcode.utils.general.misc.RunOnce;
 
 import java.util.Stack;
 
