@@ -181,7 +181,7 @@ public class ActualTeleOp extends LoopUtil {
 
     public Runnable[] commandList = new Runnable[]{loadPoint, pickUp, setArmToStow, highPlace, index, loadPoint, toggleClaw, setArmToStow, groundPlace, index};
     public int autoStackIndex = 0;
-
+/*
     public void AutoStack() {
         if((autoStackIndex == 0 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 1 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 2 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 3 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 4 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 5 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 6 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 7 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 8 && autoStackTimer > 0*EULConstants.SEC2MS) || (autoStackIndex == 9 && autoStackTimer > 0*EULConstants.SEC2MS)){
             autoStackIndex = (autoStackIndex + 1) % 10;
@@ -189,7 +189,7 @@ public class ActualTeleOp extends LoopUtil {
         }
         commandList[autoStackIndex].run();
     }
-
+*/
 
 
     @Override
