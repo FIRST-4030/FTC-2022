@@ -34,6 +34,9 @@ public class TaskManagerStateMachineDemo extends LoopUtil {
         TaskManagerStateMachineDemo.elapsedTime = 0;
 
         taskManager = new TaskManager();
+
+        taskManager.alwaysRun = () -> {inputHandler.loop();};
+
         taskManager.addStates(
                 () -> console.addData("Src: https://www.asciiart.eu/animals/rabbits", "\nArt by Joan Stark\n" +
                         "             ,\\\n" +

@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production.MecanumAuto;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production.MecanumAutoBlue;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.movement.CustomMecanumDrive;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
@@ -18,7 +17,7 @@ public class MasterOpLeft extends LoopUtil {
     @Override
     public void opInit() {
         tele = new ActualTeleOp();
-        auto = new MecanumAutoBlue();
+        auto = new MecanumAuto();
 
         tele.hardwareMap = this.hardwareMap;
         auto.hardwareMap = this.hardwareMap;

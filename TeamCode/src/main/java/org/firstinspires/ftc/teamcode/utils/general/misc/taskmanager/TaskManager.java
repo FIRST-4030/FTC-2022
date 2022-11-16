@@ -15,13 +15,16 @@ public class TaskManager {
         endConditions = new Vector<>();
         states = new Vector<>();
 
-        alwaysRun = null;
+        alwaysRun = () -> {};
 
         currentConditional = 0;
     }
 
     public void addConditions(Conditional... conditionals){
-        endConditions.addAll(Arrays.asList(conditionals)); //add all the necessary conditionals
+        for (Conditional c: conditionals) {
+            c.init();
+            endConditions.add(c);
+        }
     }
 
     public void addCondition(Conditional conditional, int idx){
@@ -41,7 +44,7 @@ public class TaskManager {
         this.states.addAll(Arrays.asList(states)); //add all the necessary conditionals
     }
 
-    public void addStates(Runnable state, int idx){
+    public void addState(Runnable state, int idx){
         states.add(idx, state);
     }
 
@@ -65,7 +68,7 @@ public class TaskManager {
     public void execute(){
         alwaysRun.run(); //run the always run
 
-        Conditional condition = endConditions.get(currentConditional);//get current conditional
+        Conditional condition = currentConditional < endConditions.size() ? endConditions.get(currentConditional) : Conditional.DEFAULT;//get current conditional
         condition.check(); //check if the condition is met
 
         if (condition.status == Conditional.STATUS.PASSED){ //change conditions if needed
@@ -73,8 +76,10 @@ public class TaskManager {
             condition = currentConditional < endConditions.size() ? endConditions.get(currentConditional) : Conditional.DEFAULT;
         }
 
-        for (int idxCall : condition.linkedStates) { //executes currently linked states
-            if (idxCall > -1) states.get(idxCall).run();
+        if (condition.linkedStates != null && condition.linkedStates.length> 0) {
+            for (int idxCall : condition.linkedStates) { //executes currently linked states
+                if (idxCall > -1) states.get(idxCall).run();
+            }
         }
     }
 

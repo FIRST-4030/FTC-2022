@@ -29,16 +29,20 @@ public class ServoTestCircleFindOpMode extends LoopUtil {
     public char servoLetter = 'A';
     @Override
     public void opInit() {
-        switch(servoLetter){
+        switch(servoLetter) {
             case 'A':
-                configA = new ServoConfig("A",false, 0, 0.83);
+                configA = new ServoConfig("A", false, 0, 0.83);
+                servo = new ServoFTC(hardwareMap, telemetry, configA);
                 break;
+            case 'B':
+                configB = new ServoConfig("B",true, 0, 1);
+                servo = new ServoFTC(hardwareMap, telemetry, configB);
+                break;
+            case'C':
+                configC= new ServoConfig("C",true, 0, 1);
+                servo = new ServoFTC(hardwareMap, telemetry, configC);
 
         }
-        configB = new ServoConfig("B",true, 0, 1);
-        configC = new ServoConfig("C",true, 0, 1);
-
-        servo = new ServoFTC(hardwareMap, telemetry, configA);
 
         servoConversionA = new AngleConversion(new AngleConversion.Centered(), AngleConversion.MODE.RADIANS);
         servoConversionB = new AngleConversion(new AngleConversion.Centered(), AngleConversion.MODE.RADIANS);
@@ -58,6 +62,28 @@ public class ServoTestCircleFindOpMode extends LoopUtil {
                 17);
     }
 
+    public void handleInput(double deltaTime){
+        gamepadHandler.loop();
+        if (gamepadHandler.up("D1:LT")){
+            enableJoystick = !enableJoystick;
+        }
+
+        if (gamepadHandler.up("D1:DPAD_UP")){ //increase outputSpeed by decimalPlace | now wrong comment
+            betterCommandedPosition.y += 0.1 * deltaTime;
+        }
+        if (gamepadHandler.up("D1:DPAD_DOWN")){ //decrease outputSpeed by decimalPlace | now wrong comment
+            betterCommandedPosition.y -= 0.1 * deltaTime;
+        }
+
+        if (gamepadHandler.up("D1:DPAD_LEFT")){ //increase outputSpeed by decimalPlace | now wrong comment
+            betterCommandedPosition.x -= 0.1 * deltaTime;
+        }
+        if (gamepadHandler.up("D1:DPAD_RIGHT")){ //decrease outputSpeed by decimalPlace | now wrong comment
+            betterCommandedPosition.x += 0.1 * deltaTime;
+        }
+        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y).times(0.005)));
+    }
+
     @Override
     public void opInitLoop() {
 
@@ -70,7 +96,11 @@ public class ServoTestCircleFindOpMode extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
+        newPropArm.circleFind(betterCommandedPosition);
 
+        telemetry.addData("Commanded Multiplier: ", commandedPositionMultiplier);
+        telemetry.addData("Commanded Position: ", betterCommandedPosition);
+        telemetry.addData("Servo Turn Position: ", servo.getPosition());
     }
 
     @Override
@@ -82,4 +112,5 @@ public class ServoTestCircleFindOpMode extends LoopUtil {
     public void opStop() {
 
     }
+
 }

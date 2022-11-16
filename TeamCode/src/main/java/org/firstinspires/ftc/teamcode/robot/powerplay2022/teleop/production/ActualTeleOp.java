@@ -137,7 +137,7 @@ public class ActualTeleOp extends LoopUtil {
     };
     Runnable pickUp = () -> {
         if(RunnableTimer < 1* EULConstants.SEC2MS){
-            betterCommandedPosition.y = -8;
+            betterCommandedPosition.y = -20;
             DOpen = true;
         }else if(RunnableTimer < 1.5* EULConstants.SEC2MS){
             DOpen = false;
@@ -289,6 +289,7 @@ public class ActualTeleOp extends LoopUtil {
         servoR.setPosition(1-R);
         RunnableTimer += deltaTime;
         autoStackTimer += deltaTime;
+        telemetry.addData("Delta Time", deltaTime);
     }
 
     @Override

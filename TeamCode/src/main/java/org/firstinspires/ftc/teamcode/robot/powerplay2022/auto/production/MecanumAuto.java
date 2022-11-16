@@ -299,7 +299,7 @@ public class MecanumAuto extends LoopUtil {
         }
         slide.update(deltaTime, slideLevelAuto, 1);
         //All comments in StateLoop are wrong, correct later
-        if (elapsedTime < 1.75 * EULConstants.SEC2MS) { //Drive Forward
+        if (elapsedTime < 1.75 * EULConstants.SEC2MS) {//Drive Forward
             betterCommandedPosition.x = 5;
             betterCommandedPosition.y = 20;
             motion.y = -stepper.update(deltaTime * EULConstants.MS2SEC)[0];
@@ -367,6 +367,7 @@ public class MecanumAuto extends LoopUtil {
         telemetry.addData("Start Time: ", startTime);
         telemetry.addData("End Time: ", endTime);
         telemetry.addData("Absolute Delta: ", Math.abs(endTime - startTime));
+        telemetry.addData("Delta Time", deltaTime);
     }
 
     @Override
