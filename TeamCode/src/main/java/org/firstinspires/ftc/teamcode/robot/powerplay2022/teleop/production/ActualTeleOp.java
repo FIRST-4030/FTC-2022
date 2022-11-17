@@ -92,6 +92,7 @@ public class ActualTeleOp extends LoopUtil {
     public boolean StepperLowerRunning = false;
     public boolean autoStack = false;
     public double autoStackTimer = 0d;
+    public boolean wheelLock = false;
 
 
 
@@ -272,6 +273,11 @@ public class ActualTeleOp extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
+        if(wheelLock){
+            joystick.x = 0;
+            joystick.y = 0;
+            joystick.z = 0;
+        }
         if(!PickUpRunning && !autoStack) {
             handleInput(deltaTime);
         }
@@ -343,8 +349,7 @@ public class ActualTeleOp extends LoopUtil {
             setArmToStow.run();
         }
         if (gamepadHandler.up("D1:LT")){
-            joystick.x = 0;
-            joystick.y = 0;
+            wheelLock = !wheelLock;
         }
 
         if (gamepadHandler.up("D2:DPAD_DOWN")){ //decrease outputSpeed by decimalPlace | now wrong comment
@@ -389,17 +394,18 @@ public class ActualTeleOp extends LoopUtil {
         } else if (angleIndex >= 4){
             angleIndex = 0;
         }
+        if(!wheelLock) {
+            joystick.x = gamepad1.left_stick_x * -0.6 * (controller.isInUse() ? 0.2 : 1);
+            joystick.y = -gamepad1.left_stick_y * -0.6 * (controller.isInUse() ? 0.2 : 1);
 
-        joystick.x = gamepad1.left_stick_x * -0.6 * (controller.isInUse() ? 0.2 : 1);
-        joystick.y = -gamepad1.left_stick_y * -0.6 * (controller.isInUse() ? 0.2 : 1);
+            right_stick.x = -gamepad1.right_stick_x;
+            right_stick.y = gamepad1.right_stick_y;
+
+            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, right_stick, false);
+        }
 
         telemetry.addData("Joystick X: ", joystick.x);
         telemetry.addData("Joystick Y: ", joystick.y);
-
-        right_stick.x = -gamepad1.right_stick_x;
-        right_stick.y = gamepad1.right_stick_y;
-
-        correction.update( drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, right_stick, false);
 
         CV2.update(RCR2.color(), RCR2.distance());
 
