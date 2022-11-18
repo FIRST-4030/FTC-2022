@@ -11,5 +11,9 @@ public abstract class RunOnce implements Runnable{
         }
     }
 
+    public void toggleLatch(){
+        latch = !latch;
+    }
+
     public abstract void run();
 }

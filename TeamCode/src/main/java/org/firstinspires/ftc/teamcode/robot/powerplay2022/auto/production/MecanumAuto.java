@@ -26,11 +26,16 @@ import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.m
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoConfig;
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoFTC;
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
+import org.firstinspires.ftc.teamcode.utils.general.misc.RunOnce;
+import org.firstinspires.ftc.teamcode.utils.general.misc.taskmanager.TaskManager;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 
 @Autonomous(name = "MecanumAutoRight")
 public class MecanumAuto extends LoopUtil {
+    //State Machine
+    public TaskManager stateMachine;
+
     //Controls Declaration for Arm and Slide
     public ThreeJointArm newPropArm;
 
@@ -77,6 +82,18 @@ public class MecanumAuto extends LoopUtil {
 
     @Override
     public void opInit() {
+        //State Machine
+        stateMachine = new TaskManager();
+        stateMachine.alwaysRun = () -> {inputHandler.loop();};
+        stateMachine.addStates(
+                () -> {
+
+                }
+        );
+        stateMachine.addConditions(
+
+        );
+        //
         gamepadHandler = InputAutoMapper.normal.autoMap(this);
         //Slide
         slide = new SlideController(hardwareMap, "LSLM", true, "LSRM", false);
@@ -134,7 +151,7 @@ public class MecanumAuto extends LoopUtil {
 
         //Drive controls movement
         drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
-        drive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true);
+        drive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true, true);
 
         //Correction outputs calculated turn speed
         correction = new AlgorithmicCorrection(new AlgorithmicCorrection.Polynomial(20));

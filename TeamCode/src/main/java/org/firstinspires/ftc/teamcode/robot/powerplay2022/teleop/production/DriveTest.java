@@ -48,7 +48,7 @@ public class DriveTest extends LoopUtil {
         Globals.input(this);
 
         drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
-        drive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true);
+        drive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true, false);
 
         joystick = new Vector3d();
         right_stick = new Vector2d(0, 1);

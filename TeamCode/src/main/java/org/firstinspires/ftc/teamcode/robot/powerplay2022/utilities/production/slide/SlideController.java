@@ -4,6 +4,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import java.util.Objects;
+
 public class SlideController {
 
     public enum LEVEL{
@@ -28,11 +32,13 @@ public class SlideController {
         left.setTargetPosition(0);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         left.setDirection(invertLeft ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
+        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setTargetPosition(0);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setDirection(invertRight ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
+        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void update(double deltaTime, LEVEL level, double slidePower){
@@ -64,6 +70,11 @@ public class SlideController {
         leftLastEncoderPosition = leftEncoderPosition;
         rightLastEncoderPosition = rightEncoderPosition;
 
+    }
+
+    public void logMotorPos(Telemetry telemetry){
+        telemetry.addData("FL Encoder Position: ", right.getCurrentPosition());
+        telemetry.addData("FR Encoder Position: ", left.getCurrentPosition());
     }
 
     public boolean isInUse(){

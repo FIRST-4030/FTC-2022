@@ -109,8 +109,8 @@ public class ActualTeleOp extends LoopUtil {
         DOpen = false;
     };
     Runnable setArmToStow = () -> {
-        betterCommandedPosition.x = 10;
-        betterCommandedPosition.y = 10;
+        betterCommandedPosition.x = 2;
+        betterCommandedPosition.y = 20;
         R = 0.5;
         DOpen = false;
     };
@@ -242,7 +242,7 @@ public class ActualTeleOp extends LoopUtil {
         Globals.input(this);
 
         drive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
-        drive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true);
+        drive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true, false);
 
         joystick = new Vector3d();
         right_stick = new Vector2d(0, 1);
@@ -371,8 +371,8 @@ public class ActualTeleOp extends LoopUtil {
         }
 
 
-        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_y, -gamepad2.right_stick_y).times(0.5)));
-        R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.left_stick_x*0.012);
+        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_y, -gamepad2.right_stick_y).times(1)));
+        R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.left_stick_x*0.025);
     }
 
     public void driveFixedUpdate(double deltaTime){
@@ -409,7 +409,7 @@ public class ActualTeleOp extends LoopUtil {
 
         CV2.update(RCR2.color(), RCR2.distance());
 
-        joystick.z = correction.getOutput() * (controller.isInUse() ? 0.2 : 1);
+        joystick.z = correction.getOutput() * (controller.isInUse() ? 0.2 : 0.5);
         drive.update(joystick, true, deltaTime);
         AngularVelocity avel = drive.getImu().getAngularVelocity();
     }
@@ -428,5 +428,7 @@ public class ActualTeleOp extends LoopUtil {
         telemetry.addData("Servo D Turn Position: ", servoD.getPosition());
         telemetry.addData("Slide is in use?: ", controller.isInUse());
         telemetry.addData("Current State Index", saveStateIndex);
+        drive.logMotorPos(telemetry);
+        controller.logMotorPos(telemetry);
     }
 }

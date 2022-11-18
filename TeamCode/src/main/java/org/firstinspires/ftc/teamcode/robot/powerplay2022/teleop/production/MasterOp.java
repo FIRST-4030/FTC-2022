@@ -38,7 +38,7 @@ public class MasterOp extends LoopUtil {
         mecanumDrive = new CustomMecanumDrive(hardwareMap, 1, 1.1, 1);
 
         //Go-Builda motor mapping:
-        mecanumDrive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true);
+        mecanumDrive.mapMotors("FL", false, "BL", true, "FR", false, "BR", true, false);
 
         //testing mecanum mapping
         //mecanumDrive.mapMotors("FL", true, "BL", false, "FR", true, "BR", false);

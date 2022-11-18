@@ -59,7 +59,7 @@ public class CustomMecanumDrive extends CustomDrive{
         initVirtualRobot();
     }
 
-    public void mapMotors(String frontLeft, boolean reverseFL, String backLeft, boolean reverseBL, String frontRight, boolean reverseFR, String backRight, boolean reverseBR){
+    public void mapMotors(String frontLeft, boolean reverseFL, String backLeft, boolean reverseBL, String frontRight, boolean reverseFR, String backRight, boolean reverseBR, boolean driveToPosition){
         motorMap.clear();
         motorMap.put("FL", hardwareMap.get(DcMotor.class, frontLeft));
         motorMap.put("FR", hardwareMap.get(DcMotor.class, frontRight));
@@ -72,23 +72,38 @@ public class CustomMecanumDrive extends CustomDrive{
         Objects.requireNonNull(motorMap.get("BR")).setDirection(reverseBR ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
 
         motorMap.get("FL").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorMap.get("FL").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorMap.get("FL").setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
         motorMap.get("FR").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorMap.get("FR").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorMap.get("FR").setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
         motorMap.get("BL").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorMap.get("BL").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorMap.get("BL").setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
         motorMap.get("BR").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorMap.get("BR").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorMap.get("BR").setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        if(!driveToPosition) {
+
+            motorMap.get("FL").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorMap.get("FR").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorMap.get("BL").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorMap.get("BR").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }else{
+
+            motorMap.get("FL").setTargetPosition(0);
+            motorMap.get("FL").setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            motorMap.get("FR").setTargetPosition(0);
+            motorMap.get("FR").setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            motorMap.get("BL").setTargetPosition(0);
+            motorMap.get("BL").setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            motorMap.get("BR").setTargetPosition(0);
+            motorMap.get("BR").setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        }
     }
 
     public void update(Vector3d control, boolean fieldCentric, double dt){
