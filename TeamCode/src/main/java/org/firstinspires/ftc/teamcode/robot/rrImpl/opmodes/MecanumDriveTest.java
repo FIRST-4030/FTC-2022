@@ -9,9 +9,9 @@ import com.sun.tools.javac.util.Pair;
 
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.misc.ColorView;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.depreciated.movement.MecanumMovementFactory;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.depreciated.movement.MecanumTrajectory;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.misc.ColorView;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.depreciated.movement.MecanumMovementFactory;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.depreciated.movement.MecanumTrajectory;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 

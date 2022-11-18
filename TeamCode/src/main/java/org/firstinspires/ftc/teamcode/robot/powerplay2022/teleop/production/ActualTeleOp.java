@@ -12,23 +12,21 @@ import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector3d;
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021.Globals;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.depreciated.movement.AnglePID;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.misc.ColorView;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.misc.InputAutoMapper;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.movement.AlgorithmicCorrection;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.movement.CustomMecanumDrive;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics.AngleConversion;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics.ThreeJointArm;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.servos.kinematics.VirtualServo;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.slide.SlideController;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpState;
-import org.firstinspires.ftc.teamcode.robot.powerplay2022.utilities.production.statemachine.OpStateList;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.depreciated.movement.AnglePID;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.misc.ColorView;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.misc.InputAutoMapper;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.movement.AlgorithmicCorrection;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.movement.CustomMecanumDrive;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.servos.kinematics.AngleConversion;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.servos.kinematics.ThreeJointArm;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.servos.kinematics.VirtualServo;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.slide.SlideController;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.statemachine.OpStateList;
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoConfig;
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoFTC;
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
-import org.firstinspires.ftc.teamcode.utils.sensors.distance.RevDistance;
 
 //Control mapping
 
