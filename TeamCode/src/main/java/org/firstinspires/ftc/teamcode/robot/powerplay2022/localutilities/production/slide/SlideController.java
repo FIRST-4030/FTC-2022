@@ -70,8 +70,10 @@ public class SlideController {
             left.setPower(slidePower);
             right.setPower(slidePower);
         } else {
-            left.setPower(0);
-            right.setPower(0);
+            left.setPower(0.5);
+            left.setTargetPosition(leftEncoderPosition);
+            right.setPower(0.5);
+            right.setTargetPosition(rightEncoderPosition);
         }
 
         inUse = !(level == LEVEL.REST);
