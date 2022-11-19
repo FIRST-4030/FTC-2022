@@ -124,6 +124,18 @@ public class CustomMecanumDrive extends CustomDrive{
         Objects.requireNonNull(motorMap.get("FR")).setPower(out.z);
         Objects.requireNonNull(motorMap.get("BR")).setPower(out.w);
     }
+    public void moveToPos(Vector3d control){
+        int[] deltaPos = new int[4];
+        deltaPos[0] = Objects.requireNonNull(motorMap.get("FL")).getCurrentPosition() + (int)(control.x*0 + control.y*-1800 + control.z*1000/90); //Change in FL ticks
+        deltaPos[1] = Objects.requireNonNull(motorMap.get("FR")).getCurrentPosition() + (int)(control.x*0 + control.y*1800 + control.z*1000/90); //Change in FR ticks
+        deltaPos[2] = Objects.requireNonNull(motorMap.get("BL")).getCurrentPosition() + (int)(control.x*0 + control.y*-1800 + control.z*-1000/90); //Change in BL ticks
+        deltaPos[3] = Objects.requireNonNull(motorMap.get("BR")).getCurrentPosition() + (int)(control.x*0 + control.y*1800 + control.z*-1000/90); //Change in BR ticks
+
+        Objects.requireNonNull(motorMap.get("FL")).setTargetPosition(deltaPos[0]);
+        Objects.requireNonNull(motorMap.get("FR")).setTargetPosition(deltaPos[1]);
+        Objects.requireNonNull(motorMap.get("BL")).setTargetPosition(deltaPos[2]);
+        Objects.requireNonNull(motorMap.get("BR")).setTargetPosition(deltaPos[3]);
+    }
 
     public void followTrajectory(double dt){
         virtualRobot.updateHeading();

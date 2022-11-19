@@ -23,12 +23,17 @@ import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.product
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.statemachine.OpStateList;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.movement.velocityramping.VelocityRampStepper;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.movement.velocityramping.VelocityRamping;
+import org.firstinspires.ftc.teamcode.robot.powerplay2022.teleop.production.TaskManagerStateMachineDemo;
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoConfig;
 import org.firstinspires.ftc.teamcode.utils.actuators.ServoFTC;
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
+import org.firstinspires.ftc.teamcode.utils.general.misc.RunOnce;
+import org.firstinspires.ftc.teamcode.utils.general.misc.taskmanager.Conditional;
 import org.firstinspires.ftc.teamcode.utils.general.misc.taskmanager.TaskManager;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
+
+import java.util.Objects;
 
 @Autonomous(name = "MecanumAutoRight")
 public class MecanumAuto extends LoopUtil {
@@ -86,11 +91,64 @@ public class MecanumAuto extends LoopUtil {
         stateMachine.alwaysRun = () -> {inputHandler.loop();};
         stateMachine.addStates(
                 () -> {
-
+                    new RunOnce() {
+                        @Override
+                        public void run() { drive.moveToPos(new Vector3d(0, 1.49, 0)); }
+                    };
+                },
+                () -> {
+                    new RunOnce() {
+                        @Override
+                        public void run() { drive.moveToPos(new Vector3d(0, 0, 0)); }
+                    };
+                },
+                () -> {
+                    new RunOnce() {
+                        @Override
+                        public void run() { drive.moveToPos(new Vector3d(0, 0, 90)); }
+                    };
+                },
+                () -> {
+                    new RunOnce() {
+                        @Override
+                        public void run() { drive.moveToPos(new Vector3d(0, -0.49, 0)); }
+                    };
+                },
+                () -> {
+                    new RunOnce() {
+                        @Override
+                        public void run() { drive.moveToPos(new Vector3d(0, 0.49, 0)); }
+                    };
+                },
+                () -> {
+                    new RunOnce() {
+                        @Override
+                        public void run() { drive.moveToPos(new Vector3d(0, 1.07, 0)); }
+                    };
+                },
+                () -> {
+                    new RunOnce() {
+                        @Override
+                        public void run() { drive.moveToPos(new Vector3d(0, -0.3, 0)); }
+                    };
                 }
         );
         stateMachine.addConditions(
+                new Conditional() {
+                    @Override
+                    public void init() {
+                        linkedStates = new int[]{0};
+                    }
 
+                    @Override
+                    public void check() {
+                        if (Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() < 2700 && Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() < 2660) {
+                            status = STATUS.PASSED;
+                        } else {
+                            status = STATUS.FAILED;
+                        }
+                    }
+                }
         );
         //
         gamepadHandler = InputAutoMapper.normal.autoMap(this);
@@ -168,7 +226,7 @@ public class MecanumAuto extends LoopUtil {
         };
 
 
-        //StateList is the list of all states the robot will occupy in autonomous
+        //STATELIST IS NOW OUTDATED ||| StateList is the list of all states the robot will occupy in autonomous
         stateList = new OpStateList();
 
         stateList.addStates(
