@@ -16,7 +16,7 @@ public class SlideController {
 
     public int leftEncoderPosition = 0;
     public int rightEncoderPosition = 0;
-    public int tickTolerance = 1;
+    public int tickTolerance = 15;
 
     private int leftLastEncoderPosition = 0;
     private int rightLastEncoderPosition = 0;
