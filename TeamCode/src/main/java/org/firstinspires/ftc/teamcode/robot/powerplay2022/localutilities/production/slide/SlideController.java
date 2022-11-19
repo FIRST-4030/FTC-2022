@@ -14,9 +14,9 @@ public class SlideController {
 
     private DcMotor left, right;
 
-    //public int leftEncoderPosition = 0;
+    public int leftEncoderPosition = 0;
     public int rightEncoderPosition = 0;
-    public int tickTolerance = 5;
+    public int tickTolerance = 1;
 
     private int leftLastEncoderPosition = 0;
     private int rightLastEncoderPosition = 0;
@@ -27,13 +27,13 @@ public class SlideController {
         left = hardwareMap.dcMotor.get(leftMotorName);
         right = hardwareMap.dcMotor.get(rightMotorName);
 
-        /*
+
         left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setTargetPosition(0);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         left.setDirection(invertLeft ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
         left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        */
+
 
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setTargetPosition(0);
@@ -44,35 +44,39 @@ public class SlideController {
 
     public void update(double deltaTime, LEVEL level, double slidePower){
 
+        leftEncoderPosition = left.getCurrentPosition();
+        rightEncoderPosition = right.getCurrentPosition();
+
         switch (level){
             case REST:
-                //left.setTargetPosition(0);
+                left.setTargetPosition(0);
                 right.setTargetPosition(0);
                 break;
             case LOW:
-                //left.setTargetPosition(540 / 3 - 50);
+                left.setTargetPosition(540 / 3 - 50);
                 right.setTargetPosition(540 / 3 - 50);
                 break;
             case MIDDLE:
-                //left.setTargetPosition(540 / 3 + 100);
+                left.setTargetPosition(540 / 3 + 100);
                 right.setTargetPosition(540 / 3 + 100);
                 break;
             case HIGH:
-                //left.setTargetPosition(540 / 3 + 250);
+                left.setTargetPosition(540 / 3 + 250);
                 right.setTargetPosition(540 / 3 + 250);
                 break;
         }
 
         if (Math.abs(rightLastEncoderPosition - right.getTargetPosition()) >= tickTolerance) {
-            //left.setPower(slidePower);
+            left.setPower(slidePower);
             right.setPower(slidePower);
         } else {
+            left.setPower(0);
             right.setPower(0);
         }
 
         inUse = !(level == LEVEL.REST);
 
-        //leftLastEncoderPosition = leftEncoderPosition;
+        leftLastEncoderPosition = leftEncoderPosition;
         rightLastEncoderPosition = rightEncoderPosition;
 
     }
