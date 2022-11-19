@@ -135,13 +135,13 @@ public class ActualTeleOp extends LoopUtil {
         setArmToPlace.run();
     };
     Runnable pickUp = () -> {
-        if(RunnableTimer < 1* EULConstants.SEC2MS){
-            betterCommandedPosition.y = -20;
+        if(RunnableTimer < 0.75* EULConstants.SEC2MS){
+            betterCommandedPosition.x = 20;
             DOpen = true;
-        }else if(RunnableTimer < 1.5* EULConstants.SEC2MS){
+        }else if(RunnableTimer < 1.25* EULConstants.SEC2MS){
             DOpen = false;
-        }else if(RunnableTimer < 1.75* EULConstants.SEC2MS){
-            betterCommandedPosition.y = 5;
+        }else if(RunnableTimer < 1.4* EULConstants.SEC2MS){
+            setArmToStow.run();
         }else{
             PickUpRunning = false;
         }
