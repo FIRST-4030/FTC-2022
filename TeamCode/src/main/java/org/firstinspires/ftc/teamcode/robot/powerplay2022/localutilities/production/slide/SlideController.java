@@ -16,7 +16,7 @@ public class SlideController {
 
     public int leftEncoderPosition = 0;
     public int rightEncoderPosition = 0;
-    public int tickTolerance = 15;
+    public int tickTolerance = 20;
 
     private int leftLastEncoderPosition = 0;
     private int rightLastEncoderPosition = 0;
@@ -67,8 +67,8 @@ public class SlideController {
         }
 
         if (Math.abs(rightLastEncoderPosition - right.getTargetPosition()) >= tickTolerance) {
-            left.setPower(slidePower);
-            right.setPower(slidePower);
+            left.setPower(Math.abs(rightLastEncoderPosition - right.getTargetPosition())/50f);
+            right.setPower(Math.abs(rightLastEncoderPosition - right.getTargetPosition())/50f);
         } else {
             left.setPower(0.5);
             left.setTargetPosition(leftEncoderPosition);
