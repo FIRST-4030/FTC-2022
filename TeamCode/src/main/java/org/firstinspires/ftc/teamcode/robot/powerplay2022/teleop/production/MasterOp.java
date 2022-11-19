@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.teleop.production;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.extrautilslib.core.misc.EULConstants;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production.MecanumAuto;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.product
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
+@Disabled
 @Autonomous(name = "MasterOp", group = "A")
 public class MasterOp extends LoopUtil {
 

@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -40,7 +41,7 @@ import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnumHelper;
 import org.firstinspires.ftc.teamcode.utils.general.maths.piecewise.PiecewiseFunction;
 
 @Config
-//@Disabled
+@Disabled
 @TeleOp(name = "DuckSpin", group = "Test")
 public class DuckSpin extends OpMode {
     // Hardware

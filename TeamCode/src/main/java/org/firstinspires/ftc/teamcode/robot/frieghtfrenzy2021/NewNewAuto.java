@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -44,7 +45,7 @@ import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnum;
 import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnumHelper;
 
 @Config
-//@Disabled
+@Disabled
 @Autonomous(name = "Autonomous", group = "Test")
 public class NewNewAuto extends MultiOpModeManager {
     // Hardware

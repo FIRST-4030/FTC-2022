@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021;
 
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
 @Config
+@Disabled
 @Autonomous(name = "Loop Util Testing", group = "Test")
 public class LoopUtilTesting extends LoopUtil {
     private String log_title = "";

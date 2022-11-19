@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.robot.frieghtfrenzy2021;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -43,6 +44,7 @@ import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnum;
 import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnumHelper;
 
 @Config
+@Disabled
 @Autonomous(name = "tfMathArcTest", group = "Test")
 public class tfMathArcTest extends MultiOpModeManager {
     // Hardware
