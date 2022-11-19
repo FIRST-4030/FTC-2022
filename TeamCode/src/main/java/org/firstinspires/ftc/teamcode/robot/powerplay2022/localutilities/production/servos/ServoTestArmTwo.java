@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.servos;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.misc.InputAutoMapper;
@@ -13,13 +12,11 @@ import org.firstinspires.ftc.teamcode.utils.actuators.ServoFTC;
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
-@Disabled
-@TeleOp(name = "ServoTestCircleFindOpMode", group = "tester")
-public class ServoTestCircleFindOpMode extends LoopUtil {
-
+@TeleOp(name = "Practice Arm Servo Testing", group = "Tester")
+public class ServoTestArmTwo extends LoopUtil {
     public ThreeJointArm newPropArm;
 
-    public static ServoFTC servo;
+    public static ServoFTC servoA, servoB, servoC;
     public static ServoConfig configA, configB, configC;
     public static AngleConversion servoConversionA, servoConversionB, servoConversionC;
 
@@ -28,23 +25,16 @@ public class ServoTestCircleFindOpMode extends LoopUtil {
     public static double commandedPosition;
     public static double commandedPositionMultiplier;
     public Vector2d betterCommandedPosition;
-    public char servoLetter = 'A';
     @Override
     public void opInit() {
-        switch(servoLetter) {
-            case 'A':
-                configA = new ServoConfig("A", false, 0, 0.83);
-                servo = new ServoFTC(hardwareMap, telemetry, configA);
-                break;
-            case 'B':
-                configB = new ServoConfig("B",true, 0, 1);
-                servo = new ServoFTC(hardwareMap, telemetry, configB);
-                break;
-            case'C':
-                configC= new ServoConfig("C",true, 0, 1);
-                servo = new ServoFTC(hardwareMap, telemetry, configC);
 
-        }
+        configA = new ServoConfig("A",false, 0, 0.83);
+        configB = new ServoConfig("B",true, 0, 1);
+        configC = new ServoConfig("C",true, 0, 1);
+
+        servoA = new ServoFTC(hardwareMap, telemetry, configA);
+        servoB = new ServoFTC(hardwareMap, telemetry, configB);
+        servoC = new ServoFTC(hardwareMap, telemetry, configC);
 
         servoConversionA = new AngleConversion(new AngleConversion.Centered(), AngleConversion.MODE.RADIANS);
         servoConversionB = new AngleConversion(new AngleConversion.Centered(), AngleConversion.MODE.RADIANS);
@@ -58,13 +48,25 @@ public class ServoTestCircleFindOpMode extends LoopUtil {
 
         newPropArm = new ThreeJointArm(
                 new VirtualServo(15, new Vector2d(0, -1), new Vector2d(0, 0)),
-                servo,
+                new ServoFTC[]{servoA, servoB, servoC},
                 new AngleConversion[]{servoConversionA, servoConversionB, servoConversionC},
                 15,
                 17);
+        newPropArm.bindTelemetry(telemetry);
+    }
+
+    @Override
+    public void opInitLoop() {
+
+    }
+
+    @Override
+    public void opStart() {
+
     }
 
     public void handleInput(double deltaTime){
+
         gamepadHandler.loop();
         if (gamepadHandler.up("D1:LT")){
             enableJoystick = !enableJoystick;
@@ -87,32 +89,24 @@ public class ServoTestCircleFindOpMode extends LoopUtil {
     }
 
     @Override
-    public void opInitLoop() {
-
-    }
-
-    @Override
-    public void opStart() {
-
-    }
-
-    @Override
     public void opUpdate(double deltaTime) {
-        newPropArm.circleFind(betterCommandedPosition);
+        //newPropArm.propagate(betterCommandedPosition, new Vector2d( 1, 0),true);
+        newPropArm.circleFindArmTwo(betterCommandedPosition);
 
         telemetry.addData("Commanded Multiplier: ", commandedPositionMultiplier);
         telemetry.addData("Commanded Position: ", betterCommandedPosition);
-        telemetry.addData("Servo Turn Position: ", servo.getPosition());
+        telemetry.addData("Servo Turn Position: ", servoA.getPosition());
+        telemetry.addData("Servo Turn Position: ", servoB.getPosition());
+        telemetry.addData("Servo Turn Position: ", servoC.getPosition());
     }
 
     @Override
     public void opFixedUpdate(double deltaTime) {
-
+        handleInput(deltaTime);
     }
 
     @Override
     public void opStop() {
 
     }
-
 }
