@@ -36,6 +36,7 @@ public class CustomMecanumDrive extends CustomDrive{
     protected double coefficientSum;
     protected MecanumDriveTrajectory followTrajectory;
     protected boolean fieldCentricMode = true;
+    protected int[] savedTicks = new int[4];
 
     protected Vector4d out;
     //public double deltaTime;
@@ -125,16 +126,21 @@ public class CustomMecanumDrive extends CustomDrive{
         Objects.requireNonNull(motorMap.get("BR")).setPower(out.w);
     }
     public void moveToPos(Vector3d control){
-        int[] deltaPos = new int[4];
-        deltaPos[0] = Objects.requireNonNull(motorMap.get("FL")).getCurrentPosition() + (int)(control.x*0 + control.y*-1800 + control.z*1000/90); //Change in FL ticks
-        deltaPos[1] = Objects.requireNonNull(motorMap.get("FR")).getCurrentPosition() + (int)(control.x*0 + control.y*1800 + control.z*1000/90); //Change in FR ticks
-        deltaPos[2] = Objects.requireNonNull(motorMap.get("BL")).getCurrentPosition() + (int)(control.x*0 + control.y*-1800 + control.z*-1000/90); //Change in BL ticks
-        deltaPos[3] = Objects.requireNonNull(motorMap.get("BR")).getCurrentPosition() + (int)(control.x*0 + control.y*1800 + control.z*-1000/90); //Change in BR ticks
+        savedTicks[0] = Objects.requireNonNull(motorMap.get("FL")).getCurrentPosition() + (int)(control.x*0 + control.y*-1800 + control.z*1000/90); //Change in FL ticks
+        savedTicks[1] = Objects.requireNonNull(motorMap.get("FR")).getCurrentPosition() + (int)(control.x*0 + control.y*1800 + control.z*1000/90); //Change in FR ticks
+        savedTicks[2] = Objects.requireNonNull(motorMap.get("BL")).getCurrentPosition() + (int)(control.x*0 + control.y*1800 + control.z*1000/90); //Change in BL ticks
+        savedTicks[3] = Objects.requireNonNull(motorMap.get("BR")).getCurrentPosition() + (int)(control.x*0 + control.y*-1800 + control.z*1000/90); //Change in BR ticks
+    }
+    public void posUpdate(double x){
+        Objects.requireNonNull(motorMap.get("FL")).setTargetPosition(savedTicks[0]);
+        Objects.requireNonNull(motorMap.get("FR")).setTargetPosition(savedTicks[1]);
+        Objects.requireNonNull(motorMap.get("BL")).setTargetPosition(savedTicks[2]);
+        Objects.requireNonNull(motorMap.get("BR")).setTargetPosition(savedTicks[3]);
 
-        Objects.requireNonNull(motorMap.get("FL")).setTargetPosition(deltaPos[0]);
-        Objects.requireNonNull(motorMap.get("FR")).setTargetPosition(deltaPos[1]);
-        Objects.requireNonNull(motorMap.get("BL")).setTargetPosition(deltaPos[2]);
-        Objects.requireNonNull(motorMap.get("BR")).setTargetPosition(deltaPos[3]);
+        Objects.requireNonNull(motorMap.get("FL")).setPower(x);
+        Objects.requireNonNull(motorMap.get("FR")).setPower(x);
+        Objects.requireNonNull(motorMap.get("BL")).setPower(x);
+        Objects.requireNonNull(motorMap.get("BR")).setPower(x);
     }
 
     public void followTrajectory(double dt){
@@ -201,7 +207,10 @@ public class CustomMecanumDrive extends CustomDrive{
         telemetry.addData("FR Encoder Position: ", Objects.requireNonNull(motorMap.get("FR")).getCurrentPosition());
         telemetry.addData("BL Encoder Position: ", Objects.requireNonNull(motorMap.get("BL")).getCurrentPosition());
         telemetry.addData("BR Encoder Position: ", Objects.requireNonNull(motorMap.get("BR")).getCurrentPosition());
+        telemetry.addData("FL Encoder Target: ", Objects.requireNonNull(motorMap.get("FL")).getTargetPosition());
+        telemetry.addData("Saved Ticks: ", savedTicks[0]);
     }
+
 
     public DcMotor getMotor(int number){
         DcMotor motor;

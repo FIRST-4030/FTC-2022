@@ -145,7 +145,7 @@ public class ThreeJointArm {
         if(Double.isNaN(C)){C=0;}
         servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A + 0.244));
         servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B - 0.07));
-        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C-0.2));
+        //servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C-0.2));
         //servoA.setPosition(0.744);
         //servoB.setPosition(0.5 -0.07);
         telemetry.addData("Restricted Target: ", restrictedTarget);

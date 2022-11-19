@@ -84,6 +84,48 @@ public class MecanumAuto extends LoopUtil {
         motion.y = 0;
     };
 
+    public RunOnce[] movts = new RunOnce[]{
+            new RunOnce() {
+                @Override
+                public void run() {
+                    drive.moveToPos(new Vector3d(0, 0.39, 0));
+                }
+            },
+            new RunOnce() {
+                @Override
+                public void run() { drive.moveToPos(new Vector3d(0, 0, 0)); }
+                double startTime = elapsedTime;
+            },
+            new RunOnce() {
+                @Override
+                public void run() { drive.moveToPos(new Vector3d(0, 1.1, 0)); }
+            },
+            new RunOnce() {
+                @Override
+                public void run() { drive.moveToPos(new Vector3d(0, 0, 90)); }
+            },
+            new RunOnce() {
+                @Override
+                public void run() { drive.moveToPos(new Vector3d(0, -0.49, 0)); }
+            },
+            new RunOnce() {
+                @Override
+                public void run() { drive.moveToPos(new Vector3d(0, 0, 0)); }
+            },
+            new RunOnce() {
+                @Override
+                public void run() { drive.moveToPos(new Vector3d(0, 0.49, 0)); }
+            },
+            new RunOnce() {
+                @Override
+                public void run() { drive.moveToPos(new Vector3d(0, 1.07, 0)); }
+            },
+            new RunOnce() {
+                @Override
+                public void run() { drive.moveToPos(new Vector3d(0, -0.3, 0)); }
+            }
+    };
+
     @Override
     public void opInit() {
         //State Machine
@@ -91,46 +133,32 @@ public class MecanumAuto extends LoopUtil {
         stateMachine.alwaysRun = () -> {inputHandler.loop();};
         stateMachine.addStates(
                 () -> {
-                    new RunOnce() {
-                        @Override
-                        public void run() { drive.moveToPos(new Vector3d(0, 1.49, 0)); }
-                    };
+                    movts[0].update();
                 },
                 () -> {
-                    new RunOnce() {
-                        @Override
-                        public void run() { drive.moveToPos(new Vector3d(0, 0, 0)); }
-                    };
+                    movts[1].update();
+                    SeenColor = CV2.getColorBetter(150);
                 },
                 () -> {
-                    new RunOnce() {
-                        @Override
-                        public void run() { drive.moveToPos(new Vector3d(0, 0, 90)); }
-                    };
+                    movts[2].update();
                 },
                 () -> {
-                    new RunOnce() {
-                        @Override
-                        public void run() { drive.moveToPos(new Vector3d(0, -0.49, 0)); }
-                    };
+                    movts[3].update();
                 },
                 () -> {
-                    new RunOnce() {
-                        @Override
-                        public void run() { drive.moveToPos(new Vector3d(0, 0.49, 0)); }
-                    };
+                    movts[4].update();
                 },
                 () -> {
-                    new RunOnce() {
-                        @Override
-                        public void run() { drive.moveToPos(new Vector3d(0, 1.07, 0)); }
-                    };
+                    movts[5].update();
                 },
                 () -> {
-                    new RunOnce() {
-                        @Override
-                        public void run() { drive.moveToPos(new Vector3d(0, -0.3, 0)); }
-                    };
+                    movts[6].update();
+                },
+                () -> {
+                    movts[7].update();
+                },
+                () -> {
+                    movts[8].update();
                 }
         );
         stateMachine.addConditions(
@@ -142,7 +170,127 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() < 2700 && Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() < 2660) {
+                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 720 && Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() > 680) {
+                            status = STATUS.PASSED;
+                        } else {
+                            status = STATUS.FAILED;
+                        }
+                    }
+                },
+                new Conditional() {
+                    @Override
+                    public void init() {
+                        linkedStates = new int[]{1};
+                    }
+
+                    @Override
+                    public void check() {
+                        if (startTime+500 <= elapsedTime) {
+                            status = STATUS.PASSED;
+                        } else {
+                            status = STATUS.FAILED;
+                        }
+                    }
+                },
+                new Conditional() {
+                    @Override
+                    public void init() {
+                        linkedStates = new int[]{2};
+                    }
+
+                    @Override
+                    public void check() {
+                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 2700 && Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() > 2660) {
+                            status = STATUS.PASSED;
+                        } else {
+                            status = STATUS.FAILED;
+                        }
+                    }
+                },
+                new Conditional() {
+                    @Override
+                    public void init() {
+                        linkedStates = new int[]{3};
+                    }
+
+                    @Override
+                    public void check() {
+                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 3700 && Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() > 3660) {
+                            status = STATUS.PASSED;
+                        } else {
+                            status = STATUS.FAILED;
+                        }
+                    }
+                },
+                new Conditional() {
+                    @Override
+                    public void init() {
+                        linkedStates = new int[]{4};
+                    }
+
+                    @Override
+                    public void check() {
+                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 2820 && Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() > 2780) {
+                            status = STATUS.PASSED;
+                        } else {
+                            status = STATUS.FAILED;
+                        }
+                    }
+                },
+                new Conditional() {
+                    @Override
+                    public void init() {
+                        linkedStates = new int[]{5};
+                    }
+
+                    @Override
+                    public void check() {
+                        if (elapsedTime > 27000) {
+                            status = STATUS.PASSED;
+                        } else {
+                            status = STATUS.FAILED;
+                        }
+                    }
+                },
+                new Conditional() {
+                    @Override
+                    public void init() {
+                        linkedStates = new int[]{6};
+                    }
+
+                    @Override
+                    public void check() {
+                        if (SeenColor != ColorView.CMYcolors.MAGENTA || elapsedTime > 30000) {
+                            status = STATUS.PASSED;
+                        } else {
+                            status = STATUS.FAILED;
+                        }
+                    }
+                },
+                new Conditional() {
+                    @Override
+                    public void init() {
+                        linkedStates = new int[]{7};
+                    }
+
+                    @Override
+                    public void check() {
+                        if (SeenColor != ColorView.CMYcolors.YELLOW || elapsedTime > 30000) {
+                            status = STATUS.PASSED;
+                        } else {
+                            status = STATUS.FAILED;
+                        }
+                    }
+                },
+                new Conditional() {
+                    @Override
+                    public void init() {
+                        linkedStates = new int[]{8};
+                    }
+
+                    @Override
+                    public void check() {
+                        if (elapsedTime > 30000) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -342,7 +490,10 @@ public class MecanumAuto extends LoopUtil {
             newPropArm.circleFind(betterCommandedPosition);
         }
         slide.update(deltaTime, slideLevelAuto, 1);
-        //All comments in StateLoop are wrong, correct later
+        stateMachine.execute();
+        drive.posUpdate(0.5);
+        //STATELOOP IS OUTDATED
+        /*
         if (elapsedTime < 1.75 * EULConstants.SEC2MS) { //Drive Forward
             betterCommandedPosition.x = 5;
             betterCommandedPosition.y = 20;
@@ -362,6 +513,7 @@ public class MecanumAuto extends LoopUtil {
             motion.y = 0;
             motion.x = 0;
         }
+         */
 
         inputHandler.loop();
         storedDeltaTime = deltaTime;
@@ -405,15 +557,6 @@ public class MecanumAuto extends LoopUtil {
 
          */
 
-
-
-        if (RCR2.distance() < 11){
-            if (!checked){ checked = true; ColorT1 = elapsedTime; }
-            if (elapsedTime - ColorT1 < 200) {
-                SeenColor = CV2.getColorBetter(150);
-            }
-        }
-
         if (inputHandler.up("D1:LB")){
             startTick = drive.getMotor(0).getCurrentPosition();
             startTime = elapsedTime;
@@ -424,7 +567,7 @@ public class MecanumAuto extends LoopUtil {
             endTime = elapsedTime;
         }
 
-        stateList.getCurrentState().runAll(deltaTime);
+        //stateList.getCurrentState().runAll(deltaTime);
         telemetry.addData("Time: ", elapsedTime * EULConstants.MS2SEC);
         telemetry.addData("State Index: ", stateList.getIndex());
         telemetry.addData("Saved Color: ", SeenColor);
@@ -442,6 +585,7 @@ public class MecanumAuto extends LoopUtil {
         telemetry.addData("End Time: ", endTime);
         telemetry.addData("Absolute Delta: ", Math.abs(endTime - startTime));
         telemetry.addData("Delta Time", deltaTime);
+        drive.logMotorPos(telemetry);
     }
 
     @Override
