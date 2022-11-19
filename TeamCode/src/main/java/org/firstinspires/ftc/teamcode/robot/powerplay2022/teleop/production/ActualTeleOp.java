@@ -370,6 +370,8 @@ public class ActualTeleOp extends LoopUtil {
 
 
         betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_y, -gamepad2.right_stick_y).times(1)));
+        betterCommandedPosition.x = EULMathEx.doubleClamp(-32, 32, betterCommandedPosition.x);
+        betterCommandedPosition.y = EULMathEx.doubleClamp(-32, 32, betterCommandedPosition.y);
         R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.left_stick_x*0.025);
     }
 
