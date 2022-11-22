@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robot.rrImpl.opmodes;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.sun.tools.javac.util.Pair;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 import java.util.Stack;
 
 @Config
+@Disabled
 @Autonomous(name="RRIMPLMecanumTest", group="Test")
 public class MecanumDriveTest extends LoopUtil {
 

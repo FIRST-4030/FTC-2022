@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.utils.cvision.tensorflow.depreciated.tfod
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.utils.cvision.tensorflow.depreciated.tfodohm.ODMain.TFODModule;
 import org.firstinspires.ftc.teamcode.utils.general.maths.misc.depreciated.matrices.DepreciatedMatrix4f;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnum;
 import org.firstinspires.ftc.teamcode.utils.general.misc.OrderedEnumHelper;
 
 @Config
+@Disabled
 @Autonomous(name = "TFDrive", group = "Test")
 public class TFDriveTest extends MultiOpModeManager {
     private NewNewDrive drive;

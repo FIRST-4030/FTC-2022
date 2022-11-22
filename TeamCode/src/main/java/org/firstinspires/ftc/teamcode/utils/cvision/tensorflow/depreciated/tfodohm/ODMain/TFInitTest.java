@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.utils.cvision.tensorflow.depreciated.tfod
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 @Config
+@Disabled
 @Autonomous(name = "TFInitTest", group = "Test")
 public class TFInitTest extends OpMode {
     private boolean enabled = false;

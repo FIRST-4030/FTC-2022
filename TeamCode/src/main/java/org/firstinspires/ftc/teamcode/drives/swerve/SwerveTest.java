@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.drives.swerve;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utils.sensors.pot.DoublePotentiometer;
 
+@Disabled
 @TeleOp(name = "SwerveTest", group = "Test")
 public class SwerveTest extends LinearOpMode {
 

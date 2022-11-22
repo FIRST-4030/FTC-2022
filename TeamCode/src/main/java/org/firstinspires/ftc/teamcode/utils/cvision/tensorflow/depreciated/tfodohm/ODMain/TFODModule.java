@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.utils.cvision.tensorflow.depreciated.tfod
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Config
+@Disabled
 @Autonomous(name = "TFODModuleTest", group = "Test")
 public class TFODModule extends OpMode {
 
