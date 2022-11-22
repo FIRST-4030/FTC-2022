@@ -88,7 +88,7 @@ public class MecanumAuto extends LoopUtil {
             new RunOnce() {
                 @Override
                 public void run() {
-                    drive.moveToPos(new Vector3d(0, 0.39, 0));
+                    drive.moveToPos(new Vector3d(0, 0.431, 0));
                 }
             },
             new RunOnce() {
@@ -169,7 +169,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 720 && Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() > 680) {
+                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 780 && Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() > 770) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -184,7 +184,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (startTime+500 <= elapsedTime) {
+                        if (true) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -199,7 +199,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 2700 && Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() > 2660) {
+                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 2685 && Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() > 2675) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -214,7 +214,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 3700 && Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() > 3660) {
+                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 3685 && Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() > 3675) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -229,7 +229,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 2820 && Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() > 2780) {
+                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 2820 && Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() > 2780) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -259,7 +259,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (SeenColor != ColorView.CMYcolors.MAGENTA || elapsedTime > 30000) {
+                        if (SeenColor != ColorView.CMYcolors.GREEN || elapsedTime > 30000) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -274,7 +274,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (SeenColor != ColorView.CMYcolors.YELLOW || elapsedTime > 30000) {
+                        if (SeenColor != ColorView.CMYcolors.BLUE || elapsedTime > 30000) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -329,7 +329,7 @@ public class MecanumAuto extends LoopUtil {
         servoConversionB = new AngleConversion(new AngleConversion.Centered(), AngleConversion.MODE.RADIANS);
         servoConversionC = new AngleConversion(new AngleConversion.Centered(), AngleConversion.MODE.RADIANS);
 
-        betterCommandedPosition = new Vector2d(0,25);
+        betterCommandedPosition = new Vector2d(10,15);
         commandedPositionMultiplier = 1;
 
         newPropArm = new ThreeJointArm(
@@ -584,6 +584,10 @@ public class MecanumAuto extends LoopUtil {
         telemetry.addData("End Time: ", endTime);
         telemetry.addData("Absolute Delta: ", Math.abs(endTime - startTime));
         telemetry.addData("Delta Time", deltaTime);
+        telemetry.addData("Color Raw", RCR2.color);
+        telemetry.addData("Red", CV2.colorInput.red*255);
+        telemetry.addData("Green", CV2.colorInput.green*255);
+        telemetry.addData("Blue", CV2.colorInput.blue*255);
         drive.logMotorPos(telemetry);
     }
 

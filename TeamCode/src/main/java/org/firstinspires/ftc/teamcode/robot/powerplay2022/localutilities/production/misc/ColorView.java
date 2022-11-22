@@ -7,9 +7,9 @@ public class ColorView {
     public double distance;
 
     public enum CMYcolors{
-        CYAN,
-        MAGENTA,
-        YELLOW,
+        RED,
+        GREEN,
+        BLUE,
         NOT_DETECTED
     }
 
@@ -21,12 +21,12 @@ public class ColorView {
     public CMYcolors getColor(){
         CMYcolors output = CMYcolors.NOT_DETECTED;
         if(distance < 1000000 && distance > 0) {
-            if (colorInput.green < colorInput.red && colorInput.green < colorInput.blue) {
-                output = CMYcolors.MAGENTA;
-            } else if (colorInput.blue < colorInput.green && colorInput.blue < colorInput.red) {
-                output = CMYcolors.YELLOW;
+            if (colorInput.red > colorInput.green-0.1 && colorInput.blue < colorInput.red) {
+                output = CMYcolors.RED;
+            }else if (colorInput.green > colorInput.red && colorInput.green > colorInput.blue) {
+                output = CMYcolors.GREEN;
             } else {
-                output = CMYcolors.CYAN;
+                output = CMYcolors.BLUE;
             }
         }
         return output;
@@ -37,13 +37,13 @@ public class ColorView {
         float hue = convertRGBToHSV(colorInput)[0];
         float dY= Math.abs(60-hue), dC = Math.abs(180-hue), dM = Math.abs(300-hue);
         if(dY < dC && dY < dM && dY < range){
-            output = CMYcolors.YELLOW;
+            output = CMYcolors.BLUE;
         }
         if(dC < dY && dC < dM && dC < range){
-            output = CMYcolors.CYAN;
+            output = CMYcolors.BLUE;
         }
         if(dM < dC && dM < dY && dM < range){
-            output = CMYcolors.MAGENTA;
+            output = CMYcolors.BLUE;
         }
         return output;
     }

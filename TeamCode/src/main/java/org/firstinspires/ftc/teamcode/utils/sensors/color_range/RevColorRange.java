@@ -10,8 +10,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class RevColorRange implements ColorRange {
-    private NormalizedColorSensor color;
-    private DistanceSensor distance;
+    public NormalizedColorSensor color;
+    public DistanceSensor distance;
 
     public RevColorRange(HardwareMap map, Telemetry telemetry, String name) {
         if (name == null || name.isEmpty()) {
