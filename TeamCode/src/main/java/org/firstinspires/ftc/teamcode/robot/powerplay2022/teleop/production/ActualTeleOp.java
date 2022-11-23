@@ -41,6 +41,7 @@ import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
  */
 @TeleOp(name = "ActualTeleOp", group = "actual")
 public class ActualTeleOp extends LoopUtil {
+    public boolean firstSave1 = false;
     //Save Position Variables
     public double[] savedX = new double[]{10, 10, 10};
     public double[] savedY = new double[]{10, 10, 10};
@@ -271,6 +272,13 @@ public class ActualTeleOp extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
+
+        if((savedX[0] == 10 && savedX[1] != 10) || (savedX[0] != 10 && savedX[1] == 10)){
+            if(savedX[1] != 10){
+                firstSave1 = true;
+            }
+        }
+
         if(wheelLock){
             joystick.x = 0;
             joystick.y = 0;
@@ -325,6 +333,17 @@ public class ActualTeleOp extends LoopUtil {
         }
         //Slide controls
         if (gamepad2.a){
+
+            if(firstSave1){
+                betterCommandedPosition.x = savedX[1];
+                betterCommandedPosition.y = savedY[1];
+                R = savedR[1];
+            }else{
+                betterCommandedPosition.x = savedX[0];
+                betterCommandedPosition.y = savedY[0];
+                R = savedR[0];
+            }
+
             slideLevel = SlideController.LEVEL.REST;
         } else if (gamepad2.b){
             slideLevel = SlideController.LEVEL.LOW;
@@ -369,7 +388,7 @@ public class ActualTeleOp extends LoopUtil {
         }
 
 
-        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_y, -gamepad2.right_stick_y).times(1)));
+        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_y, -gamepad2.right_stick_y*1.5).times(1.6)));
         betterCommandedPosition.x = EULMathEx.doubleClamp(-32, 32, betterCommandedPosition.x);
         betterCommandedPosition.y = EULMathEx.doubleClamp(-32, 32, betterCommandedPosition.y);
         R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.left_stick_x*0.025);

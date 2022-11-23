@@ -136,7 +136,7 @@ public class MecanumAuto extends LoopUtil {
                 },
                 () -> {
                     movts[1].update();
-                    SeenColor = CV2.getColorBetter(150);
+                    SeenColor = CV2.getColor();
                 },
                 () -> {
                     movts[2].update();
@@ -169,7 +169,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 780 && Objects.requireNonNull(drive.getMotorMap().get("FL")).getCurrentPosition() > 770) {
+                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 780 && Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() > 770) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -184,7 +184,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (true) {
+                        if (startTime+500<elapsedTime) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
