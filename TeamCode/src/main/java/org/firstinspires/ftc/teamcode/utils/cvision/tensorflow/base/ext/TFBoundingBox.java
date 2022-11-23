@@ -17,7 +17,7 @@ public class TFBoundingBox {
     public float width, height;
     public Vector2d topLeft, bottomRight;
 
-    public AngleUnit estimatedAngle;
+    public double estimatedAngle;
     public float estimatedDepth;
 
     public float confidence;
@@ -31,6 +31,7 @@ public class TFBoundingBox {
 
         this.confidence = 0;
         this.estimatedDepth = -1;
+        this.estimatedAngle = 0;
     }
 
     public TFBoundingBox(Recognition recognition){
@@ -42,6 +43,7 @@ public class TFBoundingBox {
 
         this.confidence = recognition.getConfidence();
         this.estimatedDepth = -1;
+        this.estimatedAngle = recognition.estimateAngleToObject(AngleUnit.RADIANS);
     }
 
     public void setEstimatedDepth(float nDepth){
