@@ -126,10 +126,10 @@ public class CustomMecanumDrive extends CustomDrive{
         Objects.requireNonNull(motorMap.get("BR")).setPower(out.w);
     }
     public void moveToPos(Vector3d control){
-        savedTicks[0] = Objects.requireNonNull(motorMap.get("FL")).getCurrentPosition() + (int)(control.x*0 + control.y*-1800 + control.z*1000/90); //Change in FL ticks
-        savedTicks[1] = Objects.requireNonNull(motorMap.get("FR")).getCurrentPosition() + (int)(control.x*0 + control.y*1800 + control.z*1000/90); //Change in FR ticks
-        savedTicks[2] = Objects.requireNonNull(motorMap.get("BL")).getCurrentPosition() + (int)(control.x*0 + control.y*1800 + control.z*1000/90); //Change in BL ticks
-        savedTicks[3] = Objects.requireNonNull(motorMap.get("BR")).getCurrentPosition() + (int)(control.x*0 + control.y*-1800 + control.z*1000/90); //Change in BR ticks
+        savedTicks[0] = Objects.requireNonNull(motorMap.get("FL")).getCurrentPosition() + (int)(control.x*0 + control.y*-1739 + control.z*1013/90); //Change in FL ticks
+        savedTicks[1] = Objects.requireNonNull(motorMap.get("FR")).getCurrentPosition() + (int)(control.x*0 + control.y*1739 + control.z*1013/90); //Change in FR ticks
+        savedTicks[2] = Objects.requireNonNull(motorMap.get("BL")).getCurrentPosition() + (int)(control.x*0 + control.y*1739 + control.z*-1013/90); //Change in BL ticks
+        savedTicks[3] = Objects.requireNonNull(motorMap.get("BR")).getCurrentPosition() + (int)(control.x*0 + control.y*-1739 + control.z*-1013/90); //Change in BR ticks
     }
     public void posUpdate(double x){
         Objects.requireNonNull(motorMap.get("FL")).setTargetPosition(savedTicks[0]);

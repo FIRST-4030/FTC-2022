@@ -68,9 +68,10 @@ public class MecanumAuto extends LoopUtil {
     public static boolean checked;
     public VelocityRamping forwardRamp, strafeRamp;
     public VelocityRampStepper stepper;
-    double elapsedTimeCycle;
-    double elapsedTimeCycleAcum;
-    double topConeY;
+    double elapsedTimeCycle = 0;
+    double elapsedTimeCycleAcum = 0;
+    double savedTimeCycle;
+    double topConeY = 0;
 
     public InputHandler inputHandler;
     public static InputHandler gamepadHandler;
@@ -88,7 +89,7 @@ public class MecanumAuto extends LoopUtil {
             new RunOnce() {
                 @Override
                 public void run() {
-                    drive.moveToPos(new Vector3d(0, 0.431, 0));
+                    drive.moveToPos(new Vector3d(0, 0.4427, 0));
                 }
             },
             new RunOnce() {
@@ -97,7 +98,7 @@ public class MecanumAuto extends LoopUtil {
             },
             new RunOnce() {
                 @Override
-                public void run() { drive.moveToPos(new Vector3d(0, 1.1, 0)); }
+                public void run() { drive.moveToPos(new Vector3d(0, 0.85, 0)); }
             },
             new RunOnce() {
                 @Override
@@ -109,7 +110,7 @@ public class MecanumAuto extends LoopUtil {
             },
             new RunOnce() {
                 @Override
-                public void run() { drive.moveToPos(new Vector3d(0, 0, 0)); }
+                public void run() { drive.moveToPos(new Vector3d(0, 0, 0)); savedTimeCycle = elapsedTime;}
             },
             new RunOnce() {
                 @Override
@@ -122,6 +123,10 @@ public class MecanumAuto extends LoopUtil {
             new RunOnce() {
                 @Override
                 public void run() { drive.moveToPos(new Vector3d(0, -0.3, 0)); }
+            },
+            new RunOnce() {
+                @Override
+                public void run() { drive.moveToPos(new Vector3d(0, 0, 0)); }
             }
     };
 
@@ -149,6 +154,7 @@ public class MecanumAuto extends LoopUtil {
                 },
                 () -> {
                     movts[5].update();
+                    cycle(getDeltaTime());
                 },
                 () -> {
                     movts[6].update();
@@ -158,6 +164,9 @@ public class MecanumAuto extends LoopUtil {
                 },
                 () -> {
                     movts[8].update();
+                },
+                () -> {
+                    movts[9].update();
                 }
         );
         stateMachine.addConditions(
@@ -199,7 +208,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 2685 && Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() > 2675) {
+                        if (Objects.requireNonNull(!Objects.requireNonNull(drive.getMotorMap().get("FR")).isBusy())){
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -214,7 +223,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 3685 && Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() > 3675) {
+                        if (!Objects.requireNonNull(drive.getMotorMap().get("FR")).isBusy()) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -229,7 +238,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 2820 && Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() > 2780) {
+                        if (!Objects.requireNonNull(drive.getMotorMap().get("FR")).isBusy()) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -289,7 +298,22 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (elapsedTime > 30000) {
+                        if (SeenColor != ColorView.CMYcolors.RED || elapsedTime > 30000 || SeenColor == ColorView.CMYcolors.BLUE || SeenColor == ColorView.CMYcolors.GREEN) {
+                            status = STATUS.PASSED;
+                        } else {
+                            status = STATUS.FAILED;
+                        }
+                    }
+                },
+                new Conditional() {
+                    @Override
+                    public void init() {
+                        linkedStates = new int[]{9};
+                    }
+
+                    @Override
+                    public void check() {
+                        if (SeenColor != ColorView.CMYcolors.RED || elapsedTime > 30000) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -431,30 +455,36 @@ public class MecanumAuto extends LoopUtil {
     public void cycle(double deltaTime) { //Cycle 4 cones, 24.5 seconds
         elapsedTimeCycle += deltaTime;
         elapsedTimeCycleAcum += deltaTime;
-        if(elapsedTimeCycleAcum < ((24.5 - (4 + 1)) * EULConstants.SEC2MS)) { //(Total Time - (Cycle Time + Buffer))
-            if (elapsedTimeCycle < 2.5 * EULConstants.SEC2MS) {
+        if(elapsedTimeCycleAcum < (((27-(savedTimeCycle * EULConstants.MS2SEC)) - (4 + 1)) * EULConstants.SEC2MS)) { //(Total Time - (Cycle Time + Buffer))
+            if (elapsedTimeCycle < 1 * EULConstants.SEC2MS) {
                 slideLevelAuto = SlideController.LEVEL.HIGH;
-                servoR.setPosition(1 + (startRight ? -1 : 0));
-                betterCommandedPosition.x = 20;
-                betterCommandedPosition.y = 5;
-                servoD.setPosition(0.6);
-            } else if (elapsedTimeCycle < 2.75 * EULConstants.SEC2MS) {
-                servoD.setPosition(0.07);
-            } else if (elapsedTimeCycle < 3.5 * EULConstants.SEC2MS) {
-                servoD.setPosition(0.6);
-                slideLevelAuto = SlideController.LEVEL.REST;
+                betterCommandedPosition.x = 2;
+                betterCommandedPosition.y = 20;
                 servoR.setPosition(0.5);
-                betterCommandedPosition.x = 12;
+                servoD.setPosition(0.6);
+            } else if (elapsedTimeCycle < 1.3 * EULConstants.SEC2MS) {
+                servoR.setPosition((startRight ? 1 : 0));
+                betterCommandedPosition.x = 5;
+                betterCommandedPosition.y = 20;
+            } else if (elapsedTimeCycle < 1.8 * EULConstants.SEC2MS) {
+                servoD.setPosition(0.07);
+            } else if (elapsedTimeCycle < 2.2 * EULConstants.SEC2MS) {
+                betterCommandedPosition.x = 2;
+                betterCommandedPosition.y = 20;
+                servoR.setPosition(0.5);
+            } else if (elapsedTimeCycle < 3.2 * EULConstants.SEC2MS) {
+                slideLevelAuto = SlideController.LEVEL.REST;
+                betterCommandedPosition.x = 5;
+                betterCommandedPosition.y = 20;
+            } else if (elapsedTimeCycle < 3.4 * EULConstants.SEC2MS) {
                 betterCommandedPosition.y = topConeY;
+            } else if (elapsedTimeCycle < 3.8 * EULConstants.SEC2MS) {
+                servoD.setPosition(0.6);
             } else if (elapsedTimeCycle < 4 * EULConstants.SEC2MS) {
-                servoD.setPosition(0.07);
-                slideLevelAuto = SlideController.LEVEL.REST;
-                servoR.setPosition(0.5);
-                betterCommandedPosition.x = 12;
-                betterCommandedPosition.y = -2;
+                betterCommandedPosition.y = 20;
             } else {
+                topConeY -= 3.4;
                 elapsedTimeCycle = 0;
-                topConeY -= 3; //Centimeters between cones in stack
             }
         } else {
             servoD.setPosition(0.6);
