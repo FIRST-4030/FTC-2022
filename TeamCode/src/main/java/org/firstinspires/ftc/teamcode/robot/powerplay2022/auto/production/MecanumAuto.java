@@ -123,10 +123,6 @@ public class MecanumAuto extends LoopUtil {
             new RunOnce() {
                 @Override
                 public void run() { drive.moveToPos(new Vector3d(0, -0.3, 0)); }
-            },
-            new RunOnce() {
-                @Override
-                public void run() { drive.moveToPos(new Vector3d(0, 0, 0)); }
             }
     };
 
@@ -164,9 +160,6 @@ public class MecanumAuto extends LoopUtil {
                 },
                 () -> {
                     movts[8].update();
-                },
-                () -> {
-                    movts[9].update();
                 }
         );
         stateMachine.addConditions(
@@ -268,7 +261,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (SeenColor != ColorView.CMYcolors.GREEN || elapsedTime > 30000) {
+                        if (SeenColor != ColorView.CMYcolors.GREEN) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -283,7 +276,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (SeenColor != ColorView.CMYcolors.BLUE || elapsedTime > 30000) {
+                        if (SeenColor != ColorView.CMYcolors.BLUE) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -298,22 +291,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (SeenColor != ColorView.CMYcolors.RED || elapsedTime > 30000 || SeenColor == ColorView.CMYcolors.BLUE || SeenColor == ColorView.CMYcolors.GREEN) {
-                            status = STATUS.PASSED;
-                        } else {
-                            status = STATUS.FAILED;
-                        }
-                    }
-                },
-                new Conditional() {
-                    @Override
-                    public void init() {
-                        linkedStates = new int[]{9};
-                    }
-
-                    @Override
-                    public void check() {
-                        if (SeenColor != ColorView.CMYcolors.RED || elapsedTime > 30000) {
+                        if (SeenColor != ColorView.CMYcolors.RED) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -453,8 +431,7 @@ public class MecanumAuto extends LoopUtil {
     }
 
     public void cycle(double deltaTime) { //Cycle 4 cones, 24.5 seconds
-        elapsedTimeCycle += deltaTime;
-        elapsedTimeCycleAcum += deltaTime;
+
         if(elapsedTimeCycleAcum < (((27-(savedTimeCycle * EULConstants.MS2SEC)) - (4 + 1)) * EULConstants.SEC2MS)) { //(Total Time - (Cycle Time + Buffer))
             if (elapsedTimeCycle < 1 * EULConstants.SEC2MS) {
                 slideLevelAuto = SlideController.LEVEL.HIGH;
@@ -493,6 +470,8 @@ public class MecanumAuto extends LoopUtil {
             betterCommandedPosition.x = 15;
             betterCommandedPosition.y = 15;
         }
+        elapsedTimeCycle += deltaTime;
+        elapsedTimeCycleAcum += deltaTime;
     }
 
     @Override
