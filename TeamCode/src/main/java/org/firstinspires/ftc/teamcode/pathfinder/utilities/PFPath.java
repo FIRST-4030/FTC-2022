@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pathfinder.utilities;
 
+import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
 import org.firstinspires.ftc.teamcode.pathfinder.control.PathFinderDrive;
 
 import java.util.Vector;
@@ -51,5 +52,47 @@ public class PFPath {
 
     public float[] getCurrentEncoderValues(){
         return this.encoderValues.get(idx);
+    }
+
+    public PFPath advance(double dist){
+        PFPose2d prev = this.poseLookup.get(poseLookup.size() - 1);
+        //exploit directional information to find the new pose's position
+        this.poseLookup.add(new PFPose2d(prev.pos.plus(prev.getDir().times(dist)), prev.heading));
+        return this;
+    }
+
+    public PFPath strafe(double dist){
+        PFPose2d prev = this.poseLookup.get(poseLookup.size() - 1);
+        //exploit tangential information to find the new pose's position
+        this.poseLookup.add(new PFPose2d(prev.pos.plus(prev.getNormal().times(dist)), prev.heading));
+        return this;
+    }
+
+    public PFPath turn(double angleDelta){
+        PFPose2d prev = this.poseLookup.get(poseLookup.size() - 1);
+        //through exploiting the fact that angles are cyclic, just add the angle delta to current one
+        this.poseLookup.add(new PFPose2d(prev.pos, prev.heading + angleDelta));
+        return this;
+    }
+
+    public PFPath turnTo(double targetAngle){
+        PFPose2d prev = this.poseLookup.get(poseLookup.size() - 1);
+        //through exploiting the fact that angles are cyclic, just set the heading to the target
+        this.poseLookup.add(new PFPose2d(prev.pos, targetAngle));
+        return this;
+    }
+
+    public PFPath move(double distX, double distY){
+        PFPose2d prev = this.poseLookup.get(poseLookup.size() - 1);
+        //combine advance and strafe (relative) into one move
+        this.poseLookup.add(new PFPose2d(prev.pos.plus(prev.getNormal().times(distX)).plus(prev.getDir().times(distY)), prev.heading));
+        return this;
+    }
+
+    public PFPath moveTo(Vector2d globalPos){
+        PFPose2d prev = this.poseLookup.get(poseLookup.size() - 1);
+        //just set the new pose's position to the one in the argument
+        this.poseLookup.add(new PFPose2d(globalPos, prev.heading));
+        return this;
     }
 }
