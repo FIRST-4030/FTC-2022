@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.slide.testOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.product
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
+@Disabled
 @TeleOp(name = "PowerPlayLinearSlideTest", group = "Testers")
 public class PowerPlayLinearSlideTest extends LoopUtil {
 

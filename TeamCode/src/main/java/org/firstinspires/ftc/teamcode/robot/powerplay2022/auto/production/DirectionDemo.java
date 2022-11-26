@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 /*
 * This is a very crude attempt at showing how to use encoder
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 * The robot moves forward and backward and then left and right.
  */
 
+@Disabled
 @Autonomous(name = "DirectionDemo", group = "actual")
 public class DirectionDemo extends DistanceDemoBase {
 
