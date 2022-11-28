@@ -9,6 +9,7 @@ public class PFPath {
 
     private PathFinderDrive drive;
     protected Vector<float[]> encoderValues;
+    protected Vector<float[]> powerValues;
     protected Vector<PFPose2d> poseLookup;
     protected int idx;
 
@@ -52,6 +53,14 @@ public class PFPath {
 
     public float[] getCurrentEncoderValues(){
         return this.encoderValues.get(idx);
+    }
+
+    public void setPowerValues(Vector<float[]> nValues){
+        this.powerValues = nValues;
+    }
+
+    public float[] getCurrentPowerValues(){
+        return this.powerValues.get(idx);
     }
 
     public PFPath advance(double dist){

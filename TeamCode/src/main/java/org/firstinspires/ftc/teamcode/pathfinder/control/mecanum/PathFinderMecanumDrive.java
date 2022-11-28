@@ -30,7 +30,7 @@ public class PathFinderMecanumDrive extends PathFinderDrive {
 
     private DcMotorEx fl, fr, bl, br;
 
-    private Matrix4d powerPartitionMatrix;
+    private Matrix4d powerPartitionMatrix, joystickPartitionMatrix;
     private double strafeCo, advancementCo, turnCo, coefficientSum;
     private float encoderReverseFL, encoderReverseFR, encoderReverseBL, encoderReverseBR;
 
@@ -68,7 +68,15 @@ public class PathFinderMecanumDrive extends PathFinderDrive {
 
         /**Beginning of setting up the power partition Matrix**/
 
-        this.modifyPowerPartitionCoefficients(1, 1, 1);
+        this.modifyJoystickPartitionCoefficients(1, 1, 1);
+
+        //TODO: Tweak this matrix for partitioning power
+        this.powerPartitionMatrix = new Matrix4d(new double[][]{
+                { 1, 1,  1, 0}, //FL
+                {-1, 1,  1, 0}, //BL
+                {-1, 1, -1, 0}, //FR
+                { 1, 1, -1, 0}  //BR
+        }).times(1d/3);
 
         /**End of setting up power partition Matrix**/
 
@@ -90,14 +98,14 @@ public class PathFinderMecanumDrive extends PathFinderDrive {
         return this;
     }
 
-    public PathFinderMecanumDrive modifyPowerPartitionCoefficients(double nStrafeCo, double nAdvancementCo, double nTurnCo){
+    public PathFinderMecanumDrive modifyJoystickPartitionCoefficients(double nStrafeCo, double nAdvancementCo, double nTurnCo){
         this.strafeCo = nStrafeCo;
         this.advancementCo = nAdvancementCo;
         this.turnCo = nTurnCo;
 
         coefficientSum = Math.abs(nStrafeCo) + Math.abs(nAdvancementCo) + Math.abs(nTurnCo);
 
-        this.powerPartitionMatrix = new Matrix4d(new double[][]{
+        this.joystickPartitionMatrix = new Matrix4d(new double[][]{
                 { strafeCo, advancementCo,  turnCo, 0}, //FL
                 {-strafeCo, advancementCo,  turnCo, 0}, //BL
                 {-strafeCo, advancementCo, -turnCo, 0}, //FR
@@ -120,38 +128,51 @@ public class PathFinderMecanumDrive extends PathFinderDrive {
 
     @Override
     public void buildPath(PFPath path){
-        Vector<float[]> output = new Vector<>();
+        Vector<float[]> encoder = new Vector<>(), power = new Vector<>();
         Vector<PFPose2d> poses = path.getPoseLookup();
         PFPose2d currentPose, targetPose;
-        float[] valueCache = new float[4], previousCache = new float[]{0, 0, 0, 0};
+        float[] encoderValueCache = new float[4], encoderPreviousValueCache = new float[]{0, 0, 0, 0}, powerValueCache = new float[4];
         float deltaValue;
+        Vector2d mimickedJoystick;
+        Vector4d motorPowers;
 
         for (int i = 0; i < poses.size(); i++) {
             currentPose = poses.get(i);
             targetPose = (i + 1) >= poses.size() ? poses.get(i) : poses.get(i + 1);
+            mimickedJoystick = targetPose.pos.minus(currentPose.pos).length() != 0 ? currentPose.toRelativeAxis(targetPose.pos) : new Vector2d();
+            motorPowers = powerPartitionMatrix.times(new Vector4d(mimickedJoystick.x, mimickedJoystick.y, Math.acos(currentPose.getDir().times(targetPose.getDir())) / targetPose.pos.minus(currentPose.pos).length() != 0 ? targetPose.pos.minus(currentPose.pos).length() : 1, 1));
 
             deltaValue = 0; //zero deltas out to prepare
             deltaValue += targetPose.pos.minus(currentPose.pos).length() * calcNewMovementCoefficient(currentPose, targetPose);
             deltaValue += calcAngleDelta(currentPose, targetPose) * this.ticksPerTurn;
 
+
             //Add deltas
             //TODO: Tweak the multiplier of the deltas with actual data
-            valueCache[0] = previousCache[0] + deltaValue * this.encoderReverseFL; //fl
-            valueCache[1] = previousCache[1] + deltaValue * this.encoderReverseFR; //fr
-            valueCache[2] = previousCache[2] + deltaValue * this.encoderReverseBL; //bl
-            valueCache[3] = previousCache[3] + deltaValue * this.encoderReverseBR; //br
+            encoderValueCache[0] = encoderPreviousValueCache[0] + deltaValue * this.encoderReverseFL; //fl
+            encoderValueCache[1] = encoderPreviousValueCache[1] + deltaValue * this.encoderReverseFR; //fr
+            encoderValueCache[2] = encoderPreviousValueCache[2] + deltaValue * this.encoderReverseBL; //bl
+            encoderValueCache[3] = encoderPreviousValueCache[3] + deltaValue * this.encoderReverseBR; //br
+
+            //take the absolute power values for each target since PIDs are "naive"
+            powerValueCache[0] = (float) Math.abs(motorPowers.x);
+            powerValueCache[1] = (float) Math.abs(motorPowers.z);
+            powerValueCache[2] = (float) Math.abs(motorPowers.y);
+            powerValueCache[3] = (float) Math.abs(motorPowers.w);
 
             //swap
-            previousCache[0] = valueCache[0];
-            previousCache[1] = valueCache[1];
-            previousCache[2] = valueCache[2];
-            previousCache[3] = valueCache[3];
+            encoderPreviousValueCache[0] = encoderValueCache[0];
+            encoderPreviousValueCache[1] = encoderValueCache[1];
+            encoderPreviousValueCache[2] = encoderValueCache[2];
+            encoderPreviousValueCache[3] = encoderValueCache[3];
 
             //add to encoder value stack
-            output.add(valueCache);
+            encoder.add(encoderValueCache);
+            power.add(powerValueCache);
         }
 
-        path.setEncoderValues(output);
+        path.setEncoderValues(encoder);
+        path.setPowerValues(power);
     }
 
     private double calcNewMovementCoefficient(PFPose2d current, PFPose2d target){
@@ -185,17 +206,20 @@ public class PathFinderMecanumDrive extends PathFinderDrive {
                                          fr.getCurrentPosition(),
                                          bl.getCurrentPosition(),
                                          br.getCurrentPosition());
+
         float[] targetEncoderValues = followingPath.getCurrentEncoderValues();
+        float[] targetPowerValues = followingPath.getCurrentPowerValues();
+
         fl.setTargetPosition((int) targetEncoderValues[0]);
         fr.setTargetPosition((int) targetEncoderValues[1]);
         bl.setTargetPosition((int) targetEncoderValues[2]);
         br.setTargetPosition((int) targetEncoderValues[3]);
 
         //TODO: Check if the power values in followPath() work for intended application
-        fl.setPower(1);
-        fr.setPower(1);
-        bl.setPower(1);
-        br.setPower(1);
+        fl.setPower(targetPowerValues[0]);
+        fr.setPower(targetPowerValues[1]);
+        bl.setPower(targetPowerValues[2]);
+        br.setPower(targetPowerValues[3]);
     }
 
     /**
@@ -213,13 +237,12 @@ public class PathFinderMecanumDrive extends PathFinderDrive {
         Matrix3d rot = fieldCentric ? Matrix3d.makeAffineRotation(-angles.firstAngle) : new Matrix3d();
         Vector3d rotated = rot.times(control.unaryMinus());
         Vector4d internalControl = new Vector4d(rotated.x, rotated.y, rotated.z, 1);
-        Vector4d out = powerPartitionMatrix.times(internalControl).div(Math.max(coefficientSum, 1));
+        Vector4d out = joystickPartitionMatrix.times(internalControl).div(Math.max(coefficientSum, 1));
 
-        //set the motor powers as referenced in the hashmap
-        fl.setPower(out.x);
-        bl.setPower(out.y);
-        fr.setPower(out.z);
-        br.setPower(out.w);
+        fl.setPower(out.x); //fl
+        bl.setPower(out.y); //bl
+        fr.setPower(out.z); //fr
+        br.setPower(out.w); //br
     }
 
 
