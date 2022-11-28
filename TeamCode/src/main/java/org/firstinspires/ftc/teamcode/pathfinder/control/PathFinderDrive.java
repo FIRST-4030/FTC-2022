@@ -57,5 +57,5 @@ public abstract class PathFinderDrive{
         return new PFPath(this, initialPose);
     }
 
-    public abstract void setFollowingPath(PFPath nPath);
+    public abstract PathFinderDrive setFollowingPath(PFPath nPath);
 }

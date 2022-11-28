@@ -113,8 +113,9 @@ public class PathFinderMecanumDrive extends PathFinderDrive {
     }
 
     @Override
-    public void setFollowingPath(PFPath nPath){
+    public PathFinderMecanumDrive setFollowingPath(PFPath nPath){
         this.followingPath = nPath;
+        return this;
     }
 
     @Override
@@ -130,7 +131,7 @@ public class PathFinderMecanumDrive extends PathFinderDrive {
             targetPose = (i + 1) >= poses.size() ? poses.get(i) : poses.get(i + 1);
 
             deltaValue = 0; //zero deltas out to prepare
-            deltaValue += targetPose.pos.minus(currentPose.pos).length() / calcNewMovementCoefficient(currentPose, targetPose);
+            deltaValue += targetPose.pos.minus(currentPose.pos).length() * calcNewMovementCoefficient(currentPose, targetPose);
             deltaValue += calcAngleDelta(currentPose, targetPose) * this.ticksPerTurn;
 
             //Add deltas
@@ -164,7 +165,7 @@ public class PathFinderMecanumDrive extends PathFinderDrive {
         double axisB = ticksPerStrafeCM * Math.cos(theta);
         double output = (ticksPerAdvancementCM * ticksPerStrafeCM) / (Math.sqrt(axisA * axisA + axisB * axisB));
 
-        return Math.abs(output); //we need the absolute value because these measurements need to be the denominator for the length
+        return Math.abs(output); //we need the absolute value because these measurements need to be the multiplier for the length
     }
 
     private double calcAngleDelta(PFPose2d current, PFPose2d target){
@@ -198,7 +199,7 @@ public class PathFinderMecanumDrive extends PathFinderDrive {
     }
 
     /**
-     * Args are Vector3d where X: gamepad analog stick X, Y: gamepad analog stick Y, Z: whatever controls turn velocity
+     * Args are one Vector3d where X: gamepad analog stick X, Y: gamepad analog stick Y, Z: whatever controls turn velocity, and one boolean that controls relative of field centric (false true respectively)
      * @param args
      */
     @Override
