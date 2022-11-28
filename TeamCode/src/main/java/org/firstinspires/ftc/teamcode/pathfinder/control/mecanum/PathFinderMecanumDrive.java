@@ -140,7 +140,7 @@ public class PathFinderMecanumDrive extends PathFinderDrive {
             currentPose = poses.get(i);
             targetPose = (i + 1) >= poses.size() ? poses.get(i) : poses.get(i + 1);
             mimickedJoystick = targetPose.pos.minus(currentPose.pos).length() != 0 ? currentPose.toRelativeAxis(targetPose.pos) : new Vector2d();
-            motorPowers = powerPartitionMatrix.times(new Vector4d(mimickedJoystick.x, mimickedJoystick.y, Math.acos(currentPose.getDir().times(targetPose.getDir())) / targetPose.pos.minus(currentPose.pos).length() != 0 ? targetPose.pos.minus(currentPose.pos).length() : 1, 1));
+            motorPowers = powerPartitionMatrix.times(new Vector4d(mimickedJoystick.x, mimickedJoystick.y, (1 - ((currentPose.getDir().times(targetPose.getDir()) + 1) / 2)) / (targetPose.pos.minus(currentPose.pos).length() != 0 ? targetPose.pos.minus(currentPose.pos).length() : 1), 1));
 
             deltaValue = 0; //zero deltas out to prepare
             deltaValue += targetPose.pos.minus(currentPose.pos).length() * calcNewMovementCoefficient(currentPose, targetPose);
