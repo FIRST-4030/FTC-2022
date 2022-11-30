@@ -150,7 +150,7 @@ public class MecanumAuto extends LoopUtil {
                 },
                 () -> {
                     movts[5].update();
-                    cycle(getDeltaTime());
+                    //cycle(getDeltaTime());
                 },
                 () -> {
                     movts[6].update();
@@ -246,7 +246,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        status = STATUS.PASSED;
+                        this.status = STATUS.PASSED;
                         if (elapsedTime > 27000) {
                             status = STATUS.PASSED;
                         } else {
