@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.depreciated.servos;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.extrautilslib.core.maths.vectors.Vector2d;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.utils.actuators.ServoFTC;
 import org.firstinspires.ftc.teamcode.utils.gamepad.InputHandler;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
+@Disabled
 @TeleOp(name = "ArmTest", group = "Tester")
 public class ArmTest extends LoopUtil {
 

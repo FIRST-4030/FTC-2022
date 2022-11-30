@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.robot.powerplay2022.auto.production;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 /*
  * This routine runs a standard autonomous mode after reading CYAN on the signal sleeve
  */
 
+@Disabled
 @Autonomous(name = "SpareAutoCyan", group = "actual")
 public class SpareAutoCyan extends SpareAuto {
 

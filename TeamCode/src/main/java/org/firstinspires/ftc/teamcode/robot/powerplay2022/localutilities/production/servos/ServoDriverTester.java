@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.servos;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robot.powerplay2022.localutilities.production.servos.customDriver.Custom360Servo;
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.utils.actuators.ServoConfig;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
 @Config
+@Disabled
 @TeleOp(name = "Servo Custom Driver Tester v2", group = "Tester")
 public class ServoDriverTester extends LoopUtil {
     public static ServoConfig config;
