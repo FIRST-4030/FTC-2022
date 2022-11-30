@@ -250,7 +250,7 @@ public class MecanumAuto extends LoopUtil {
                         if (elapsedTime > 27000) {
                             status = STATUS.PASSED;
                         } else {
-                            status = STATUS.FAILED;
+                            //status = STATUS.FAILED;
                         }
                     }
                 },
