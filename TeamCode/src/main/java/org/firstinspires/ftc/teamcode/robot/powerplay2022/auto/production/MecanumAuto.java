@@ -246,6 +246,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
+                        status = STATUS.PASSED;
                         if (elapsedTime > 27000) {
                             status = STATUS.PASSED;
                         } else {
