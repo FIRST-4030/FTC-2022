@@ -89,6 +89,7 @@ public class TFODBase{
         for (Recognition output: tfOutput) {
             if (!checkLabels(output.getLabel())) {
                 this.recognitions.put(output.getLabel(), new ArrayList<>());
+                this.boundingBoxes.put(output.getLabel(), new ArrayList<>());
             }
 
             this.recognitions.get(output.getLabel()).add(output); //appends recognition to properly labeled arraylist
