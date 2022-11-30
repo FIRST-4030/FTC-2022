@@ -42,6 +42,8 @@ public class SlideController {
         right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    public SlideController(HardwareMap hardwareMap){}
+
     public void update(double deltaTime, LEVEL level, double slidePower){
 
         leftEncoderPosition = left.getCurrentPosition();
