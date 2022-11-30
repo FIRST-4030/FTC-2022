@@ -145,7 +145,7 @@ public class ThreeJointArm {
         if(Double.isNaN(C)){C=0;}
         servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A + 0.244));
         servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B - 0.07));
-        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C));
+        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C-0.4));
         //servoA.setPosition(0.5);
         //servoB.setPosition(1);
         //servoC.setPosition(0.5);

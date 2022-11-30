@@ -44,7 +44,7 @@ public class ServoTest extends LoopUtil {
         };
 
         servoValues = new double[servos.length];
-        Arrays.fill(servoValues, 0d);
+        Arrays.fill(servoValues, 0.5d);
 
         joyStick = new Vector2d(0, 1);
         inputHandler = InputAutoMapper.normal.autoMap(this);
@@ -72,6 +72,8 @@ public class ServoTest extends LoopUtil {
         for (int i = 0; i < servos.length; i++) {
             servos[i].setPosition(servoValues[i]);
         }
+
+        handleTelemetry();
     }
 
     public void handleInput(double deltaTime){
@@ -86,11 +88,11 @@ public class ServoTest extends LoopUtil {
         }
 
         if (inputHandler.held("D1:DPAD_UP")){
-            servoValues[servoSelector] += 1 * deltaTime;
+            servoValues[servoSelector] += 0.1;
         }
 
         if (inputHandler.held("D1:DPAD_DOWN")){
-            servoValues[servoSelector] -= 1 * deltaTime;
+            servoValues[servoSelector] -= 0.1;
         }
 
         servoSelector = Math.floorMod(servoSelector, servos.length);
@@ -98,6 +100,7 @@ public class ServoTest extends LoopUtil {
 
     public void handleTelemetry(){
         telemetry.addData("CURRENT CONTROLLED SERVO: ", configs[servoSelector].name);
+        telemetry.addData("Current Position: ", servos[servoSelector].getPosition());
     }
 
     @Override
