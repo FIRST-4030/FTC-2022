@@ -272,7 +272,7 @@ public class MecanumAuto extends LoopUtil {
                 new Conditional() {
                     @Override
                     public void init() {
-                        linkedStates = new int[]{7};
+                        linkedStates = new int[]{startRight ? 8 : 7};
                     }
 
                     @Override
@@ -287,7 +287,7 @@ public class MecanumAuto extends LoopUtil {
                 new Conditional() {
                     @Override
                     public void init() {
-                        linkedStates = new int[]{8};
+                        linkedStates = new int[]{startRight ? 7 : 8};
                     }
 
                     @Override
