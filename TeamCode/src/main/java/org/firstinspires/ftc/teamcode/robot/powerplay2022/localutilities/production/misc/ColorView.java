@@ -21,9 +21,9 @@ public class ColorView {
     public CMYcolors getColor(){
         CMYcolors output = CMYcolors.NOT_DETECTED;
         if(distance < 1000000 && distance > 0) {
-            if (colorInput.red > colorInput.green-0.1 && colorInput.blue < colorInput.red) {
+            if (colorInput.red > colorInput.green - 0.1 && colorInput.blue < colorInput.red) {
                 output = CMYcolors.RED;
-            }else if (colorInput.green > colorInput.red && colorInput.green > colorInput.blue) {
+            }else if (colorInput.green > colorInput.red && colorInput.green > colorInput.blue + 0) {
                 output = CMYcolors.GREEN;
             } else {
                 output = CMYcolors.BLUE;

@@ -334,15 +334,7 @@ public class ActualTeleOp extends LoopUtil {
         //Slide controls
         if (gamepad2.a){
 
-            if(firstSave1){
-                betterCommandedPosition.x = savedX[1];
-                betterCommandedPosition.y = savedY[1];
-                R = savedR[1];
-            }else{
-                betterCommandedPosition.x = savedX[0];
-                betterCommandedPosition.y = savedY[0];
-                R = savedR[0];
-            }
+            setArmToStow.run();
 
             slideLevel = SlideController.LEVEL.REST;
         } else if (gamepad2.b){

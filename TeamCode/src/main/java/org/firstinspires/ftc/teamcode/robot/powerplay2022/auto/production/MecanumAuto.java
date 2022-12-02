@@ -89,7 +89,7 @@ public class MecanumAuto extends LoopUtil {
             new RunOnce() {
                 @Override
                 public void run() {
-                    drive.moveToPos(new Vector3d(0, 0.4427, 0));
+                    drive.moveToPos(new Vector3d(0, 0.451, 0));
                 }
             },
             new RunOnce() {
@@ -98,15 +98,15 @@ public class MecanumAuto extends LoopUtil {
             },
             new RunOnce() {
                 @Override
-                public void run() { drive.moveToPos(new Vector3d(0, 0.85, 0)); }
+                public void run() { drive.moveToPos(new Vector3d(0, 0.81, 0)); }
             },
             new RunOnce() {
                 @Override
-                public void run() { drive.moveToPos(new Vector3d(0, 0, 90)); }
+                public void run() { drive.moveToPos(new Vector3d(0, 0, (startRight ? 90 : -90))); }
             },
             new RunOnce() {
                 @Override
-                public void run() { drive.moveToPos(new Vector3d(0, -0.49, 0)); }
+                public void run() { drive.moveToPos(new Vector3d(0, -0.38, 0)); }
             },
             new RunOnce() {
                 @Override
@@ -114,15 +114,19 @@ public class MecanumAuto extends LoopUtil {
             },
             new RunOnce() {
                 @Override
-                public void run() { drive.moveToPos(new Vector3d(0, 0.49, 0)); }
+                public void run() { drive.moveToPos(new Vector3d(0, 0.40, 0)); }
             },
             new RunOnce() {
                 @Override
-                public void run() { drive.moveToPos(new Vector3d(0, 1.07, 0)); }
+                public void run() { drive.moveToPos(new Vector3d(0, 1, 0)); }
             },
             new RunOnce() {
                 @Override
-                public void run() { drive.moveToPos(new Vector3d(0, -0.3, 0)); }
+                public void run() { drive.moveToPos(new Vector3d(0, -0.21, 0)); }
+            },
+            new RunOnce() {
+                @Override
+                public void run() { drive.moveToPos(new Vector3d(0, 0, 0)); double startTime = elapsedTime;}
             }
     };
 
@@ -160,6 +164,9 @@ public class MecanumAuto extends LoopUtil {
                 },
                 () -> {
                     movts[8].update();
+                },
+                () -> {
+                    movts[9].update();
                 }
         );
         stateMachine.addConditions(
@@ -171,7 +178,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 780 && Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() > 770) {
+                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 800 && Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() > 750) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -211,12 +218,42 @@ public class MecanumAuto extends LoopUtil {
                 new Conditional() {
                     @Override
                     public void init() {
+                        linkedStates = new int[]{9};
+                    }
+
+                    @Override
+                    public void check() {
+                        if (startTime+500<elapsedTime) {
+                            status = STATUS.PASSED;
+                        } else {
+                            status = STATUS.FAILED;
+                        }
+                    }
+                },
+                new Conditional() {
+                    @Override
+                    public void init() {
                         linkedStates = new int[]{3};
                     }
 
                     @Override
                     public void check() {
                         if (!Objects.requireNonNull(drive.getMotorMap().get("FR")).isBusy()) {
+                            status = STATUS.PASSED;
+                        } else {
+                            status = STATUS.FAILED;
+                        }
+                    }
+                },
+                new Conditional() {
+                    @Override
+                    public void init() {
+                        linkedStates = new int[]{9};
+                    }
+
+                    @Override
+                    public void check() {
+                        if (startTime+500<elapsedTime) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -437,23 +474,23 @@ public class MecanumAuto extends LoopUtil {
             if (elapsedTimeCycle < 1 * EULConstants.SEC2MS) {
                 slideLevelAuto = SlideController.LEVEL.HIGH;
                 betterCommandedPosition.x = 2;
-                betterCommandedPosition.y = 20;
-                servoR.setPosition(0.5);
+                betterCommandedPosition.y = 25;
+                servoR.setPosition(0.3);
                 servoD.setPosition(0.6);
             } else if (elapsedTimeCycle < 1.3 * EULConstants.SEC2MS) {
-                servoR.setPosition((startRight ? 1 : 0));
+                servoR.setPosition((startRight ? 0 : 1));
                 betterCommandedPosition.x = 5;
                 betterCommandedPosition.y = 20;
             } else if (elapsedTimeCycle < 1.8 * EULConstants.SEC2MS) {
                 servoD.setPosition(0.07);
             } else if (elapsedTimeCycle < 2.2 * EULConstants.SEC2MS) {
                 betterCommandedPosition.x = 2;
-                betterCommandedPosition.y = 20;
+                betterCommandedPosition.y = 25;
                 servoR.setPosition(0.5);
             } else if (elapsedTimeCycle < 3.2 * EULConstants.SEC2MS) {
                 slideLevelAuto = SlideController.LEVEL.REST;
-                betterCommandedPosition.x = 5;
-                betterCommandedPosition.y = 20;
+                betterCommandedPosition.x = 3;
+                betterCommandedPosition.y = 25;
             } else if (elapsedTimeCycle < 3.4 * EULConstants.SEC2MS) {
                 betterCommandedPosition.y = topConeY;
             } else if (elapsedTimeCycle < 3.8 * EULConstants.SEC2MS) {
