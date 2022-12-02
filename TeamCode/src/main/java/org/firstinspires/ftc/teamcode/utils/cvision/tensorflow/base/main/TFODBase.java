@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.utils.cvision.tensorflow.base.ext.TFBoundingBox;
+import org.firstinspires.ftc.teamcode.utils.general.misc.RunOnce;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,10 +20,12 @@ public class TFODBase{
 
     public boolean isDone = true;
     public boolean isInitialized = false;
+    private boolean imgSet = false;
 
     public float confidenceThreshold = 0.8f;
 
     public int inputSize = 320;
+    public int imgWidth = 1, imgHeight = 1;
 
 
     public static final String VUFORIA_KEY = "AV9rwXT/////AAABma+8TAirNkVYosxu9qv0Uz051FVEjKU+nkH+MaIvGuHMijrdgoZYBZwCW2aG8P3+eZecZZPq9UKsZiTHAg73h09NT48122Ui10c8DsPe0Tx5Af6VaBklR898w8xCTdOUa7AlBEOa4KfWX6zDngegeZT5hBLfJKE1tiDmYhJezVDlITIh7SHBv0xBvoQuXhemlzL/OmjrnLuWoKVVW0kLanImI7yra+L8eOCLLp1BBD/Iaq2irZCdvgziZPnMLeTUEO9XUbuW8txq9i51anvlwY8yvMXLvIenNC1xg4KFhMmFzZ8xnpx4nWZZtyRBxaDU99aXm7cQgkVP0VD/eBIDYN4AcB0/Pa7V376m6tRJ5UZh";
@@ -90,6 +93,12 @@ public class TFODBase{
             if (!checkLabels(output.getLabel())) {
                 this.recognitions.put(output.getLabel(), new ArrayList<>());
                 this.boundingBoxes.put(output.getLabel(), new ArrayList<>());
+
+                if (!imgSet) {
+                    imgWidth = output.getImageWidth();
+                    imgHeight = output.getImageHeight();
+                    imgSet = true;
+                }
             }
 
             this.recognitions.get(output.getLabel()).add(output); //appends recognition to properly labeled arraylist
