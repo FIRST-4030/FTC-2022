@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.utils.actuators.ServoFTC;
 import org.firstinspires.ftc.teamcode.utils.momm.LoopUtil;
 
 @Config
-@Disabled
 @TeleOp(name = "Servo Driver Test", group = "Tester")
 public class ServoTest extends LoopUtil {
     public static ServoFTC servo;

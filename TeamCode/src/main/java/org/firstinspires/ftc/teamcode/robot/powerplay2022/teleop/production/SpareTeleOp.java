@@ -213,7 +213,7 @@ public class SpareTeleOp extends LoopUtil {
 
     @Override
     public void opUpdate(double deltaTime) {
-
+        handleInput(deltaTime);
         if((savedX[0] == 10 && savedX[1] != 10) || (savedX[0] != 10 && savedX[1] == 10)){
             if(savedX[1] != 10){
                 firstSave1 = true;
@@ -235,14 +235,18 @@ public class SpareTeleOp extends LoopUtil {
         }
         armUpdate(deltaTime);
         outputTelemetry();
-        DPos = DOpen ? 0.07 : 0.7;
+        DPos = DOpen ? 1 : 0.05;
         if(Double.isNaN(DPos)){DPos=0.6;}
         if(Double.isNaN(R)){R=0.5;}
+
         servoD.setPosition(DPos);
-        servoR.setPosition(1-R);
+        servoR.setPosition(R);
         RunnableTimer += deltaTime;
         autoStackTimer += deltaTime;
         telemetry.addData("Delta Time", deltaTime);
+
+
+
     }
 
     @Override
@@ -253,7 +257,7 @@ public class SpareTeleOp extends LoopUtil {
     public void armUpdate(double deltaTime) {
         if(betterCommandedPosition.x < 0.001){ betterCommandedPosition.x = 0.001; }
         //newPropArm.propagate(betterCommandedPosition, new Vector2d( 1, 0),true);
-        newPropArm.circleFind(betterCommandedPosition);
+        newPropArm.circleFindArmTwo(betterCommandedPosition);
         if(PickUpRunning){
             pickUp.run();
         }
@@ -263,6 +267,7 @@ public class SpareTeleOp extends LoopUtil {
     }
 
     public void driveFixedUpdate(double deltaTime){
+
         lastStateRB = currentStateRB;
         lastStateLB = currentStateLB;
 
@@ -346,14 +351,15 @@ public class SpareTeleOp extends LoopUtil {
             R = savedR[saveStateIndex];
         }
 
-        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_y, -gamepad2.right_stick_y*1.5).times(1.6)));
+        betterCommandedPosition = betterCommandedPosition.plus((new Vector2d(gamepad2.left_stick_y, -gamepad2.right_stick_y*1.5).times(0.5)));
         betterCommandedPosition.x = EULMathEx.doubleClamp(-32, 32, betterCommandedPosition.x);
-        betterCommandedPosition.y = EULMathEx.doubleClamp(-32, 32, betterCommandedPosition.y);
+        betterCommandedPosition.y = EULMathEx.doubleClamp(-20, 32, betterCommandedPosition.y);
         R = EULMathEx.doubleClamp(0.001, 0.999, R+gamepad2.left_stick_x*0.025);
     }
 
 
     public void outputTelemetry(){
+        telemetry.addData("D control: ", DOpen);
         telemetry.addData("Commanded Multiplier: ", commandedPositionMultiplier);
         telemetry.addData("Commanded Position: ", betterCommandedPosition);
         telemetry.addData("Servo A Turn Position: ", servoA.getPosition());
@@ -361,6 +367,7 @@ public class SpareTeleOp extends LoopUtil {
         telemetry.addData("Servo C Turn Position: ", servoC.getPosition());
         telemetry.addData("Servo D Turn Position: ", servoD.getPosition());
         telemetry.addData("Current State Index", saveStateIndex);
+        telemetry.addData("Is running pick up:", PickUpRunning);
         drive.logMotorPos(telemetry);
     }
 }

@@ -66,53 +66,6 @@ public class ThreeJointArm {
         this.telemetry = telemetry;
     }
 
-    /*public void CircleFindSingleServoTest(Vector2d target, char servoLetter){
-        Vector2d restrictedTarget = target.length() <= (totalArmLength-0.5) ? target : target.normalized().times(totalArmLength);
-        double b = (armLengthA*armLengthA - armLengthB*armLengthB - restrictedTarget.length()*restrictedTarget.length())/(-2*restrictedTarget.length());
-        double angleToTarget = EULMathEx.safeACOS(-1 * restrictedTarget.x/restrictedTarget.length());
-        double a = restrictedTarget.length() - b;
-        double h = Math.sqrt(armLengthB*armLengthB - b*b);
-        //Why is A this and not: double A = EULMathEx.safeASIN(h/armLengthA);
-        double A = EULMathEx.safeASIN(restrictedTarget.y/restrictedTarget.length()) + EULMathEx.safeASIN(h/armLengthA);
-        double B = EULMathEx.safeASIN(a/armLengthA) + EULMathEx.safeASIN(b/armLengthB);
-        double C = (Math.PI*1.75 - A - B)/(Math.PI*1.5);
-        telemetry.addData("Angle A Pi Rad: ", A/Math.PI);
-        telemetry.addData("Angle B Pi Rad: ", B/Math.PI);
-        A=A/(Math.PI);
-        B=B/(Math.PI);
-        telemetry.addData("Angle B Output Raw: ", B);
-        telemetry.addData("Angle A Output Raw: ", A);
-        telemetry.addData("Angle A Output: ", EULMathEx.doubleClamp(0.001, 0.999, A));
-        servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B+0.25));
-        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C-0.5));
-        if(A>=1){
-            A=0.99;
-        }
-        if(B>=0.99){
-            B=EULMathEx.doubleClamp(0.001, 0.999, B);
-        }
-        if(Double.isNaN(A)){A=0.5;}
-        if(Double.isNaN(B)){B=1;}
-        if(Double.isNaN(C)){C=1;}
-        servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
-        servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B));
-        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C - 1d / 3d));
-        //servoA.setPosition(0.83);
-        //servoB.setPosition(0);
-        switch(servoLetter) {
-            case 'A':
-                servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A));
-                break;
-            case 'B':
-                servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B));
-                break;
-            case 'C':
-                servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C - 1d / 3d));
-        }
-        telemetry.addData("Restricted Target: ", restrictedTarget);
-        telemetry.addData("A: ", (A*2)+0.27);
-        telemetry.addData("B: ", B*2);
-    }*/
 
     public void circleFind(Vector2d target){
         Vector2d restrictedTarget = target.length() <= (totalArmLength-0.5) ? target : target.normalized().times(totalArmLength);
@@ -187,10 +140,10 @@ public class ThreeJointArm {
         if(Double.isNaN(C)){C=0;}
         servoA.setPosition(EULMathEx.doubleClamp(0.001, 0.999, A + 0.244));
         servoB.setPosition(EULMathEx.doubleClamp(0.001, 0.999, B - 0.07));
-        servoC.setPosition(EULMathEx.doubleClamp(0.001, 0.999, C-0.2));
-        servoA.setPosition(0.5);
-        servoB.setPosition(0.5);
-        servoC.setPosition(0.5);
+        servoC.setPosition(EULMathEx.doubleClamp(0.05, 0.999, C-0.2));
+        //servoA.setPosition(1);
+        //servoB.setPosition(0.5);
+        //servoC.setPosition(0);
         telemetry.addData("Restricted Target: ", restrictedTarget);
         telemetry.addData("A: ", A*2);
         telemetry.addData("B: ", B*2);
