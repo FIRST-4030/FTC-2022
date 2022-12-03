@@ -254,7 +254,8 @@ public class ActualTeleOp extends LoopUtil {
         RCR2 = new RevColorRange(hardwareMap, telemetry, "rcr");
         CV2 = new ColorView(RCR2.color(), RCR2.distance());
 
-        correction = new AlgorithmicCorrection(new AlgorithmicCorrection.Polynomial(20));
+        //correction = new AlgorithmicCorrection(new AlgorithmicCorrection.Polynomial(20));
+        correction = new AlgorithmicCorrection(new AlgorithmicCorrection.BiasedInterpolation(0.7));
 
         //D1 = new RevDistance(hardwareMap, telemetry, "range1");
         //D2 = new RevDistance(hardwareMap, telemetry, "range2");
@@ -420,7 +421,7 @@ public class ActualTeleOp extends LoopUtil {
 
         CV2.update(RCR2.color(), RCR2.distance());
 
-        joystick.z = correction.getOutput() * (controller.isInUse() ? 0.2 : 0.5);
+        joystick.z = correction.getOutput() * right_stick.length() * (controller.isInUse() ? 0.3 : 0.6); //0.2, 0.5
         drive.update(joystick, true, deltaTime);
         AngularVelocity avel = drive.getImu().getAngularVelocity();
     }
