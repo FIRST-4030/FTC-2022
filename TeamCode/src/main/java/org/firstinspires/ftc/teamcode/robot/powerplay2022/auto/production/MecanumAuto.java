@@ -503,13 +503,13 @@ public class MecanumAuto extends LoopUtil {
             slideLevelAuto = SlideController.LEVEL.REST;
             betterCommandedPosition.x = 2;
             betterCommandedPosition.y = 25;
-        } else if (elapsedTimeCycle < 1.5 * EULConstants.SEC2MS) {
-            servoR.setPosition((startRight ? 0.97 : 0.03));
+        } else if (elapsedTimeCycle < 1.9 * EULConstants.SEC2MS) {
+            servoR.setPosition((startRight ? 0.95 : 0.05));
             betterCommandedPosition.x = 16;
             betterCommandedPosition.y = 23;
-        } else if (elapsedTimeCycle < 1.7 * EULConstants.SEC2MS) {
-            servoD.setPosition(0.07);
         } else if (elapsedTimeCycle < 2.2 * EULConstants.SEC2MS) {
+            servoD.setPosition(0.07);
+        } else if (elapsedTimeCycle < 2.7 * EULConstants.SEC2MS) {
             betterCommandedPosition.x = 1;
             betterCommandedPosition.y = 20;
             servoR.setPosition(0.05);
