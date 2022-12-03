@@ -246,6 +246,34 @@ public class AlgorithmicCorrection {
         }
     }
 
+    public static class BiasedInterpolation implements InterpolationAlgorithm{
+
+        private double k;
+
+        public BiasedInterpolation(double bias){
+            if (bias != 1){
+                k = (1 - bias) * (1 - bias) * (1 - bias);
+            } else {
+                k = 0;
+            }
+        }
+
+        @Override
+        public double process(double scalar) {
+            return 1 - (scalar * k) / (k * scalar - scalar + 1);
+        }
+
+        @Override
+        public double derivative(double scalar) {
+            return (-k / (((k - 1) * scalar + 1) * ((k - 1) * scalar + 1)));
+        }
+
+        @Override
+        public boolean hasDerivative() {
+            return true;
+        }
+    }
+
     //member variable declaration under here
 
     private double output;
