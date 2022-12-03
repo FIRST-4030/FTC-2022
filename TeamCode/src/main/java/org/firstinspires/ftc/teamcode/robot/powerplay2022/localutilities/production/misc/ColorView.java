@@ -16,14 +16,18 @@ public class ColorView {
     public ColorView(NormalizedRGBA CI, double DIST){
         colorInput = CI;
         distance = DIST;
+        double total = Math.sqrt(colorInput.red*colorInput.red + colorInput.green*colorInput.green + colorInput.blue*colorInput.blue);
+        colorInput.red /= total;
+        colorInput.green /= total;
+        colorInput.blue /= total;
     }
 
     public CMYcolors getColor(){
         CMYcolors output = CMYcolors.NOT_DETECTED;
         if(distance < 1000000 && distance > 0) {
-            if (colorInput.red > colorInput.green - 0.1 && colorInput.blue < colorInput.red) {
+            if (colorInput.red > colorInput.green && colorInput.blue < colorInput.red) {
                 output = CMYcolors.RED;
-            }else if (colorInput.green > colorInput.red && colorInput.green > colorInput.blue) {
+            }else if (colorInput.green > colorInput.blue) {
                 output = CMYcolors.GREEN;
             } else {
                 output = CMYcolors.BLUE;

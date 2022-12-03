@@ -413,7 +413,7 @@ public class ActualTeleOp extends LoopUtil {
             right_stick.x = -gamepad1.right_stick_x;
             right_stick.y = gamepad1.right_stick_y;
 
-            correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, right_stick, false);
+            //correction.update(drive.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle, right_stick, false);
         }
 
         telemetry.addData("Joystick X: ", joystick.x);
@@ -421,8 +421,8 @@ public class ActualTeleOp extends LoopUtil {
 
         CV2.update(RCR2.color(), RCR2.distance());
 
-        joystick.z = correction.getOutput() * right_stick.length() * (controller.isInUse() ? 0.3 : 0.6); //0.2, 0.5
-        drive.update(joystick, true, deltaTime);
+        joystick.z = right_stick.x*0.5;
+        drive.update(joystick, false, deltaTime);
         AngularVelocity avel = drive.getImu().getAngularVelocity();
     }
 
