@@ -35,7 +35,7 @@ import org.firstinspires.ftc.teamcode.utils.sensors.color_range.RevColorRange;
 
 import java.util.Objects;
 
-@Autonomous(name = "MecanumAutoRight")
+@Autonomous(name = "MecanumAuto")
 public class MecanumAuto extends LoopUtil {
     //State Machine
     public TaskManager stateMachine;
@@ -63,6 +63,7 @@ public class MecanumAuto extends LoopUtil {
     public static RevColorRange RCR2;
     public static ColorView.CMYcolors SeenColor;
     public static ColorView CV2;
+    public double savedB, savedG, savedR;
     //
     public static double ColorT1;
     public static boolean checked;
@@ -89,7 +90,7 @@ public class MecanumAuto extends LoopUtil {
             new RunOnce() {
                 @Override
                 public void run() {
-                    drive.moveToPos(new Vector3d(0, 0.451, 0));
+                    drive.moveToPos(new Vector3d(0, 0.49, 0));
                 }
             },
             new RunOnce() {
@@ -142,6 +143,9 @@ public class MecanumAuto extends LoopUtil {
                 () -> {
                     movts[1].update();
                     SeenColor = CV2.getColor();
+                    savedB = CV2.colorInput.blue*255;
+                    savedR = CV2.colorInput.red*255;
+                    savedG = CV2.colorInput.green*255;
                 },
                 () -> {
                     movts[2].update();
@@ -178,7 +182,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 800 && Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() > 750) {
+                        if (Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() < 900 && Objects.requireNonNull(drive.getMotorMap().get("FR")).getCurrentPosition() > 700) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -193,7 +197,7 @@ public class MecanumAuto extends LoopUtil {
 
                     @Override
                     public void check() {
-                        if (startTime+500<elapsedTime) {
+                        if (startTime+1200<elapsedTime) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -309,12 +313,12 @@ public class MecanumAuto extends LoopUtil {
                 new Conditional() {
                     @Override
                     public void init() {
-                        linkedStates = new int[]{startRight ? 8 : 7};
+                        linkedStates = new int[]{8};
                     }
 
                     @Override
                     public void check() {
-                        if (SeenColor != ColorView.CMYcolors.BLUE) {
+                        if (SeenColor != ColorView.CMYcolors.BLUE && startRight || SeenColor != ColorView.CMYcolors.RED && !startRight) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -324,12 +328,12 @@ public class MecanumAuto extends LoopUtil {
                 new Conditional() {
                     @Override
                     public void init() {
-                        linkedStates = new int[]{startRight ? 7 : 8};
+                        linkedStates = new int[]{7};
                     }
 
                     @Override
                     public void check() {
-                        if (SeenColor != ColorView.CMYcolors.RED) {
+                        if (SeenColor != ColorView.CMYcolors.RED && startRight || SeenColor != ColorView.CMYcolors.BLUE && !startRight) {
                             status = STATUS.PASSED;
                         } else {
                             status = STATUS.FAILED;
@@ -523,6 +527,7 @@ public class MecanumAuto extends LoopUtil {
         }
 
         telemetry.addData("Starting Side: ", (startRight ? "Right" : "Left"));
+        telemetry.addData("DPad L/R to change side", "");
     }
 
     @Override
@@ -620,7 +625,6 @@ public class MecanumAuto extends LoopUtil {
         telemetry.addData("Dist: ", RCR2.distance());
         telemetry.addData("ColorBetter: ", CV2.getColorBetter(80));
         telemetry.addData("Color: ", CV2.getColor());
-        telemetry.addData("Color: ", CV2.convertRGBToHSV(CV2.colorInput)[0]);
         telemetry.addData("Motion.y", motion.y);
 
         telemetry.addData("VelocityRecording: ", "");
@@ -635,6 +639,9 @@ public class MecanumAuto extends LoopUtil {
         telemetry.addData("Red", CV2.colorInput.red*255);
         telemetry.addData("Green", CV2.colorInput.green*255);
         telemetry.addData("Blue", CV2.colorInput.blue*255);
+        telemetry.addData("Saved Red", savedR);
+        telemetry.addData("Saved Green", savedG);
+        telemetry.addData("Saved Blue", savedB);
         drive.logMotorPos(telemetry);
     }
 

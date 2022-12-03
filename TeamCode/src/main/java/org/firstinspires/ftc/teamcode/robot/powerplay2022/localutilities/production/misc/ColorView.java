@@ -23,7 +23,7 @@ public class ColorView {
         if(distance < 1000000 && distance > 0) {
             if (colorInput.red > colorInput.green - 0.1 && colorInput.blue < colorInput.red) {
                 output = CMYcolors.RED;
-            }else if (colorInput.green > colorInput.red && colorInput.green > colorInput.blue + 0) {
+            }else if (colorInput.green > colorInput.red && colorInput.green > colorInput.blue) {
                 output = CMYcolors.GREEN;
             } else {
                 output = CMYcolors.BLUE;
